@@ -102,7 +102,14 @@ class main extends CI_Controller {
 		$garden = $this->gardener_model->garden_info($id);
 		$data['garden'] = $garden;
 		
+		//get flower in garden info
+		$gardenflower = $this->gardener_model->gardenflower_info($garden['GARDEN_ID']);
+		$data['gardenflower'] = $gardenflower;
 		
+		
+		
+		
+		//var_dump($data['gardenflower']);
 		
 		//var_dump($data['gardener_list'] ); exit();
 	
@@ -115,87 +122,59 @@ class main extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 	 
 	}
-/* 
-`Garden_GARDEN_ID`
-`Flower_FLOWER_ID`
-`AMOUNT_HIVE`
-`RISK_MIX_HONEY`
-`FLOWER_NEARBY_ID`
-`GARDEN_TYPE`
 
-
-array (size=37)
-  'plant' => 
-    array (size=4)
-      0 => string '1' (length=1)
-      1 => string '4' (length=1)
-      2 => string '5' (length=1)
-      3 => string '6' (length=1)
-  'area1' => string '200' (length=3)
-  'mix1' => string '1' (length=1)
-  'mix_plant1' => string '3' (length=1)
-  'amount_hive1' => string '40' (length=2)
-  'area2' => string '' (length=0)
-  'mix_plant2' => string '-' (length=1)
-  'amount_hive2' => string '' (length=0)
-  'area3' => string '' (length=0)
-  'mix_plant3' => string '-' (length=1)
-  'amount_hive3' => string '' (length=0)
-  'area4' => string '' (length=0)
-  'mix4' => string '4' (length=1)
-  'mix_plant4' => string '11' (length=2)
-  'amount_hive4' => string '28' (length=2)
-  'area5' => string '20' (length=2)
-  'mix_plant5' => string '-' (length=1)
-  'amount_hive5' => string '10' (length=2)
-  'area6' => string '30' (length=2)
-  'mix_plant6' => string '-' (length=1)
-  'amount_hive6' => string '10' (length=2)
-  'area7' => string '' (length=0)
-  'mix_plant7' => string '-' (length=1)
-  'amount_hive7' => string '' (length=0)
-  'area8' => string '' (length=0)
-  'mix_plant8' => string '-' (length=1)
-  'amount_hive8' => string '' (length=0)
-  'area9' => string '' (length=0)
-  'mix_plant9' => string '-' (length=1)
-  'amount_hive9' => string '' (length=0)
-  'area10' => string '' (length=0)
-  'mix_plant10' => string '-' (length=1)
-  'amount_hive10' => string '' (length=0)
-  'area11' => string '' (length=0)
-  'mix_plant11' => string '-' (length=1)
-  'amount_hive11' => string '' (length=0)
-  'garden_id' => string '2' (length=1)
-
-*/	
 	public function member_update_flower(){
 		$this->load->helper('form');
+		$this->load->model('gardener_model');
 		//var_dump($_POST);
 		
 		$plant_id= $this->input->post('plant');
 		$garden_id= $this->input->post('garden_id');
+		$gardener_id= $this->input->post('gardener_id');
+		//delete all flower
+		$chk_del = $this->gardener_model->garderflower_delete($garden_id);
+		
+		$chk_insert =array();
 		for($i=0;$i<count($plant_id);$i++){
 			$data_insert['Garden_GARDEN_ID']= $garden_id;
 			$data_insert['Flower_FLOWER_ID']= $plant_id[$i];
 			
 			$data_insert['AMOUNT_HIVE']= $this->input->post('amount_hive'.$plant_id[$i]);  
+			$data_insert['AREA']= $this->input->post('area'.$plant_id[$i]);  
+			
 			if($this->input->post('mix'.$plant_id[$i]) !=null){
 				
 				$data_insert['RISK_MIX_HONEY'] = TRUE;
 				$data_insert['FLOWER_NEARBY_ID'] = $this->input->post('mix_plant'.$plant_id[$i]);  
+				
 			}else{
 				$data_insert['RISK_MIX_HONEY'] = FALSE;
 				$data_insert['FLOWER_NEARBY_ID'] = '';  
 			}
 			
 			
+			
+			$chk_insert[$i] = $this->gardener_model->gardenflower_insert($data_insert);
+			//echo "<br/>insert".$chk_insert[$i];
 		}
 		
-		
-		
-		
-		
+		if(in_array(false,$chk_insert)=== false && $chk_del ==true ){
+			redirect('main/member_detail/'.$gardener_id, 'refresh');
+		}
 	}
 	
+	public function annual_plan(){
+		$this->load->helper('form');
+		$this->load->model('gardener_model');
+		$data = $this->get_data();
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('annual_plan', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('js/annual_plan', $data);
+		$this->load->view('theme/footer', $data);
+		
+	}
 }

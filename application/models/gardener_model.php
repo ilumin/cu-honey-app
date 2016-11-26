@@ -41,14 +41,29 @@ class gardener_model extends CI_Model {
 		return $data;
 		
 	}
-	public function gardenflower_insert($data){
+	public function gardenflower_info($garden_id){
 		
 		
-		$query = $this->db->query('SELECT * from GARDEN WHERE GARDENER_ID='.$member_id);
-		$data= $query->row_array();
+		$query = $this->db->query('SELECT * from GARDENFLOWER WHERE GARDEN_GARDEN_ID='.$garden_id);
+		$data= $query->result_array();
 		return $data;
 		
 	}
+	public function gardenflower_insert($data){
+		
+		
+		$check = $this->db->insert('gardenflower', $data);
+
+		return $check;
+		
+	}
+	public function garderflower_delete($id){
+		
+		$this->db->where('Garden_GARDEN_ID', $id);
+		$check_delete = $this->db->delete('gardenflower'); 
+		return $check_delete;
+	}
+	
 }
 
 ?>
