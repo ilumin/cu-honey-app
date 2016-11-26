@@ -77,8 +77,13 @@ class Member extends CI_Controller {
 	}
 
 	public function register_submit(){
-    echo "YIKES";
-    die();
+    try {
+      $this->load->model('gardener_model','',TRUE);
+      $this->gardener_model->insert($_POST);
+      header("Location: /member/register2");
+    } catch (Exception $e) {
+      echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
+    }
 	}
 
 	public function register2(){
