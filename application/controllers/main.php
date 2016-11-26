@@ -1,13 +1,13 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class main extends CI_Controller {
+class Main extends CI_Controller {
 	public $data;
 	function __construct()
 	 {
 	   parent::__construct();
 	   $this->load->model('member_model','',TRUE);
-	   
+
 	 }
 	/**
 	 * Index Page for this controller.
@@ -31,13 +31,13 @@ class main extends CI_Controller {
 		$this->load->model('beekeeper_model');
 		$bee_keeper_id=1;
 		$bee_keeper_info = $this->beekeeper_model->check_login($email,md5($password));
-		
+
 		if( is_null($bee_keeper_info) == false){
 			$data['account_info'] = array('account_id'=>$bee_keeper_info['BEE_KEEPER_ID'], 'account_name' => $bee_keeper_info['FIRSTNAME'] , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
 			//var_dump($bee_keeper_info);
 		}
-	
-		
+
+
 		//$data['account_info'] = array('account_id'=>2, 'account_name' => 'Admin' , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
 		$data['honey_sum'] = array('total_hive'=>168, 'onprogress_hive'=>120, 'cure_hive'=>48,'expired_hive'=>10);
 
@@ -47,15 +47,15 @@ class main extends CI_Controller {
 		$data['get_notification'][3] = array('account_id'=>4, 'account_name' => 'สมศรี' , 'type'=>'orchardmen','account_picture'=> base_url().'img/account/4.png','status'=>'ยังไม่มีการแจ้งดอกไม้บาน');
 
 		$data['todo'] = array('ลำไยสวนใหญ่  ยังไม่ได้ทำการแจ้งดอกไม้บาน','สวนศิลสุนทร  ยังไม่ได้ทำการแจ้งดอกไม้บาน');
-		
-	
+
+
 	return $data;
 	}
 	public function index()
 	{
 		//$data = array('data','123');
-	
-		
+
+
 		//$this->load->view('');
 		//$this->load->view('welcome_message');
 		$data = $this->get_data();
@@ -66,7 +66,7 @@ class main extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
-	
+
 	public function logout()
 	 {
 	   $this->session->unset_userdata('logged_in');
@@ -79,7 +79,7 @@ class main extends CI_Controller {
 		$this->load->model('gardener_model','',TRUE);
 		$data['gardener_list'] = $this->gardener_model->gardener_list();
 		//var_dump($data['gardener_list'] ); exit();
-	
+
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
@@ -87,7 +87,7 @@ class main extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('js/member_list_js', $data);
 		$this->load->view('theme/footer', $data);
-	 
+
 	}
 	public function member_detail($id){
 		$data = $this->get_data();
@@ -95,17 +95,17 @@ class main extends CI_Controller {
 		//get member info from gardener
 		$this->load->model('gardener_model','',TRUE);
 		$data['gardener_info'] = $this->gardener_model->gardener_info($id);
-		//get flower table 
+		//get flower table
 		$flower = $this->gardener_model->get_flower();
 		$data['flower'] = $flower;
 		//get garden info
 		$garden = $this->gardener_model->garden_info($id);
 		$data['garden'] = $garden;
-		
-		
-		
+
+
+
 		//var_dump($data['gardener_list'] ); exit();
-	
+
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
@@ -113,9 +113,9 @@ class main extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		//$this->load->view('js/member_detail_js', $data);
 		$this->load->view('theme/footer', $data);
-	 
+
 	}
-/* 
+/*
 `Garden_GARDEN_ID`
 `Flower_FLOWER_ID`
 `AMOUNT_HIVE`
@@ -125,7 +125,7 @@ class main extends CI_Controller {
 
 
 array (size=37)
-  'plant' => 
+  'plant' =>
     array (size=4)
       0 => string '1' (length=1)
       1 => string '4' (length=1)
@@ -168,34 +168,34 @@ array (size=37)
   'amount_hive11' => string '' (length=0)
   'garden_id' => string '2' (length=1)
 
-*/	
+*/
 	public function member_update_flower(){
 		$this->load->helper('form');
 		//var_dump($_POST);
-		
+
 		$plant_id= $this->input->post('plant');
 		$garden_id= $this->input->post('garden_id');
 		for($i=0;$i<count($plant_id);$i++){
 			$data_insert['Garden_GARDEN_ID']= $garden_id;
 			$data_insert['Flower_FLOWER_ID']= $plant_id[$i];
-			
-			$data_insert['AMOUNT_HIVE']= $this->input->post('amount_hive'.$plant_id[$i]);  
+
+			$data_insert['AMOUNT_HIVE']= $this->input->post('amount_hive'.$plant_id[$i]);
 			if($this->input->post('mix'.$plant_id[$i]) !=null){
-				
+
 				$data_insert['RISK_MIX_HONEY'] = TRUE;
-				$data_insert['FLOWER_NEARBY_ID'] = $this->input->post('mix_plant'.$plant_id[$i]);  
+				$data_insert['FLOWER_NEARBY_ID'] = $this->input->post('mix_plant'.$plant_id[$i]);
 			}else{
 				$data_insert['RISK_MIX_HONEY'] = FALSE;
-				$data_insert['FLOWER_NEARBY_ID'] = '';  
+				$data_insert['FLOWER_NEARBY_ID'] = '';
 			}
-			
-			
+
+
 		}
-		
-		
-		
-		
-		
+
+
+
+
+
 	}
-	
+
 }
