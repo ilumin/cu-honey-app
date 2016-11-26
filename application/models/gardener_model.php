@@ -77,4 +77,53 @@ class gardener_model extends CI_Model {
     $this->db->insert('gardener', $this);
     return $this;
   }
+
+  public function insert_garden($data, $gardener_id)
+  {
+    $this->db->trans_begin();
+
+    try {
+      $has_gardener = !empty($gardener_id);
+      if (!$has_gardener) {
+        throw new Exception("Permission denied", 1);
+      }
+
+      $has_gardenflower = isset($data['selected']) ? !empty($data['selected']) : false;
+      if (!$has_gardenflower) {
+        throw new Exception("Required garden flower", 1);
+      }
+
+      $garden['GARDENER_ID'] = $gardener_id;
+      $garden['NAME'] = isset($data['garden_name']) ? $data['garden_name'] : "";
+      $garden['ADDRESS'] = isset($data['address']) ? $data['address'] : "";
+      $garden['PROVINCE_ID'] = isset($data['province']) ? $data['province'] : "";
+      $garden['GARDEN_TYPE'] = isset($data['garden_type']) ? $data['garden_type'] : "";
+      $this->db->insert('garden', $garden);
+      $garden_id = $this->db->insert_id();
+
+      $selected_flowers = isset($data['selected']) ? $data['selected'] : array();
+      $flowers = isset($data['flowers']) ? $data['flowers'] : array();
+      foreach ($flowers as $flower_id => $flower) {
+        if (!in_array($flower_id, $selected_flowers)) {
+          continue;
+        }
+
+        $this->db->insert('gardenflower', array(
+          'Garden_GARDEN_ID' => $garden_id,
+          'Flower_FLOWER_ID' => $flower_id,
+          'AMOUNT_HIVE' => isset($flower['hive']) ? $flower['hive'] : NULL,
+          'RISK_MIX_HONEY' => isset($flower['risk']) ? $flower['risk']=='mix' : 0,
+          'FLOWER_NEARBY_ID' => isset($flower['mix']) ? $flower['mix'] : NULL,
+          'AREA' => isset($flower['area']) ? $flower['area'] : NULL,
+        ));
+      }
+
+      $this->db->trans_commit();
+    } catch (Exception $e) {
+      $this->db->trans_rollback();
+      throw new Exception("Database transaction error: " . $e->getMessage(), 1);
+
+    }
+
+  }
 }

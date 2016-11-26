@@ -80,6 +80,22 @@ class Member extends CI_Controller {
     try {
       $this->load->model('gardener_model','',TRUE);
       $this->gardener_model->insert($_POST);
+
+      // TODO: set user session here
+
+      header("Location: /member/register2");
+    } catch (Exception $e) {
+      echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
+    }
+	}
+
+	public function register_submit2(){
+    try {
+      // TODO: check user session here
+      $gardener_id = 1;
+
+      $this->load->model('gardener_model','',TRUE);
+      $this->gardener_model->insert_garden($_POST, $gardener_id);
       header("Location: /member/register2");
     } catch (Exception $e) {
       echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
@@ -89,8 +105,8 @@ class Member extends CI_Controller {
 	public function register2(){
 		$data = array();
 		$this->load->model('gardener_model','',TRUE);
-		$flower = $this->gardener_model->get_flower();
-		$data['flower'] = $flower;
+		$data['flowers'] = $this->gardener_model->get_flower();
+    $data['province'] = $this->gardener_model->province_near_by();
 
 		$this->load->view('theme/nonlogin/header');
 		$this->load->view('register_gardener2',$data);
