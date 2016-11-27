@@ -106,7 +106,7 @@ class Member extends CI_Controller {
 		$data = array();
 		$this->load->model('gardener_model','',TRUE);
 		$data['flowers'] = $this->gardener_model->get_flower();
-    $data['province'] = $this->gardener_model->province_near_by();
+		$data['province'] = $this->gardener_model->province_near_by();
 
 		$this->load->view('theme/nonlogin/header');
 		$this->load->view('register_gardener2',$data);

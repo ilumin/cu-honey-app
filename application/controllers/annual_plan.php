@@ -53,10 +53,18 @@ class annual_plan extends CI_Controller {
 	}
 	public function index()
 	{
-		$this->load->model('gardener_model');
-	
 		
+		//start_Date <= EndDateOfMonth And EndDate >=StartDateOfMonth
 		$data = $this->get_data();
+		$this->load->model('annual_model');
+		$this->load->model('gardener_model');
+		$data['annual_info']=$this->annual_model->annual_info();
+		$data['config']=$this->annual_model->config();
+		$flower=$this->gardener_model->get_flower();
+		for($i=0; $i<count($flower); $i++){
+			$data['flower'][$flower[$i]['FLOWER_ID']]= $flower[$i]['FLOWER_NAME'];
+		}
+		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
