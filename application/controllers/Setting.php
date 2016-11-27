@@ -8,7 +8,7 @@ class Setting extends CI_Controller
         $listAction = empty($id);
         $submitAction = !empty($this->input->post('submit_type'));
 
-        $this->load->model('beehive','',TRUE);
+        $this->load->model('beehiveModel','',TRUE);
 
         if ($listAction) {
             return $this->listHive();
@@ -23,7 +23,7 @@ class Setting extends CI_Controller
 
     public function listHive()
     {
-        $data['hives'] = $this->beehive->list();
+        $data['hives'] = $this->beehiveModel->list();
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_list',$data);
