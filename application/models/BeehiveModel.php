@@ -8,6 +8,6 @@ class BeehiveModel extends CI_Model
 
     public function list()
     {
-        return array();
+        return $this->db->get('beehive')->result();
     }
 }

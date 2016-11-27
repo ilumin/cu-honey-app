@@ -16,6 +16,7 @@
 			  <th>สถานะรังผึ้ง</th>
 			  <th>วันที่เริ่มต้นสถานะ</th>
 			  <th>วันที่สิ้นสุดสถานะ</th>
+			  <th>&nbsp;</th>
 			</tr>
 		  </thead>
 
@@ -23,11 +24,14 @@
 		  <tbody>
 		  <?php foreach($hives as $hive): ?>
 			<tr>
-        <td><?php echo $hive->BEEHIVE_ID; ?></td>
+        <td><?php echo $hive->BEE_HIVE_ID; ?></td>
         <td><?php echo $hive->EXPIRED_DATE; ?></td>
         <td><?php echo $hive->STATUS; ?></td>
         <td><?php echo $hive->STARTDATE; ?></td>
         <td><?php echo $hive->ENDDATE; ?></td>
+        <td>
+          <?php echo anchor('setting/hive/' . $hive->BEE_HIVE_ID, 'Edit');?>
+        </td>
 			</tr>
     <?php endforeach; ?>
 		  </tbody>

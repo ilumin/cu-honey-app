@@ -41,7 +41,7 @@ class gardener_model extends CI_Model {
 		return $data;
 
 	}
-  
+
 	public function gardenflower_info($garden_id){
 
 
