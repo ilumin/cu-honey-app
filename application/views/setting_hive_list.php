@@ -8,6 +8,12 @@
     </div>
   <?php endif; ?>
 
+  <div class="x_panel">
+    <div class="x_content">
+      <?php include 'setting_hive_form.php'; ?>
+	  </div>
+  </div>
+
 	<div class="x_panel">
 	  <div class="x_title">
 		<h2>รายการกล่องรังผึ้ง</h2>

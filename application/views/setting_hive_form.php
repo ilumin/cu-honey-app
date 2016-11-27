@@ -1,4 +1,5 @@
 <?php
+$hive_id = isset($hive_id) ? $hive_id : null;
 $beehive_id = isset($hive->BEE_HIVE_ID) ? $hive->BEE_HIVE_ID : null;
 $expired_date = isset($hive->EXPIRED_DATE) ? $hive->EXPIRED_DATE : null;
 $start_date = isset($hive->STARTDATE) ? $hive->STARTDATE : null;
@@ -15,7 +16,9 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
 
 <form action="<?php echo base_url() . 'setting/hive/' . $hive_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
 
-  <span class="section">แก้ไขข้อมูลกล่องรังผึ้ง</span>
+  <span class="section">
+    <?php echo empty($hive_id) ? 'เพิ่มกล่องรังผึ้ง' : 'แก้ไขข้อมูลกล่องรังผึ้ง'; ?>
+  </span>
 
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
