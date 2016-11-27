@@ -10,4 +10,9 @@ class BeehiveModel extends CI_Model
     {
         return $this->db->get('beehive')->result();
     }
+
+    public function getData($id)
+    {
+        return $this->db->where('BEE_HIVE_ID', $id)->get('beehive')->row();
+    }
 }

@@ -7,6 +7,7 @@ class Setting extends CI_Controller
     {
         $listAction = empty($id);
         $submitAction = !empty($this->input->post('submit_type'));
+        $displayFormAction = $listAction==false && $submitAction==false;
 
         $this->load->model('beehiveModel','',TRUE);
 
@@ -18,6 +19,10 @@ class Setting extends CI_Controller
             return $this->submitHive($id, $this->input->post());
         }
 
+        if ($displayFormAction) {
+            return $this->formEditHive($id);
+        }
+
         throw new Exception("Invalid Request: missing hive ID", 1);
     }
 
@@ -27,6 +32,16 @@ class Setting extends CI_Controller
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_list',$data);
+    		$this->load->view('theme/nonlogin/footer');
+    }
+
+    public function formEditHive($id)
+    {
+        $data['hive_id'] = $id;
+        $data['hive'] = $this->beehiveModel->getData($id);
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_hive_form', $data);
     		$this->load->view('theme/nonlogin/footer');
     }
 
