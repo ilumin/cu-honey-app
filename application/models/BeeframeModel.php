@@ -21,6 +21,20 @@ class BeeframeModel extends CI_Model
         return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('beeframe')->result();
     }
 
+    public function countFrame()
+    {
+        $frames = array();
+        $query = 'SELECT beehive.BEE_HIVE_ID, COUNT(beeframe.BeeHive_BEE_HIVE_ID) AS available from beehive LEFT JOIN beeframe ON beehive.BEE_HIVE_ID = beeframe.BeeHive_BEE_HIVE_ID GROUP BY beehive.BEE_HIVE_ID';
+        $result = $this->db
+          ->query($query)
+          ->result();
+        foreach ($result as $item) {
+            $frames[$item->BEE_HIVE_ID] = $item->available;
+        }
+
+        return $frames;
+    }
+
     public function updateData($id, $data = array())
     {
         $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;

@@ -77,6 +77,7 @@ class Setting extends CI_Controller
     private function listHive()
     {
         $this->data['hives'] = $this->beehiveModel->list();
+        $this->data['frames'] = $this->beeframeModel->countFrame();
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_list',$this->data);
