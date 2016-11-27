@@ -38,6 +38,40 @@ class Setting extends CI_Controller
         throw new Exception("Invalid Request: missing hive ID", 1);
     }
 
+    public function frame($id = null)
+    {
+        $listAction = empty($id);
+        $hasPostRequest = !empty($this->input->post());
+        $newFrameAction = $hasPostRequest==true && empty($id);
+        $updateFrameAction = $hasPostRequest==true && !empty($id);
+        $displayFormAction = $listAction==false && $hasPostRequest==false;
+
+        $this->load->library('session');
+        $this->load->model('beehiveModel','',TRUE);
+        $this->load->model('beeframeModel','',TRUE);
+
+        $this->data['flash_type'] = $this->session->flashdata('flash.type');
+        $this->data['flash_message'] = $this->session->flashdata('flash.message');
+
+        if ($newFrameAction) {
+            return $this->newFrame($this->input->post());
+        }
+
+        if ($updateFrameAction) {
+            return $this->updateFrame($id, $this->input->post());
+        }
+
+        if ($listAction) {
+            return $this->listFrame();
+        }
+
+        if ($displayFormAction) {
+            return $this->formEditFrame($id);
+        }
+
+        throw new Exception("Invalid Request: missing frame ID", 1);
+    }
+
     private function listHive()
     {
         $this->data['hives'] = $this->beehiveModel->list();
@@ -86,6 +120,15 @@ class Setting extends CI_Controller
             $this->session->set_flashdata('flash.message', $e->getMessage());
             header('Location: /setting/hive/' . $id);
         }
+    }
+
+    private function listFrame()
+    {
+        $this->data['frames'] = $this->beeframeModel->list();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_frame_list', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
     }
 
 }
