@@ -12,6 +12,7 @@ class Setting extends CI_Controller
         $this->load->library('session');
         $this->load->model('beehiveModel','',TRUE);
         $this->load->model('beeframeModel','',TRUE);
+        $this->load->model('queenModel','',TRUE);
     }
 
     public function hive($id = null)
@@ -69,6 +70,36 @@ class Setting extends CI_Controller
 
         if ($displayFormAction) {
             return $this->formEditFrame($id);
+        }
+
+        throw new Exception("Invalid Request: missing frame ID", 1);
+    }
+
+    public function queen($id = null)
+    {
+        $listAction = empty($id);
+        $hasPostRequest = !empty($this->input->post());
+        $newQueenAction = $hasPostRequest==true && empty($id);
+        $updateQueenAction = $hasPostRequest==true && !empty($id);
+        $displayFormAction = $listAction==false && $hasPostRequest==false;
+
+        $this->data['flash_type'] = $this->session->flashdata('flash.type');
+        $this->data['flash_message'] = $this->session->flashdata('flash.message');
+
+        if ($newFrameAction) {
+            return $this->newQueen($this->input->post());
+        }
+
+        if ($updateFrameAction) {
+            return $this->updateQueen($id, $this->input->post());
+        }
+
+        if ($listAction) {
+            return $this->listQueen();
+        }
+
+        if ($displayFormAction) {
+            return $this->formEditQueen($id);
         }
 
         throw new Exception("Invalid Request: missing frame ID", 1);
@@ -177,5 +208,26 @@ class Setting extends CI_Controller
             $this->session->set_flashdata('flash.message', $e->getMessage());
             header('Location: /setting/hive/' . $id);
         }
+    }
+
+    public function listQueen()
+    {
+        $this->data['queens'] = $this->queenModel->list();
+        // $this->data['hives'] = $this->queenModel->getAvailableHive();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_queen_list', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
+    }
+
+    public function formEditQueen($id)
+    {
+        $this->data['queen_id'] = $id;
+        $this->data['queen'] = $this->queenModel->getData($id);
+        $this->data['hives'] = $this->queenModel->getAvailableHive();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_queen_form', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
     }
 }
