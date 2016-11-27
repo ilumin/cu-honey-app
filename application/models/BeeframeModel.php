@@ -39,4 +39,11 @@ class BeeframeModel extends CI_Model
             throw new Exception("Cannot insert frame: " . $e->getMessage(), 1);
         }
     }
+
+    public function getAvailableHive()
+    {
+        return $this->db
+          ->query('SELECT BeeHive_BEE_HIVE_ID AS BEE_HIVE_ID, COUNT(BeeHive_BEE_HIVE_ID) AS available FROM beeframe GROUP BY BeeHive_BEE_HIVE_ID having COUNT(BeeHive_BEE_HIVE_ID) < 10;')
+          ->result();
+    }
 }

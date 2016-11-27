@@ -131,4 +131,15 @@ class Setting extends CI_Controller
     		$this->load->view('theme/nonlogin/footer');
     }
 
+    public function formEditFrame($id)
+    {
+        $this->data['frame_id'] = $id;
+        $this->data['frame'] = $this->beeframeModel->getData($id);
+        $this->data['hives'] = $this->beeframeModel->getAvailableHive();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_frame_form', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
+    }
+
 }
