@@ -18,7 +18,7 @@ class QueenModel extends CI_Model
 
     public function getQueenFromHive($id)
     {
-        return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('queenbee')->result();
+        return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('queenbee')->row();
     }
 
     public function mapHiveWithQueen()

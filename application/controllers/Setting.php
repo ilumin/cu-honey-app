@@ -109,6 +109,7 @@ class Setting extends CI_Controller
     {
         $this->data['hives'] = $this->beehiveModel->list();
         $this->data['frames'] = $this->beeframeModel->countFrame();
+        $this->data['queens'] = $this->queenModel->mapHiveWithQueen();
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_list',$this->data);
@@ -120,7 +121,7 @@ class Setting extends CI_Controller
         $this->data['hive_id'] = $id;
         $this->data['hive'] = $this->beehiveModel->getData($id);
         $this->data['frames'] = $this->beeframeModel->getFrameFromHive($id);
-        // $this->data['display_hive_info'] = 1;
+        $this->data['queen'] = $this->queenModel->getQueenFromHive($id);
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_form', $this->data);

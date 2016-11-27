@@ -31,6 +31,15 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
 
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+      รหัสนางพญา
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <?php echo !empty($queen) ? $queen->QUEEN_ID : "-"; ?>
+    </div>
+  </div>
+
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
       วันที่หมดอายุ<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
