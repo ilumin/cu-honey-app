@@ -163,18 +163,4 @@ class main extends CI_Controller {
 		}
 	}
 	
-	public function annual_plan(){
-		$this->load->helper('form');
-		$this->load->model('gardener_model');
-		$data = $this->get_data();
-		
-		$this->load->view('theme/header', $data);
-		$this->load->view('theme/left_bar', $data);
-		$this->load->view('theme/nav',$data);
-		$this->load->view('annual_plan', $data);
-		$this->load->view('theme/footer_js', $data);
-		$this->load->view('js/annual_plan', $data);
-		$this->load->view('theme/footer', $data);
-		
-	}
 }

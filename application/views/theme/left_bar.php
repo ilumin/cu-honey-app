@@ -18,15 +18,15 @@
                   </li>
                   <li><a><i class="fa fa-user "></i>สมาชิกชาวสวน <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-					 <li><a href="<?php echo base_url()?>member">ข้อมูลสมาชิก</a></li>
+					 <li><a href="<?php echo base_url()?>main/member_list">ข้อมูลสมาชิก</a></li>
                     </ul>
                   </li>
 				  
-				  <li><a href="<?php echo base_url()?>annualplan" ><i class="fa fa-calendar-o" ></i> Annual Plan </a></li>
-				  <li><a href="<?php echo base_url()?>actionplan" ><i class="fa fa-trello"  ></i> Action Plan </a></li>
+				  <li><a href="<?php echo base_url()?>annual_plan" ><i class="fa fa-calendar-o" ></i> Annual Plan </a></li>
+				  <li><a href="<?php echo base_url()?>action_plan" ><i class="fa fa-trello"  ></i> Action Plan </a></li>
 				  <li><a><i class="fa fa-table "></i>Operation Plan <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-					 <li><a href="<?php echo base_url()?>operationplan">Operation Plan</a></li>
+					 <li><a href="<?php echo base_url()?>operation_plan">Operation Plan</a></li>
 					 <li><a href="<?php echo base_url()?>blooming">แจ้งดอกไม้บาน</a></li>
                     </ul>
                   </li>

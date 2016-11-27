@@ -1,5 +1,3 @@
-
-
 <div class="row right_col">
 <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
@@ -118,7 +116,7 @@
 										$check_plant=' checked="checked" ';
 										
 										if($gardenflower[$k]['AREA'] !=0 ){
-											$check_area=$check_area;
+											$check_area=$gardenflower[$k]['AREA'];
 										}
 										if($gardenflower[$k]['RISK_MIX_HONEY'] ==1 ){
 											$check_mix=' checked="checked" ';
