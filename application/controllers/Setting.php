@@ -142,4 +142,19 @@ class Setting extends CI_Controller
     		$this->load->view('theme/nonlogin/footer');
     }
 
+    public function updateFrame($id, $insert = array())
+    {
+        try {
+            $this->beeframeModel->updateData($id, $insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลคอนรหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive/' . $insert['beehive_id']);
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/hive/' . $id);
+        }
+    }
+
 }

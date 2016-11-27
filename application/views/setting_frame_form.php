@@ -24,7 +24,7 @@ $status = isset($frame->STATUS) ? $frame->STATUS : null;
       รังผึ้ง<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <select id="hive_id" name="hive_id" class="form-control" required="required">
+      <select id="beehive_id" name="beehive_id" class="form-control" required="required">
         <option value="">เลือกรังผึ้ง</option>
         <?php foreach($hives as $hive): $available[] = $hive->BEE_HIVE_ID; ?>
           <option value="<?php echo $hive->BEE_HIVE_ID; ?>" <?php echo $beehive_id==$hive->BEE_HIVE_ID ? 'selected' : ''; ?>><?php echo $hive->BEE_HIVE_ID; ?></option>
@@ -54,6 +54,7 @@ $status = isset($frame->STATUS) ? $frame->STATUS : null;
         <option value="">เลือกสถานะ</option>
         <option <?php echo $status=='ใช้งาน' ? 'selected' : ''; ?> value="ใช้งาน">ใช้งาน</option>
         <option <?php echo $status=='ว่าง' ? 'selected' : ''; ?> value="ว่าง">ว่าง</option>
+        <option <?php echo $status=='ซ่อมแซม' ? 'selected' : ''; ?> value="ซ่อมแซม">ซ่อมแซม</option>
       </select>
     </div>
   </div>
