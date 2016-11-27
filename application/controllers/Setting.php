@@ -3,20 +3,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Setting extends CI_Controller
 {
+    private $data = array();
+
     public function hive($id = null)
     {
         $listAction = empty($id);
-        $submitAction = !empty($this->input->post('submit_type'));
-        $displayFormAction = $listAction==false && $submitAction==false;
+        $hasPostRequest = !empty($this->input->post());
+        $newHiveAction = $hasPostRequest==true && empty($id);
+        $updateHiveAction = $hasPostRequest==true && !empty($id);
+        $displayFormAction = $listAction==false && $hasPostRequest==false;
 
+        $this->load->library('session');
         $this->load->model('beehiveModel','',TRUE);
+
+        $this->data['flash_type'] = $this->session->flashdata('flash.type');
+        $this->data['flash_message'] = $this->session->flashdata('flash.message');
+
+        if ($newHiveAction) {
+            return $this->newHive($this->input->post());
+        }
+
+        if ($updateHiveAction) {
+            return $this->updateHive($id, $this->input->post());
+        }
 
         if ($listAction) {
             return $this->listHive();
-        }
-
-        if ($submitAction) {
-            return $this->submitHive($id, $this->input->post());
         }
 
         if ($displayFormAction) {
@@ -26,28 +38,45 @@ class Setting extends CI_Controller
         throw new Exception("Invalid Request: missing hive ID", 1);
     }
 
-    public function listHive()
+    private function listHive()
     {
-        $data['hives'] = $this->beehiveModel->list();
+        $this->data['hives'] = $this->beehiveModel->list();
 
     		$this->load->view('theme/nonlogin/header');
-    		$this->load->view('setting_hive_list',$data);
+    		$this->load->view('setting_hive_list',$this->data);
     		$this->load->view('theme/nonlogin/footer');
     }
 
-    public function formEditHive($id)
+    private function formEditHive($id)
     {
-        $data['hive_id'] = $id;
-        $data['hive'] = $this->beehiveModel->getData($id);
+        $this->data['hive_id'] = $id;
+        $this->data['hive'] = $this->beehiveModel->getData($id);
 
     		$this->load->view('theme/nonlogin/header');
-    		$this->load->view('setting_hive_form', $data);
+    		$this->load->view('setting_hive_form', $this->data);
     		$this->load->view('theme/nonlogin/footer');
     }
 
-    public function submitHive($id, $data = array())
+    private function newHive($data = array())
     {
         // TODO: submit hive data
+        var_dump($data);
+        die();
+    }
+
+    private function updateHive($id, $insert = array())
+    {
+        try {
+            $this->beehiveModel->updateData($id, $insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'อัพเดทข้อมูลกล่องรังผึ้งรหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive');
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/hive/' . $id);
+        }
     }
 
 }

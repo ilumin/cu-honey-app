@@ -1,5 +1,13 @@
 <div class="row right_col">
 <div class="col-md-12 col-sm-12 col-xs-12">
+
+  <?php if(!empty($flash_type)): ?>
+    <div class="x_panel">
+      <h4><?php echo $flash_type; ?></h4>
+      <p><?php echo $flash_message; ?></p>
+    </div>
+  <?php endif; ?>
+
 	<div class="x_panel">
 	  <div class="x_title">
 		<h2>รายการกล่องรังผึ้ง</h2>

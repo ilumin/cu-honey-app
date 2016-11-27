@@ -6,6 +6,13 @@ $end_date = isset($hive->ENDDATE) ? $hive->ENDDATE : null;
 $status = isset($hive->STATUS) ? $hive->STATUS : null;
 ?>
 
+<?php if(!empty($flash_type)): ?>
+  <div class="x_panel">
+    <h4><?php echo $flash_type; ?></h4>
+    <p><?php echo $flash_message; ?></p>
+  </div>
+<?php endif; ?>
+
 <form action="<?php echo base_url() . 'setting/hive/' . $hive_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
 
   <span class="section">แก้ไขข้อมูลกล่องรังผึ้ง</span>
@@ -15,7 +22,7 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
       รหัสรังผึ้ง<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="text" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly' : ''; ?>>
+      <input class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="text" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly disabled' : ''; ?>>
     </div>
   </div>
 

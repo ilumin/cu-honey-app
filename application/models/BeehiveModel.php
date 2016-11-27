@@ -15,4 +15,14 @@ class BeehiveModel extends CI_Model
     {
         return $this->db->where('BEE_HIVE_ID', $id)->get('beehive')->row();
     }
+
+    public function updateData($id, $data = array())
+    {
+        $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
+        $insert['STARTDATE'] = isset($data['start_date']) ? $data['start_date'] : null;
+        $insert['ENDDATE'] = isset($data['end_date']) ? $data['end_date'] : null;
+        $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
+        
+        return $this->db->where('BEE_HIVE_ID', $id)->update('beehive', $insert);
+    }
 }
