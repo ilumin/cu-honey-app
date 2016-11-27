@@ -41,6 +41,11 @@ class QueenModel extends CI_Model
         $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
         $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
 
+        $duplicate = $this->db->where('BeeHive_BEE_HIVE_ID', $insert['BeeHive_BEE_HIVE_ID'])->where('QUEEN_ID !=', $id)->from('queenbee')->count_all_results();
+        if ($duplicate) {
+            throw new Exception("Hive already has queen", 1);
+        }
+
         return $this->db->where('QUEEN_ID', $id)->update('queenbee', $insert);
     }
 
@@ -50,6 +55,11 @@ class QueenModel extends CI_Model
             $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;
             $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
             $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
+
+            $duplicate = $this->db->where('BeeHive_BEE_HIVE_ID', $insert['BeeHive_BEE_HIVE_ID'])->from('queenbee')->count_all_results();
+            if ($duplicate) {
+                throw new Exception("Hive already has queen", 1);
+            }
 
             $this->db->insert('queenbee', $insert);
 
@@ -66,4 +76,5 @@ class QueenModel extends CI_Model
           ->query($query)
           ->result();
     }
+
 }

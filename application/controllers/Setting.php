@@ -86,11 +86,11 @@ class Setting extends CI_Controller
         $this->data['flash_type'] = $this->session->flashdata('flash.type');
         $this->data['flash_message'] = $this->session->flashdata('flash.message');
 
-        if ($newFrameAction) {
+        if ($newQueenAction) {
             return $this->newQueen($this->input->post());
         }
 
-        if ($updateFrameAction) {
+        if ($updateQueenAction) {
             return $this->updateQueen($id, $this->input->post());
         }
 
@@ -230,4 +230,35 @@ class Setting extends CI_Controller
     		$this->load->view('setting_queen_form', $this->data);
     		$this->load->view('theme/nonlogin/footer');
     }
+
+    public function newQueen($insert = array())
+    {
+        try {
+            $id = $this->queenModel->insertData($insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลกล่องนางพญารหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive/' . $insert['beehive_id']);
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/queen/');
+        }
+    }
+
+    public function updateQueen($id, $insert = array())
+    {
+        try {
+            $this->queenModel->updateData($id, $insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลนางพญารหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive/' . $insert['beehive_id']);
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/queen');
+        }
+    }
+
 }
