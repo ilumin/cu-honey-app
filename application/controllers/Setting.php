@@ -5,6 +5,15 @@ class Setting extends CI_Controller
 {
     private $data = array();
 
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->library('session');
+        $this->load->model('beehiveModel','',TRUE);
+        $this->load->model('beeframeModel','',TRUE);
+    }
+
     public function hive($id = null)
     {
         $listAction = empty($id);
@@ -12,9 +21,6 @@ class Setting extends CI_Controller
         $newHiveAction = $hasPostRequest==true && empty($id);
         $updateHiveAction = $hasPostRequest==true && !empty($id);
         $displayFormAction = $listAction==false && $hasPostRequest==false;
-
-        $this->load->library('session');
-        $this->load->model('beehiveModel','',TRUE);
 
         $this->data['flash_type'] = $this->session->flashdata('flash.type');
         $this->data['flash_message'] = $this->session->flashdata('flash.message');
@@ -45,10 +51,6 @@ class Setting extends CI_Controller
         $newFrameAction = $hasPostRequest==true && empty($id);
         $updateFrameAction = $hasPostRequest==true && !empty($id);
         $displayFormAction = $listAction==false && $hasPostRequest==false;
-
-        $this->load->library('session');
-        $this->load->model('beehiveModel','',TRUE);
-        $this->load->model('beeframeModel','',TRUE);
 
         $this->data['flash_type'] = $this->session->flashdata('flash.type');
         $this->data['flash_message'] = $this->session->flashdata('flash.message');
@@ -85,9 +87,12 @@ class Setting extends CI_Controller
     {
         $this->data['hive_id'] = $id;
         $this->data['hive'] = $this->beehiveModel->getData($id);
+        $this->data['frames'] = $this->beeframeModel->getFrameFromHive($id);
+        // $this->data['display_hive_info'] = 1;
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_form', $this->data);
+    		$this->load->view('setting_frame_list', $this->data);
     		$this->load->view('theme/nonlogin/footer');
     }
 

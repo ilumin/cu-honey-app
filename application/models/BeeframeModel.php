@@ -16,6 +16,11 @@ class BeeframeModel extends CI_Model
         return $this->db->where('BEEFRAME_ID', $id)->get('beeframe')->row();
     }
 
+    public function getFrameFromHive($id)
+    {
+        return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('beeframe')->result();
+    }
+
     public function updateData($id, $data = array())
     {
         $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;

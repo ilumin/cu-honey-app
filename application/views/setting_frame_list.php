@@ -1,6 +1,7 @@
 <div class="row right_col">
 <div class="col-md-12 col-sm-12 col-xs-12">
 
+  <?php if(count($frames) < 10): ?>
   <?php if(!empty($flash_type)): ?>
     <div class="x_panel">
       <h4><?php echo $flash_type; ?></h4>
@@ -13,6 +14,7 @@
       <?php include 'setting_frame_form.php'; ?>
 	  </div>
   </div>
+  <?php endif; ?>
 
 	<div class="x_panel">
 	  <div class="x_title">
