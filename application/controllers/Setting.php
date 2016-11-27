@@ -125,6 +125,7 @@ class Setting extends CI_Controller
     private function listFrame()
     {
         $this->data['frames'] = $this->beeframeModel->list();
+        $this->data['hives'] = $this->beeframeModel->getAvailableHive();
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_frame_list', $this->data);

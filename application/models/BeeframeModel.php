@@ -42,8 +42,9 @@ class BeeframeModel extends CI_Model
 
     public function getAvailableHive()
     {
+        $query = 'SELECT beehive.BEE_HIVE_ID, COUNT(beeframe.BeeHive_BEE_HIVE_ID) AS available from beehive LEFT JOIN beeframe ON beehive.BEE_HIVE_ID = beeframe.BeeHive_BEE_HIVE_ID GROUP BY beehive.BEE_HIVE_ID having COUNT(beehive.BEE_HIVE_ID) < 10';
         return $this->db
-          ->query('SELECT BeeHive_BEE_HIVE_ID AS BEE_HIVE_ID, COUNT(BeeHive_BEE_HIVE_ID) AS available FROM beeframe GROUP BY BeeHive_BEE_HIVE_ID having COUNT(BeeHive_BEE_HIVE_ID) < 10;')
+          ->query($query)
           ->result();
     }
 }

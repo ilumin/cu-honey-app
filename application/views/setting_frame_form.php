@@ -29,7 +29,7 @@ $status = isset($frame->STATUS) ? $frame->STATUS : null;
         <?php foreach($hives as $hive): $available[] = $hive->BEE_HIVE_ID; ?>
           <option value="<?php echo $hive->BEE_HIVE_ID; ?>" <?php echo $beehive_id==$hive->BEE_HIVE_ID ? 'selected' : ''; ?>><?php echo $hive->BEE_HIVE_ID; ?></option>
         <?php endforeach; ?>
-        <?php if (!in_array($beehive_id, $available)): ?>
+        <?php if (!in_array($beehive_id, $available) && !empty($beehive_id)): ?>
           <option value="<?php echo $beehive_id; ?>" selected><?php echo $beehive_id; ?></option>
         <?php endif; ?>
       </select>

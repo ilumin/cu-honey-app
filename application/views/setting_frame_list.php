@@ -10,7 +10,7 @@
 
   <div class="x_panel">
     <div class="x_content">
-      <?php // include 'setting_hive_form.php'; ?>
+      <?php include 'setting_frame_form.php'; ?>
 	  </div>
   </div>
 
@@ -38,7 +38,7 @@
 		  <?php foreach($frames as $frame): ?>
 			<tr>
         <td><?php echo $frame->BEEFRAME_ID; ?></td>
-        <td><?php echo $frame->BeeHive_BEE_HIVE_ID; ?></td>
+        <td><?php echo anchor('/setting/hive/' . $frame->BeeHive_BEE_HIVE_ID, $frame->BeeHive_BEE_HIVE_ID); ?></td>
         <td><?php echo $frame->STATUS; ?></td>
         <td><?php echo $frame->EXPIRED_DATE; ?></td>
         <td>
