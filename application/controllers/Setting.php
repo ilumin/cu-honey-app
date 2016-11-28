@@ -133,7 +133,6 @@ class Setting extends CI_Controller
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_hive_form', $this->data);
-    		$this->load->view('setting_frame_list', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
