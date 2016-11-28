@@ -1,5 +1,7 @@
-<div class="row right_col">
-<div class="col-md-12 col-sm-12 col-xs-12">
+<?php if ($action == 'form-hive'): ?>
+  <div class="row right_col">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+<?php endif; ?>
 
 <?php
 $hive_id = isset($hive_id) ? $hive_id : null;
@@ -149,5 +151,7 @@ if ($action != 'list-hive') {
 }
 ?>
 
+<?php if ($action == 'form-hive'): ?>
 </div>
 </div>
+<?php endif; ?>
