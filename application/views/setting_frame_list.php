@@ -1,5 +1,4 @@
-<div class="row right_col">
-<div class="col-md-12 col-sm-12 col-xs-12">
+
 
   <?php if(count($frames) < 10): ?>
   <?php if(!empty($flash_type)): ?>

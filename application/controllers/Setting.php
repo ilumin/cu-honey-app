@@ -105,18 +105,20 @@ class Setting extends CI_Controller
         throw new Exception("Invalid Request: missing frame ID", 1);
     }
 
-    private function listHive()
+    public function listHive()
     {
         $this->data['hives'] = $this->beehiveModel->list();
         $this->data['frames'] = $this->beeframeModel->countFrame();
         $this->data['queens'] = $this->queenModel->mapHiveWithQueen();
 
-    		$this->load->view('theme/nonlogin/header');
+			$this->load->view('theme/header', $data);
+			$this->load->view('theme/left_bar', $data);
+			$this->load->view('theme/nav',$data);
     		$this->load->view('setting_hive_list',$this->data);
     		$this->load->view('theme/nonlogin/footer');
     }
 
-    private function formEditHive($id)
+    public function formEditHive($id)
     {
         $this->data['hive_id'] = $id;
         $this->data['hive'] = $this->beehiveModel->getData($id);
@@ -162,7 +164,7 @@ class Setting extends CI_Controller
 
     private function listFrame()
     {
-        $this->data['frames'] = $this->beeframeModel->list();
+        $this->data['frames'] = $this->beeframeModel->blist();
         $this->data['hives'] = $this->beeframeModel->getAvailableHive();
 
     		$this->load->view('theme/nonlogin/header');
@@ -213,7 +215,7 @@ class Setting extends CI_Controller
 
     public function listQueen()
     {
-        $this->data['queens'] = $this->queenModel->list();
+        $this->data['queens'] = $this->queenModel->blist();
         // $this->data['hives'] = $this->queenModel->getAvailableHive();
 
     		$this->load->view('theme/nonlogin/header');

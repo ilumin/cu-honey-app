@@ -1,3 +1,5 @@
+<div class="row right_col">
+<div class="col-md-12 col-sm-12 col-xs-12">
 <?php
 $hives = isset($hives) ? $hives : array();
 $frame_id = isset($frame_id) ? $frame_id : null;
@@ -122,3 +124,5 @@ $status = isset($frame->STATUS) ? $frame->STATUS : null;
   });
 
 </script>
+</div>
+</div>

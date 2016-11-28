@@ -1,55 +1,43 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
-class member_model extends CI_Model {
-	public function __construct()	{
-	  $this->load->database(); 
-	}
-	
-	public function check_login($email,$password) {
-		$password = md5($password);
-	  if($email != FALSE && $password != FALSE) {
-		$query = $this->db->get_where('beekeeper', array('EMAIL' => $email,'PASSWORD'=>$password));
-		$data= $query->row_array();
-		//var_dump($data);
-		if(is_null($data)== true){
-			$query = $this->db->get_where('gardener', array('EMAIL' => $email,'PASSWORD'=>$password));
-			$data= $query->row_array();
-		}
-		if(isset($data['BEE_KEEPER_ID'])){
-			$data['id'] = $data['BEE_KEEPER_ID'];
-			$data['type'] = 'beekeeper';
-		}
-		
-		if(isset($data['GARDENER_ID'])){
-			$data['id'] = $data['GARDENER_ID'];
-			$data['type'] = 'gardener';
-		}
-		
-		return $data;
-	  }
-	  else {
-		return FALSE;
-	  }
-	}
-	
-	
-	public function get_data()
+class annual_plan extends CI_Controller {
+	public $data;
+	function __construct()
+	 {
+	   parent::__construct();
+	   $this->load->model('member_model','',TRUE);
+	   
+	 }
+	/**
+	 * Index Page for this controller.
+	 *
+	 * Maps to the following URL
+	 * 		http://example.com/index.php/welcome
+	 *	- or -
+	 * 		http://example.com/index.php/welcome/index
+	 *	- or -
+	 * Since this controller is set as the default controller in
+	 * config/routes.php, it's displayed at http://example.com/
+	 *
+	 * So any other public methods not prefixed with an underscore will
+	 * map to /index.php/welcome/<method_name>
+	 * @see https://codeigniter.com/user_guide/general/urls.html
+	 */
+	private function get_data()
 	{
-
 		$email ="yippadedoda@gmail.com";
 		$password = "1234";
-		//$this->load->model('beekeeper_model');
+		$this->load->model('beekeeper_model');
 		$bee_keeper_id=1;
-		$CI =& get_instance();
-		$CI->load->model('beekeeper_model');
-		$bee_keeper_info =  $CI->beekeeper_model->check_login($email,md5($password));
-
+		$bee_keeper_info = $this->beekeeper_model->check_login($email,md5($password));
+		
 		if( is_null($bee_keeper_info) == false){
 			$data['account_info'] = array('account_id'=>$bee_keeper_info['BEE_KEEPER_ID'], 'account_name' => $bee_keeper_info['FIRSTNAME'] , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
 			//var_dump($bee_keeper_info);
 		}
-
-
+	
+		
 		//$data['account_info'] = array('account_id'=>2, 'account_name' => 'Admin' , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
 		$data['honey_sum'] = array('total_hive'=>168, 'onprogress_hive'=>120, 'cure_hive'=>48,'expired_hive'=>10);
 
@@ -59,12 +47,32 @@ class member_model extends CI_Model {
 		$data['get_notification'][3] = array('account_id'=>4, 'account_name' => 'สมศรี' , 'type'=>'orchardmen','account_picture'=> base_url().'img/account/4.png','status'=>'ยังไม่มีการแจ้งดอกไม้บาน');
 
 		$data['todo'] = array('ลำไยสวนใหญ่  ยังไม่ได้ทำการแจ้งดอกไม้บาน','สวนศิลสุนทร  ยังไม่ได้ทำการแจ้งดอกไม้บาน');
-
-
+		
+	
 	return $data;
 	}
 	
-
+	public function index()
+	{
+		
+		//start_Date <= EndDateOfMonth And EndDate >=StartDateOfMonth
+		$data = $this->get_data();
+		$this->load->model('annual_model');
+		$this->load->model('gardener_model');
+		
+		
+		$data['annual_list']=$this->annual_model->annual_info_list();
+		
+		
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('annual_plan_list', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('theme/footer', $data);
+	}
+	
+	
+	
 }
-
-?>

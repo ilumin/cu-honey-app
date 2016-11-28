@@ -6,7 +6,7 @@ class QueenModel extends CI_Model
         $this->load->database();
     }
 
-    public function list()
+    public function blist()
     {
         return $this->db->get('queenbee')->result();
     }
