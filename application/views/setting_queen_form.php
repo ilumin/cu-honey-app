@@ -1,5 +1,7 @@
+<?php if($action == 'form-queen'): ?>
 <div class="row right_col">
 <div class="col-md-12 col-sm-12 col-xs-12">
+<?php endif; ?>
 
 <?php
 $hives = isset($hives) ? $hives : array();
@@ -124,5 +126,8 @@ $status = isset($queen->STATUS) ? $queen->STATUS : null;
   });
 
 </script>
+
+<?php if($action == 'form-queen'): ?>
 </div>
 </div>
+<?php endif; ?>

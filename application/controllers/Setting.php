@@ -172,6 +172,7 @@ class Setting extends CI_Controller
 
     private function listFrame()
     {
+        $this->data['action'] = 'list-frame';
         $this->data['frames'] = $this->beeframeModel->listData();
         $this->data['hives'] = $this->beeframeModel->getAvailableHive();
 
@@ -185,6 +186,7 @@ class Setting extends CI_Controller
 
     public function formEditFrame($id)
     {
+        $this->data['action'] = 'form-frame';
         $this->data['frame_id'] = $id;
         $this->data['frame'] = $this->beeframeModel->getData($id);
         $this->data['hives'] = $this->beeframeModel->getAvailableHive();
@@ -229,6 +231,7 @@ class Setting extends CI_Controller
 
     public function listQueen()
     {
+        $this->data['action'] = 'list-queen';
         $this->data['queens'] = $this->queenModel->listData();
         // $this->data['hives'] = $this->queenModel->getAvailableHive();
 
@@ -242,6 +245,7 @@ class Setting extends CI_Controller
 
     public function formEditQueen($id)
     {
+        $this->data['action'] = 'form-queen';
         $this->data['queen_id'] = $id;
         $this->data['queen'] = $this->queenModel->getData($id);
         $this->data['hives'] = $this->queenModel->getAvailableHive();
