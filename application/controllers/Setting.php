@@ -13,6 +13,9 @@ class Setting extends CI_Controller
         $this->load->model('beehiveModel','',TRUE);
         $this->load->model('beeframeModel','',TRUE);
         $this->load->model('queenModel','',TRUE);
+        $this->load->model('member_model','',TRUE);
+
+        $this->data = $this->member_model->get_data();
     }
 
     public function hive($id = null)
@@ -107,15 +110,16 @@ class Setting extends CI_Controller
 
     public function listHive()
     {
-        $this->data['hives'] = $this->beehiveModel->list();
+        $this->data['hives'] = $this->beehiveModel->listData();
         $this->data['frames'] = $this->beeframeModel->countFrame();
         $this->data['queens'] = $this->queenModel->mapHiveWithQueen();
 
-			$this->load->view('theme/header', $data);
-			$this->load->view('theme/left_bar', $data);
-			$this->load->view('theme/nav',$data);
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_hive_list',$this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     public function formEditHive($id)
@@ -125,10 +129,13 @@ class Setting extends CI_Controller
         $this->data['frames'] = $this->beeframeModel->getFrameFromHive($id);
         $this->data['queen'] = $this->queenModel->getQueenFromHive($id);
 
-    		$this->load->view('theme/nonlogin/header');
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_hive_form', $this->data);
     		$this->load->view('setting_frame_list', $this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     private function newHive($insert = array())
@@ -164,12 +171,15 @@ class Setting extends CI_Controller
 
     private function listFrame()
     {
-        $this->data['frames'] = $this->beeframeModel->blist();
+        $this->data['frames'] = $this->beeframeModel->listData();
         $this->data['hives'] = $this->beeframeModel->getAvailableHive();
 
-    		$this->load->view('theme/nonlogin/header');
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_frame_list', $this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     public function formEditFrame($id)
@@ -178,9 +188,12 @@ class Setting extends CI_Controller
         $this->data['frame'] = $this->beeframeModel->getData($id);
         $this->data['hives'] = $this->beeframeModel->getAvailableHive();
 
-    		$this->load->view('theme/nonlogin/header');
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_frame_form', $this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     public function updateFrame($id, $insert = array())
@@ -215,12 +228,15 @@ class Setting extends CI_Controller
 
     public function listQueen()
     {
-        $this->data['queens'] = $this->queenModel->blist();
+        $this->data['queens'] = $this->queenModel->listData();
         // $this->data['hives'] = $this->queenModel->getAvailableHive();
 
-    		$this->load->view('theme/nonlogin/header');
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_queen_list', $this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     public function formEditQueen($id)
@@ -229,9 +245,12 @@ class Setting extends CI_Controller
         $this->data['queen'] = $this->queenModel->getData($id);
         $this->data['hives'] = $this->queenModel->getAvailableHive();
 
-    		$this->load->view('theme/nonlogin/header');
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_queen_form', $this->data);
-    		$this->load->view('theme/nonlogin/footer');
+    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('theme/footer', $this->data);
     }
 
     public function newQueen($insert = array())
