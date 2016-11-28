@@ -12,6 +12,7 @@ class Setting extends CI_Controller
         $this->load->library('session');
         $this->load->model('beehiveModel','',TRUE);
         $this->load->model('beeframeModel','',TRUE);
+        $this->load->model('queenModel','',TRUE);
     }
 
     public function hive($id = null)
@@ -74,10 +75,41 @@ class Setting extends CI_Controller
         throw new Exception("Invalid Request: missing frame ID", 1);
     }
 
+    public function queen($id = null)
+    {
+        $listAction = empty($id);
+        $hasPostRequest = !empty($this->input->post());
+        $newQueenAction = $hasPostRequest==true && empty($id);
+        $updateQueenAction = $hasPostRequest==true && !empty($id);
+        $displayFormAction = $listAction==false && $hasPostRequest==false;
+
+        $this->data['flash_type'] = $this->session->flashdata('flash.type');
+        $this->data['flash_message'] = $this->session->flashdata('flash.message');
+
+        if ($newQueenAction) {
+            return $this->newQueen($this->input->post());
+        }
+
+        if ($updateQueenAction) {
+            return $this->updateQueen($id, $this->input->post());
+        }
+
+        if ($listAction) {
+            return $this->listQueen();
+        }
+
+        if ($displayFormAction) {
+            return $this->formEditQueen($id);
+        }
+
+        throw new Exception("Invalid Request: missing frame ID", 1);
+    }
+
     private function listHive()
     {
         $this->data['hives'] = $this->beehiveModel->list();
         $this->data['frames'] = $this->beeframeModel->countFrame();
+        $this->data['queens'] = $this->queenModel->mapHiveWithQueen();
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_list',$this->data);
@@ -89,7 +121,7 @@ class Setting extends CI_Controller
         $this->data['hive_id'] = $id;
         $this->data['hive'] = $this->beehiveModel->getData($id);
         $this->data['frames'] = $this->beeframeModel->getFrameFromHive($id);
-        // $this->data['display_hive_info'] = 1;
+        $this->data['queen'] = $this->queenModel->getQueenFromHive($id);
 
     		$this->load->view('theme/nonlogin/header');
     		$this->load->view('setting_hive_form', $this->data);
@@ -178,4 +210,56 @@ class Setting extends CI_Controller
             header('Location: /setting/hive/' . $id);
         }
     }
+
+    public function listQueen()
+    {
+        $this->data['queens'] = $this->queenModel->list();
+        // $this->data['hives'] = $this->queenModel->getAvailableHive();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_queen_list', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
+    }
+
+    public function formEditQueen($id)
+    {
+        $this->data['queen_id'] = $id;
+        $this->data['queen'] = $this->queenModel->getData($id);
+        $this->data['hives'] = $this->queenModel->getAvailableHive();
+
+    		$this->load->view('theme/nonlogin/header');
+    		$this->load->view('setting_queen_form', $this->data);
+    		$this->load->view('theme/nonlogin/footer');
+    }
+
+    public function newQueen($insert = array())
+    {
+        try {
+            $id = $this->queenModel->insertData($insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลกล่องนางพญารหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive/' . $insert['beehive_id']);
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/queen/');
+        }
+    }
+
+    public function updateQueen($id, $insert = array())
+    {
+        try {
+            $this->queenModel->updateData($id, $insert);
+
+            $this->session->set_flashdata('flash.type', 'success');
+            $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลนางพญารหัส ' . $id . ' สำเร็จ');
+            header('Location: /setting/hive/' . $insert['beehive_id']);
+        } catch (Exception $e) {
+            $this->session->set_flashdata('flash.type', 'error');
+            $this->session->set_flashdata('flash.message', $e->getMessage());
+            header('Location: /setting/queen');
+        }
+    }
+
 }

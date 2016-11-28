@@ -1,10 +1,9 @@
 <?php
-$hive_id = isset($hive_id) ? $hive_id : null;
-$beehive_id = isset($hive->BEE_HIVE_ID) ? $hive->BEE_HIVE_ID : null;
-$expired_date = isset($hive->EXPIRED_DATE) ? $hive->EXPIRED_DATE : null;
-$start_date = isset($hive->STARTDATE) ? $hive->STARTDATE : null;
-$end_date = isset($hive->ENDDATE) ? $hive->ENDDATE : null;
-$status = isset($hive->STATUS) ? $hive->STATUS : null;
+$hives = isset($hives) ? $hives : array();
+$queen_id = isset($queen_id) ? $queen_id : null;
+$beehive_id = isset($queen->BeeHive_BEE_HIVE_ID) ? $queen->BeeHive_BEE_HIVE_ID : null;
+$expired_date = isset($queen->EXPIRED_DATE) ? $queen->EXPIRED_DATE : null;
+$status = isset($queen->STATUS) ? $queen->STATUS : null;
 ?>
 
 <?php if(!empty($flash_type)): ?>
@@ -14,27 +13,30 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
   </div>
 <?php endif; ?>
 
-<form action="<?php echo base_url() . 'setting/hive/' . $hive_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
+<form action="<?php echo base_url() . 'setting/queen/' . $queen_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
 
   <span class="section">
-    <?php echo empty($hive_id) ? 'เพิ่มกล่องรังผึ้ง' : 'แก้ไขข้อมูลกล่องรังผึ้ง'; ?>
+    <?php echo empty($queen_id) ? 'เพิ่มนางพญา' : 'แก้ไขข้อมูลนางพญา'; ?>
   </span>
 
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-      รหัสรังผึ้ง<span class="required">*</span>
+      รังผึ้ง<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="text" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly disabled' : ''; ?>>
-    </div>
-  </div>
-
-  <div class="item form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-      รหัสนางพญา
-    </label>
-    <div class="col-md-6 col-sm-6 col-xs-12">
-      <?php echo !empty($queen) ? $queen->QUEEN_ID : "-"; ?>
+      <?php if (isset($hive_id)): ?>
+        <input class="form-control col-md-7 col-xs-12" type="text" name="beehive_id" id="beehive_id" value="<?php echo $hive_id; ?>" readonly>
+      <?php else: ?>
+      <select id="beehive_id" name="beehive_id" class="form-control" required="required">
+        <option value="">เลือกรังผึ้ง</option>
+        <?php foreach($hives as $hive): $available[] = $hive->BEE_HIVE_ID; ?>
+          <option value="<?php echo $hive->BEE_HIVE_ID; ?>" <?php echo $beehive_id==$hive->BEE_HIVE_ID ? 'selected' : ''; ?>><?php echo $hive->BEE_HIVE_ID; ?></option>
+        <?php endforeach; ?>
+        <?php if (!in_array($beehive_id, $available) && !empty($beehive_id)): ?>
+          <option value="<?php echo $beehive_id; ?>" selected><?php echo $beehive_id; ?></option>
+        <?php endif; ?>
+      </select>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -49,34 +51,14 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
 
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-      สถานะรังผึ้ง<span class="required">*</span>
+      สถานะนางพญา<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
       <select id="status" name="status" class="form-control" required="required">
         <option value="">เลือกสถานะ</option>
+        <option <?php echo $status=='ใช้งาน' ? 'selected' : ''; ?> value="ใช้งาน">ใช้งาน</option>
         <option <?php echo $status=='เพาะ' ? 'selected' : ''; ?> value="เพาะ">เพาะ</option>
-        <option <?php echo $status=='ว่าง' ? 'selected' : ''; ?> value="ว่าง">ว่าง</option>
-        <option <?php echo $status=='เก็บน้ำผึ้ง' ? 'selected' : ''; ?> value="เก็บน้ำผึ้ง">เก็บน้ำผึ้ง</option>
-        <option <?php echo $status=='หมดอายุ' ? 'selected' : ''; ?> value="หมดอายุ">หมดอายุ</option>
       </select>
-    </div>
-  </div>
-
-  <div class="item form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-      วันที่เริ่มต้นสถานะ<span class="required">*</span>
-    </label>
-    <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12 input-date" id="start_date" name="start_date" required="required" type="text" value="<?php echo $start_date; ?>">
-    </div>
-  </div>
-
-  <div class="item form-group">
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
-      วันที่สิ้นสุดสถานะ<span class="required">*</span>
-    </label>
-    <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12 input-date" id="end_date" name="end_date" required="required" type="text" value="<?php echo $end_date; ?>">
     </div>
   </div>
 

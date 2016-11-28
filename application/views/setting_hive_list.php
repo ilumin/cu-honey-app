@@ -29,6 +29,7 @@
 			  <th>วันที่หมดอายุ</th>
 			  <th>สถานะรังผึ้ง</th>
 			  <th>จำนวนคอน</th>
+			  <th>รหัสนางพญา</th>
 			  <th>วันที่เริ่มต้นสถานะ</th>
 			  <th>วันที่สิ้นสุดสถานะ</th>
 			  <th>&nbsp;</th>
@@ -43,6 +44,7 @@
         <td><?php echo $hive->EXPIRED_DATE; ?></td>
         <td><?php echo $hive->STATUS; ?></td>
         <td><?php echo isset($frames[$hive->BEE_HIVE_ID]) ? $frames[$hive->BEE_HIVE_ID] : 0; ?></td>
+        <td><?php echo isset($queens[$hive->BEE_HIVE_ID]) ? $queens[$hive->BEE_HIVE_ID] : "-"; ?></td>
         <td><?php echo $hive->STARTDATE; ?></td>
         <td><?php echo $hive->ENDDATE; ?></td>
         <td>
