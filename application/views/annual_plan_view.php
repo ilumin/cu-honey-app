@@ -14,7 +14,6 @@
 	  </div>
 
 		<div class="x_content">
-		<form  action="<?php echo base_url(); ?>annual_plan/insert" method="post" >
 			<span class="section">Annual Plan <?php echo date('Y', strtotime('+1 year'));?></span>
 		  <div class="item">
 			<label class="control-label col-md-4 col-sm-3 col-xs-12" for="name">ความสามารถในการเก็บน่ำผึ้ง
@@ -34,8 +33,7 @@
 			<label class="control-label col-md-4 col-sm-3 col-xs-12" for="name">จำนวนรังผึ้ง On Process
 			</label>
 			<div class="col-md-2 col-sm-6 col-xs-12">
-			<?php $hiveonprocess = $config['CAP_HARVEST_HONEY']*$config['ROUND_HARVEST']; ?>
-				<input width="30" type="text" name="hive_on_process" value="<?php echo $hiveonprocess;?>" /> 
+				<?php echo $config['BEEHIVE_ON_PROCESS'];?>
 			</div>
 		  </div>	
 			
@@ -147,15 +145,19 @@
 		
 			<td colspan="6" align="right"><strong>จำนวนรังผึ้งที่คาดว่าจะใช้แต่ละเดือน</strong></td>
 			<?php for($i=1; $i<=12;$i++){?>
-			<td><strong <?php if($hive_month[$i] < $hiveonprocess){ echo ' class="red" ';} ?>><?php echo $hive_month[$i];?></strong></td>
+			<td><strong><?php echo $hive_month[$i];?></strong></td>
+			<?php } ?>
+		</tr>
+		<tr class="bor-top">
+		
+			<td colspan="6" align="right"><strong>จำนวนรังผึ้งที่ต้องทำต่อเดือน</strong></td>
+			<?php for($i=1; $i<=12;$i++){?>
+			<td><strong <?php if($hive_month[$i] < $config['BEEHIVE_ON_PROCESS']){ echo ' class="red" ';} ?> ><?php echo $summary_info['hive_process_month'][$i];?></strong></td>
 			<?php } ?>
 		</tr>
 		  </tbody>
 		</table>
-		
-			<input type="hidden" name= "hive_month" value="<?php echo implode(",",$hive_month);?>">
-			<button id="send" type="submit" class="btn btn-success">ยืนยันการสร้าง Annual Plan <?php echo date('Y', strtotime('+1 year'));?></button>
-		</form>
+	
 		
 	  </div>
 	</div>

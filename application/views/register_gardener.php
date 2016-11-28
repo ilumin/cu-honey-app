@@ -162,6 +162,6 @@
       });
 
 
-	  $('#wizard').smartWizard();
+	  
     </script>
     <!-- /validator -->
