@@ -1,3 +1,6 @@
+<div class="row right_col">
+<div class="col-md-12 col-sm-12 col-xs-12">
+
 <?php
 $hive_id = isset($hive_id) ? $hive_id : null;
 $beehive_id = isset($hive->BEE_HIVE_ID) ? $hive->BEE_HIVE_ID : null;
@@ -139,3 +142,6 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
   });
 
 </script>
+
+</div>
+</div>
