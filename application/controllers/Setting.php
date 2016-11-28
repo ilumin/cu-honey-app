@@ -110,6 +110,7 @@ class Setting extends CI_Controller
 
     public function listHive()
     {
+        $this->data['action'] = 'list-hive';
         $this->data['hives'] = $this->beehiveModel->listData();
         $this->data['frames'] = $this->beeframeModel->countFrame();
         $this->data['queens'] = $this->queenModel->mapHiveWithQueen();
@@ -124,6 +125,7 @@ class Setting extends CI_Controller
 
     public function formEditHive($id)
     {
+        $this->data['action'] = 'form-hive';
         $this->data['hive_id'] = $id;
         $this->data['hive'] = $this->beehiveModel->getData($id);
         $this->data['frames'] = $this->beeframeModel->getFrameFromHive($id);

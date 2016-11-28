@@ -143,7 +143,11 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
 
 </script>
 
-<?php include 'setting_frame_list.php'; ?>
+<?php
+if ($action != 'list-hive') {
+  include 'setting_frame_list.php';
+}
+?>
 
 </div>
 </div>
