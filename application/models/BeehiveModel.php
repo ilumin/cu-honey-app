@@ -6,7 +6,7 @@ class BeehiveModel extends CI_Model
         $this->load->database();
     }
 
-    public function blist()
+    public function listData()
     {
         return $this->db->get('beehive')->result();
     }
