@@ -25,7 +25,8 @@ class annual_model extends CI_Model {
 			G.STATUS ='APPROVE' AND
 			F.FLOWER_ID = GF.Flower_FLOWER_ID AND
 			G.GARDEN_ID=GF.Garden_GARDEN_ID AND
-			G.PROVINCE_ID= P.PROVINCE_ID
+			G.PROVINCE_ID= P.PROVINCE_ID AND
+			G.GARDEN_TYPE = 'MEMBER'
 			ORDER BY G.GARDEN_ID ASC, FLOWER_ID ASC
 		";
 		$query = $this->db->query($sql);

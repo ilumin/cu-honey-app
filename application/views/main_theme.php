@@ -3,29 +3,27 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
-          <div class="row tile_count">
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-stack-exchange"></i> จำนวนรังผึ้งรวมทั้งหมด</span>
-              <div class="count"><?php echo $honey_sum['total_hive']?></div>
-            </div>
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-clock-o"></i> จำนวนรังผึ้งที่กำลังทำงาน</span>
-              <div class="count blue"><?php echo $honey_sum['onprogress_hive']?></div>
-              
-            </div>
-           
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-stack-exchange"></i> รังผึ้งที่กำลังเพาะ</span>
-              <div class="count green"><?php echo $honey_sum['cure_hive']?></div>
-            </div>
-           
-            <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-stack-exchange"></i> รังที่หมดอายุเดือนนี้</span>
-              <div class="count red"><?php echo $honey_sum['expired_hive']?></div>
-            </div>
-			
-			
-          </div>
+			<div class="row tile_count">
+				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+				  <span class="count_top"><i class="fa fa-stack-exchange"></i> จำนวนรังผึ้งรวมทั้งหมด</span>
+				  <div class="count"><?php echo $hive_summary['TOTAL'] ?></div>
+				</div>
+				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+				  <span class="count_top"><i class="fa fa-clock-o"></i> จำนวนรังผึ้งที่กำลังทำงาน</span>
+				  <div class="count blue"><?php echo ($hive_summary['TOTAL']-$hive_summary['เพาะ']) ?></div>
+				  
+				</div>
+			   
+				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+				  <span class="count_top"><i class="fa fa-stack-exchange"></i> รังผึ้งที่กำลังเพาะ</span>
+				  <div class="count green"><?php echo $hive_summary['เพาะ'] ?></div>
+				</div>
+			   
+				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
+				  <span class="count_top"><i class="fa fa-stack-exchange"></i> รังที่หมดอายุเดือนหน้า</span>
+				  <div class="count red"><?php echo $hive_summary['EXPIRED'] ?></div>
+				</div>
+			</div>
  
           <div class="row">
             

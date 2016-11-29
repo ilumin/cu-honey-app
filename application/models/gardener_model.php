@@ -33,10 +33,10 @@ class gardener_model extends CI_Model {
 		return $data;
 
 	}
-	public function garden_info($member_id){
+	public function garden_info($member_id,$type="MEMBER"){
 
 
-		$query = $this->db->query('SELECT * from GARDEN WHERE GARDENER_ID='.$member_id);
+		$query = $this->db->query('SELECT * from GARDEN WHERE GARDEN_TYPE="'.$type.'" AND GARDENER_ID='.$member_id);
 		$data= $query->row_array();
 		return $data;
 

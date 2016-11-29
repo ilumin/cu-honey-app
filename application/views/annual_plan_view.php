@@ -14,7 +14,7 @@
 	  </div>
 
 		<div class="x_content">
-			<span class="section">Annual Plan <?php echo date('Y', strtotime('+1 year'));?></span>
+			<span class="section">Annual Plan <?php echo $year?></span>
 		  <div class="item">
 			<label class="control-label col-md-4 col-sm-3 col-xs-12" for="name">ความสามารถในการเก็บน่ำผึ้ง
 			</label>

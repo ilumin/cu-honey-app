@@ -33,6 +33,14 @@ class Main extends CI_Controller {
 		//$this->load->view('');
 		//$this->load->view('welcome_message');
 		$data = $this->member_model->get_data();
+		$this->load->model('action_model');
+		$data_show['HIVE_STATUS'] = $this->action_model->summary_hive();
+		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired(11,2016);
+		
+		$this->load->library('action_plan_library');
+		$data['hive_summary']=$this->action_plan_library->summary_hive($data_show);
+		
+		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);

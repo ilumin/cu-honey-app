@@ -1,12 +1,14 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class annual_plan extends CI_Controller {
+class action_plan extends CI_Controller {
 	public $data;
 	function __construct()
 	 {
 	   parent::__construct();
 	   $this->load->model('member_model','',TRUE);
+	   $this->current_month =date('m',strtotime(TODAY_DATE));
+	   $this->current_year = date('Y',strtotime(TODAY_DATE));
 	   
 	 }
 	/**
@@ -26,30 +28,7 @@ class annual_plan extends CI_Controller {
 	 */
 	private function get_data()
 	{
-		$email ="yippadedoda@gmail.com";
-		$password = "1234";
-		$this->load->model('beekeeper_model');
-		$bee_keeper_id=1;
-		$bee_keeper_info = $this->beekeeper_model->check_login($email,md5($password));
-		
-		if( is_null($bee_keeper_info) == false){
-			$data['account_info'] = array('account_id'=>$bee_keeper_info['BEE_KEEPER_ID'], 'account_name' => $bee_keeper_info['FIRSTNAME'] , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
-			//var_dump($bee_keeper_info);
-		}
-	
-		
-		//$data['account_info'] = array('account_id'=>2, 'account_name' => 'Admin' , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
-		$data['honey_sum'] = array('total_hive'=>168, 'onprogress_hive'=>120, 'cure_hive'=>48,'expired_hive'=>10);
-
-		$data['get_notification'][0] = array('account_id'=>1, 'account_name' => 'ลุงสร' , 'type'=>'orchardmen','account_picture'=> base_url().'img/account/1.png','status'=>'ได้แจ้งดอกไม้บานวันที่ 15/11/2016');
-		$data['get_notification'][1] = array('account_id'=>2, 'account_name' => 'Admin' , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png','status'=>'ตรวจสอบดอกไม้บาน ');
-		$data['get_notification'][2] = array('account_id'=>3, 'account_name' => 'นายพงษ์' , 'type'=>'orchardmen','account_picture'=> base_url().'img/account/3.png','status'=>'ยังไม่มีการแจ้งดอกไม้บาน');
-		$data['get_notification'][3] = array('account_id'=>4, 'account_name' => 'สมศรี' , 'type'=>'orchardmen','account_picture'=> base_url().'img/account/4.png','status'=>'ยังไม่มีการแจ้งดอกไม้บาน');
-
-		$data['todo'] = array('ลำไยสวนใหญ่  ยังไม่ได้ทำการแจ้งดอกไม้บาน','สวนศิลสุนทร  ยังไม่ได้ทำการแจ้งดอกไม้บาน');
-		
-	
-	return $data;
+		return $this->member_model->get_data();
 	}
 	
 	public function index()
@@ -58,17 +37,94 @@ class annual_plan extends CI_Controller {
 		//start_Date <= EndDateOfMonth And EndDate >=StartDateOfMonth
 		$data = $this->get_data();
 		$this->load->model('annual_model');
-		$this->load->model('gardener_model');
+		$this->load->model('action_model');
 		
 		
-		$data['annual_list']=$this->annual_model->annual_info_list();
+		$data_show['HIVE_STATUS'] = $this->action_model->summary_hive();
+		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired(11,2016);
+		
+		$this->load->library('action_plan_library');
+		$data['hive_summary']=$this->action_plan_library->summary_hive($data_show);
+		
+		//echo $data['hive_summary']['TOTAL']; exit();
 		
 		
+		$month_forward= 3;
+		$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$month_forward);
+		
+		
+		$this->load->library('annual_plan_library');	
+		for($i=$this->current_year ; $i<=$date_calc['year'] ;$i++){
+			$data['annual_info']=$this->annual_model->annual_info_list_db($i);
+			$data['config']=$this->annual_model->annual_info_db($i);
+			$summary_hive[$i]=$this->annual_plan_library->summary_hive_month($data['annual_info'],$data['config']['BEEHIVE_ON_PROCESS']);
+		}
+		
+		$data['bee_queen_on_process'][0] = $data['hive_summary']['TOTAL']-$data['hive_summary']['เพาะ'];
+		for($i=0; $i<4; $i++){
+			
+			// Past 2 Month	
+			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i-2);
+			$data['bee_queen_raise_complete'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			
+			
+			// Past Month	
+			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i-1);
+			$data['bee_queen_raise_2month'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			
+			
+			// Current Month	
+			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i);
+			$data['bee_hive_using'][$i]=$this->action_model->bee_hive_using('เก็บน้ำผึ้ง',$date_calc['month'],$date_calc['year']);
+			$data['bee_annual'][$i]=$summary_hive[$date_calc['year']]['hive_process_month'][$date_calc['month']];
+			$data['month_txt'][$i] = date('M-Y',strtotime($date_calc['year']."-".$date_calc['month']."-1"));
+			$data['bee_queen_raise_1month'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			
+			
+			// Next Month
+			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i+1);
+			$data['bee_hive_expired'][$i]=$this->action_model->bee_hive_expired($date_calc['month'],$date_calc['year']);
+			$data['bee_con_expired'][$i]=$this->action_model->bee_con_expired($date_calc['month'],$date_calc['year']);
+			$data['bee_queen_expired'][$i]=$this->action_model->bee_queen_expired($date_calc['month'],$date_calc['year']);	
+			
+			
+			
+			
+			if($i>0){
+				$data['bee_queen_on_process'][$i]=$data['hive_summary']['TOTAL']-$data['bee_hive_expired'][$i]['AMOUNT'];
+			}
+			
+			$data['need_hive'][$i]=0;
+			$need_hive = $data['bee_annual'][$i] - $data['bee_queen_on_process'][$i];
+			if($need_hive>0){
+				$data['need_hive'][$i] = $need_hive;
+			}
+			//var_dump($date_calc);
+		}
+		
+		//var_dump($data['bee_queen_expired']);
+		
+		for($i=0; $i<4;$i++){
+			if($i>0){
+				if($data['bee_queen_raise_1month'][$i]['AMOUNT'] == false){
+					$data['bee_queen_raise_1month'][$i] = $data['bee_queen_expired'][$i-1];
+				}
+
+				if($data['bee_queen_raise_2month'][$i]['AMOUNT'] == false){
+					$data['bee_queen_raise_2month'][$i] = $data['bee_queen_raise_1month'][$i-1];
+					
+				}
+				if($data['bee_queen_raise_complete'][$i]['AMOUNT'] == false){
+					$data['bee_queen_raise_complete'][$i] = $data['bee_queen_raise_2month'][$i-1];
+				}
+			}
+			
+		}
 		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
-		$this->load->view('annual_plan_list', $data);
+		$this->load->view('action_plan', $data);
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
