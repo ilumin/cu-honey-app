@@ -31,17 +31,24 @@ class operation_plan extends CI_Controller {
 	
 	public function index()
 	{
+		$data = $this->get_data();
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
-		$this->load->view('action_plan', $data);
+		$this->load->view('operation_plan', $data);
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 		
 	}
 	
 	public function blooming(){
-		
+		$data = $this->get_data();
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('blooming', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('theme/footer', $data);
 	}
 	
 }

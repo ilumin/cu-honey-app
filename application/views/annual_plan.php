@@ -1,10 +1,4 @@
-<style>
-.table-bordered>tbody>tr.bor-top>td{
-	border-top: 2px solid #000;
-}
-</style>
-
-<div class="row right_col">
+<div  class="right_col" role="main">
 <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
 	  <div class="x_title">

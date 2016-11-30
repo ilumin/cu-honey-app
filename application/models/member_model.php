@@ -10,10 +10,13 @@ class member_model extends CI_Model {
 	  if($email != FALSE && $password != FALSE) {
 		$query = $this->db->get_where('beekeeper', array('EMAIL' => $email,'PASSWORD'=>$password));
 		$data= $query->row_array();
-		//var_dump($data);
+		
 		if(is_null($data)== true){
+	
 			$query = $this->db->get_where('gardener', array('EMAIL' => $email,'PASSWORD'=>$password));
 			$data= $query->row_array();
+			
+			
 		}
 		if(isset($data['BEE_KEEPER_ID'])){
 			$data['id'] = $data['BEE_KEEPER_ID'];
@@ -31,6 +34,7 @@ class member_model extends CI_Model {
 		return FALSE;
 	  }
 	}
+
 	
 	
 	public function get_data()

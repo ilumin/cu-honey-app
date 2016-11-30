@@ -2,11 +2,11 @@
 <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
 	  <div class="x_title">
-		<h2>รายชื่อชาวสวน</h2>
+		<h2>ข้อมูลชาวสวน</h2>
 		<div class="title_right">
-			<div class="col-md-3 col-sm-3 col-xs-12 form-group pull-right top_search">
+			<div class="col-md-2 col-sm-2 col-xs-12 form-group pull-right top_search">
 			  <div class="input-group">
-				<a  class="btn btn-primary" href="<?php echo base_url();?>main/member_list">กลับไปยังหน้ารายการสมาชิกชาวสวน</a>
+				<a  class="btn btn-primary" href="<?php echo base_url();?>member/edit_profile">แก้ไข</a>
 			  </div>
 			</div>
 		</div>
@@ -15,7 +15,7 @@
 		
 	  <div class="x_content">
 		
-	  <form method="post" action="<?php echo base_url();?>main/member_update_flower" class="form-horizontal form-label-left" novalidate>
+	
 						<div id="step1">
 					   
 						  <span class="section">ข้อมูลส่วนตัว</span>
@@ -87,6 +87,10 @@
 							</div>
 						  </div>
 						  <div class="clearfix"></div>
+							
+					  </div>
+					  
+                  <div class="clearfix"></div>
 							<span class="section">ข้อมูลพืชมีดอกที่ปลูกในสวน</span>
 							<h4 class="red">เลือกพืชที่ปลูกในสวน  (อย่างน้อย 1 รายการ)</h4>
 							<table class="table">
@@ -131,14 +135,14 @@
 									
 									
 								}
-								
+								if($check_plant !=""){
 								?>
 									<tr>
 										<th scope="row">
 											<label><input  name="plant[]" type="checkbox" <?php if($i==1){echo ' data-parsley-mincheck="1" required ';}?> value="<?php echo $flower[$i]['FLOWER_ID'];?>" class="flat" <?php echo $check_plant;?>>  <?php echo $flower[$i]['FLOWER_NAME']?></label>
 										</th>
 										<td>
-										  <input style="width: 80px;" type="number"  name="area<?php echo $flower[$i]['FLOWER_ID'];?>"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $check_area;?>" >
+										 <?php echo $check_area;?>
 										</td>
 										<td>
 											<label><input name="mix<?php echo $flower[$i]['FLOWER_ID'];?>" type="checkbox" value="<?php echo $flower[$i]['FLOWER_ID'];?>" class="flat checkbox_check" <?php echo $check_mix;?> > ปลูกผสมกับ</label>
@@ -147,39 +151,27 @@
 									  
 									  
 									  <?php 
-									  //echo $check_mix_plant;
-									  $select_plant= '<select name="mix_plant'.$flower[$i]['FLOWER_ID'].'" >	<option value="-">เลือกพืชที่ปลูกผสม</option>';
+
 										for($j=0; $j<count($flower); $j++){
-											$selected ="";
+										
 											if($flower[$i]['FLOWER_ID'] != $flower[$j]['FLOWER_ID']  ){
-												if($flower[$j]['FLOWER_ID'] == $check_mix_plant){ $selected = 'selected ="selected"'; }
-												$select_plant.= '<option '.$selected.' value= "'.$flower[$j]['FLOWER_ID'].'">'.$flower[$j]['FLOWER_NAME'].'</option>';
+												if($flower[$j]['FLOWER_ID'] == $check_mix_plant){ echo $flower[$i]["FLOWER_NAME"]; }
+												
 											}
 										}
-										$select_plant.= '</select  >';
-									  echo $select_plant;
+									
 									  
 									  ?>
 									  </td>
-									  <td><input style="width: 80px;" type="number" name="amount_hive<?php echo $flower[$i]['FLOWER_ID'];?>"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $check_hive_no;?>"/></td>
+									  <td><?php echo $check_hive_no;?></td>
 									</tr>
 									
-							<?php } ?>
+								<?php 
+									}
+								} 
+								?>
 								  </tbody>
 								</table>
-							  <div class="clearfix"></div>
-						 <div class="ln_solid"></div>
-						  <div class="form-group">
-							<div class="col-md-6 col-md-offset-3">
-								<input type="hidden" name="gardener_id" value="<?php echo $gardener_info['GARDENER_ID'];?>" />
-								<input type="hidden" name="garden_id" value="<?php echo $garden['GARDEN_ID'];?>" />
-							  <button type="submit" class="btn btn-primary">Cancel</button>
-							  <button id="send" type="submit" class="btn btn-success">บันทีกข้อมูลสวน</button>
-							</div>
-						  </div>
-					  </div>
-					  
-                    </form>
 		
 	  </div>
 	</div>

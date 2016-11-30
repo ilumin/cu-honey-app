@@ -15,6 +15,12 @@ class Member extends CI_Controller {
 		$this->load->view('theme/nonlogin/footer');
 
 	 }
+	public function logout()
+	 {
+	   $this->session->unset_userdata('logged_in');
+	   session_destroy();
+	   redirect('member/login', 'refresh');
+	 }
 	public function check_login(){
 
 		$this->load->library('form_validation');
@@ -32,7 +38,7 @@ class Member extends CI_Controller {
 			$this->load->view('theme/nonlogin/footer');
 
 		}else{
-
+			
 			redirect('main', 'refresh');
 		}
 
@@ -47,11 +53,11 @@ class Member extends CI_Controller {
 
 	   //query the database
 	   $result = $this->member_model->check_login($username, $password);
-		//var_dump($result);
+
 	   if(is_null($result) == false)
 	   {
 		$data_session = array('id'=>$result['id'],'name'=>$result['FIRSTNAME'],'email'=>$result['EMAIL'],'type'=>$result['type']);
-		$this->session->set_userdata('logged_in', $result);
+		$this->session->set_userdata('logged_in', $data_session);
 
 		 return TRUE;
 	   }
@@ -111,6 +117,79 @@ class Member extends CI_Controller {
 		$this->load->view('theme/nonlogin/header');
 		$this->load->view('register_gardener2',$data);
 		$this->load->view('theme/nonlogin/footer');
+	}
+	private function get_data()
+	{
+		return $this->member_model->get_data();
+	}
+	
+	
+//MEMBER GARDENER	
+	public function profile(){
+		$data = $this->get_data();
+		
+		$user = $this->session->userdata('logged_in');
+		$id = $user['id'];
+	
+		$this->load->model('gardener_model','',TRUE);
+		$data['gardener_info'] = $this->gardener_model->gardener_info($id);
+		
+		//get flower table
+		$flower = $this->gardener_model->get_flower();
+		$data['flower'] = $flower;
+		//get garden info
+		$garden = $this->gardener_model->garden_info($id);
+		$data['garden'] = $garden;
+
+		//get flower in garden info
+		$gardenflower = $this->gardener_model->gardenflower_info($garden['GARDEN_ID']);
+		$data['gardenflower'] = $gardenflower;
+
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/gardener/left_bar', $data);
+		$this->load->view('theme/gardener/nav',$data);
+		$this->load->view('gardener_profile', $data);
+		$this->load->view('theme/gardener/footer_js', $data);
+		$this->load->view('theme/gardener/footer', $data);
+	}
+
+	public function blooming(){
+		$data = array();
+		$data = $this->get_data();
+		
+		$user = $this->session->userdata('logged_in');
+		$id = $user['id'];
+		
+		$this->load->model('gardener_model','',TRUE);
+		$garden = $this->gardener_model->garden_info($id);
+		$data['garden'] = $garden;
+		
+		$this->load->model('gardener_model','',TRUE);
+		$data['flowers'] = $this->gardener_model->get_flower();
+		//$data['province'] = $this->gardener_model->province_near_by();
+
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/gardener/left_bar', $data);
+		$this->load->view('theme/gardener/nav',$data);
+		$this->load->view('gardener_blooming', $data);
+		$this->load->view('theme/gardener/footer_js', $data);
+		$this->load->view('theme/gardener/footer', $data);
+	}
+	public function bloomstatus(){
+		$data = array();
+		$this->load->model('gardener_model','',TRUE);
+		$data['flowers'] = $this->gardener_model->get_flower();
+		$data['province'] = $this->gardener_model->province_near_by();
+
+		$data = $this->get_data();
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/gardener/left_bar', $data);
+		$this->load->view('theme/gardener/nav',$data);
+		$this->load->view('gardener_bloomstatus', $data);
+		$this->load->view('theme/gardener/footer_js', $data);
+		$this->load->view('theme/gardener/footer', $data);
 	}
 
 }

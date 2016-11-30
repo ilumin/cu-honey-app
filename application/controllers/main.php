@@ -28,8 +28,10 @@ class Main extends CI_Controller {
 	public function index()
 	{
 		//$data = array('data','123');
-
-
+		$user = $this->session->userdata('logged_in');
+		if($user['type'] != "beekeeper"){
+			redirect('member/profile', 'refresh');	
+		}
 		//$this->load->view('');
 		//$this->load->view('welcome_message');
 		$data = $this->member_model->get_data();
@@ -49,12 +51,7 @@ class Main extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 	}
 
-	public function logout()
-	 {
-	   $this->session->unset_userdata('logged_in');
-	   session_destroy();
-	   redirect('member/login', 'refresh');
-	 }
+	
 	public function member_list(){
 		$data = $this->member_model->get_data();
 		$this->load->helper(array('form'));
