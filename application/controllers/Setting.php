@@ -14,6 +14,7 @@ class Setting extends CI_Controller
         $this->load->model('beeframeModel','',TRUE);
         $this->load->model('queenModel','',TRUE);
         $this->load->model('configModel','',TRUE);
+        $this->load->model('beekeeperModel','',TRUE);
         $this->load->model('member_model','',TRUE);
 
         $this->data = $this->member_model->get_data();
@@ -124,6 +125,25 @@ class Setting extends CI_Controller
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
         $this->load->view('setting_config',$this->data);
+        $this->load->view('theme/footer_js', $this->data);
+        $this->load->view('theme/footer', $this->data);
+    }
+
+    public function beekeeper()
+    {
+        $hasPostRequest = !empty($this->input->post());
+        if ($hasPostRequest) {
+            $this->beekeeperModel->updateData($this->input->post());
+            header('Location: /setting/config');
+        }
+
+        $this->data['field'] = $this->beekeeperModel->getField();
+        $this->data['config'] = $this->beekeeperModel->getAll();
+
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
+        $this->load->view('setting_beekeeper',$this->data);
         $this->load->view('theme/footer_js', $this->data);
         $this->load->view('theme/footer', $this->data);
     }
