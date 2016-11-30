@@ -15,6 +15,7 @@ class Setting extends CI_Controller
         $this->load->model('queenModel','',TRUE);
         $this->load->model('configModel','',TRUE);
         $this->load->model('beekeeperModel','',TRUE);
+        $this->load->model('parkModel','',TRUE);
         $this->load->model('member_model','',TRUE);
 
         $this->data = $this->member_model->get_data();
@@ -144,6 +145,40 @@ class Setting extends CI_Controller
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
         $this->load->view('setting_beekeeper',$this->data);
+        $this->load->view('theme/footer_js', $this->data);
+        $this->load->view('theme/footer', $this->data);
+    }
+
+    public function publicpark($id = null)
+    {
+        $hasId = !empty($id);
+        $hasPostRequest = !empty($this->input->post());
+
+        if ($hasId && $hasPostRequest) {
+            $this->parkModel->updateData($id, $this->input->post());
+            header('Location: /setting/publicpark');
+        }
+
+        if ($hasPostRequest) {
+            $this->parkModel->insertData($this->input->post());
+            header('Location: /setting/publicpark');
+        }
+
+        $this->data['park_id'] = $id;
+
+        if ($hasId) {
+            $this->data['park_edit'] = $this->parkModel->getData($id);
+        }
+        else {
+            $this->data['parks'] = $this->parkModel->getAll();
+        }
+
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
+
+        $this->load->view('setting_park',$this->data);
+
         $this->load->view('theme/footer_js', $this->data);
         $this->load->view('theme/footer', $this->data);
     }
