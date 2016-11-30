@@ -164,6 +164,8 @@ class Setting extends CI_Controller
             header('Location: /setting/publicpark');
         }
 
+        $user = $this->member_model->getUser();
+        $this->data['gardener_id'] = isset($user['id']) ? $user['id'] : null;
         $this->data['park_id'] = $id;
 
         if ($hasId) {

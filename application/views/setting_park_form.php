@@ -16,6 +16,8 @@ $province = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
         <?php endif; ?>
     </span>
 
+    <input type="hidden" name="garbdener_id" value="<?php echo $gardener_id; ?>">
+
     <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
             ชื่อสวน<span class="required">*</span>

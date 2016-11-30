@@ -10,6 +10,11 @@ class Member extends CI_Controller {
 	   $this->current_year = date('Y',strtotime(TODAY_DATE));
 	 }
 
+	 public function getUser()
+     {
+         return $this->session->userdata('logged_in');
+     }
+
 	public function login(){
 		$this->load->helper(array('form'));
 		$this->load->view('theme/nonlogin/header');
