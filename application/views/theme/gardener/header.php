@@ -33,6 +33,8 @@
     <link href="<?php echo base_url() ;?>gentelella-master/vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url() ;?>gentelella-master/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url() ;?>gentelella-master/vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
+	
+	
 	<style>
 .table-bordered>tbody>tr.bor-top>th,
 .table-bordered>tbody>tr.bor-top>td{

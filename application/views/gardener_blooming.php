@@ -17,26 +17,41 @@
                   <div class="x_content">
 					
 
-                    <form action="<?php echo base_url(); ?>member/register_submit" class="form-horizontal form-label-left" method="post" novalidate>
+                    <form action="<?php echo base_url(); ?>member/blooming_save" class="form-horizontal form-label-left" method="post" novalidate>
 						<div id="step1">
 
 						  <span class="section">กรุณากรอกข้อมูลให้ครบ</span>
 
 						  <div class="item form-group">
-							<label class="control-label col-md-3 col-sm-3 col-xs-12" >ชื่อสวน
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="flower">ชื่อสวน
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
 							 <?php echo $garden['NAME'];?>
-							 <input type="hidden" name="GARDEN_ID"  value="<?php echo $garden['GARDEN_ID']?>" />
+							 <input type="hidden" name="garden_id"  value="<?php echo $garden['GARDEN_ID']?>" />
 							</div>
 						  </div>
 						  <div class="item form-group">
 							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="flower">เลือกพืชที่บาน<span class="required">*</span>
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
+							
 							<?php
-							for($i=0; $i<count($flower); $i++){
+
+							if(count($flower_chosen) >0){
 								
+							?>
+								<select class="form-control" name="flower_id" > 
+							<?php
+								for($i=0;$i<count($flower_chosen);$i++){ 
+									?>
+									<option value="<?php echo $flower_chosen[$i]['FLOWER_ID'];?>|<?php echo $flower_chosen[$i]['PERIOD_BLOOM_DATE'];?>" ><?php echo $flower_chosen[$i]['FLOWER_NAME'];?></option>
+									<?php
+								}
+							?>
+								</select>
+							<?php	
+							} else {
+								echo "ไม่มีรายการดอกไม้บานให้เลือก"; 
 								
 							}
 							?>
@@ -46,14 +61,22 @@
 							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">เปอร์เซ็นต์การบานรอบนี้ <span class="required">*</span>
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
-							  <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+							 <select class="form-control" name="percent_blooming" >
+							 <?php
+								for($i=0;$i<=10;$i++){ 
+									?>
+									<option value="<?php echo 100-$i*10;?>" ><?php echo 100-$i*10;?>%</option>
+									<?php
+								}
+							?>
+							 </select>
 							</div>
 						  </div>
 						  <div class="item form-group">
 							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">วันที่คาดว่าดอกไม้บาน <span class="required">*</span>
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
-							  <input type="email" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12">
+							   <input id="blooming_date" name="blooming_date" class="date-picker form-control col-md-7 col-xs-12" required="required" type="text" value="<?php echo TODAY_DATE;?>">
 							</div>
 						  </div>
 						  

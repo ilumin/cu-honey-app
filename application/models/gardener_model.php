@@ -50,6 +50,21 @@ class gardener_model extends CI_Model {
 		return $data;
 
 	}
+	
+	public function garden_bloomingmonth($month,$garden_id){
+	$query = $this->db->query('SELECT *FROM FLOWER F ,GARDENFLOWER GF WHERE
+	(
+		(BLOOM_START_MONTH <= BLOOM_END_MONTH AND BLOOM_START_MONTH <='.$month.' AND BLOOM_END_MONTH >='.$month.')
+		OR 
+		(BLOOM_START_MONTH >BLOOM_END_MONTH AND ('.$month.'<= BLOOM_END_MONTH   OR '.$month.'>= BLOOM_START_MONTH) )
+	)
+		AND GF.FLOWER_FLOWER_ID = F.FLOWER_ID
+		AND GF.GARDEN_GARDEN_ID='.$garden_id);
+		
+	
+		$data= $query->result_array();
+		return $data;
+	}
 
 	public function gardenflower_insert($data){
 
@@ -59,12 +74,28 @@ class gardener_model extends CI_Model {
 		return $check;
 
 	}
+	public function insert_blooming($data){
+
+
+		$check = $this->db->insert('blooming', $data);
+
+		return $check;
+
+	}
+	public function blooming_info($garden_id){
+
+		$query = $this->db->query('SELECT * from BLOOMING AS B,FLOWER AS F WHERE  F.FLOWER_ID = B.FLOWER_FLOWER_ID AND B.Garden_GARDEN_ID='.$garden_id);
+		$data= $query->result_array();
+		return $data;
+
+	}
 	public function garderflower_delete($id){
 
 		$this->db->where('Garden_GARDEN_ID', $id);
 		$check_delete = $this->db->delete('gardenflower');
 		return $check_delete;
 	}
+	
 
   public function insert($data)
   {

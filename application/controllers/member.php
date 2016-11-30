@@ -6,6 +6,8 @@ class Member extends CI_Controller {
 	 {
 	   parent::__construct();
 	   $this->load->model('member_model','',TRUE);
+	   $this->current_month =date('m',strtotime(TODAY_DATE));
+	   $this->current_year = date('Y',strtotime(TODAY_DATE));
 	 }
 
 	public function login(){
@@ -130,7 +132,10 @@ class Member extends CI_Controller {
 		
 		$user = $this->session->userdata('logged_in');
 		$id = $user['id'];
-	
+		if($id==false){
+			redirect('member/login', 'refresh');
+			
+		}
 		$this->load->model('gardener_model','',TRUE);
 		$data['gardener_info'] = $this->gardener_model->gardener_info($id);
 		
@@ -157,7 +162,7 @@ class Member extends CI_Controller {
 	public function blooming(){
 		$data = array();
 		$data = $this->get_data();
-		
+		$data['flower_chosen'] =array();
 		$user = $this->session->userdata('logged_in');
 		$id = $user['id'];
 		
@@ -165,25 +170,58 @@ class Member extends CI_Controller {
 		$garden = $this->gardener_model->garden_info($id);
 		$data['garden'] = $garden;
 		
-		$this->load->model('gardener_model','',TRUE);
+		
 		$data['flowers'] = $this->gardener_model->get_flower();
 		//$data['province'] = $this->gardener_model->province_near_by();
+		
+		if(isset($data['garden']['GARDEN_ID'])){
+			$data['flower_chosen'] = $this->gardener_model->garden_bloomingmonth($this->current_month,$data['garden']['GARDEN_ID']);
+		}
 
+		$data['date_start'] = date('Y-m-d',strtotime(TODAY_DATE.' -3days'));
+		$data['date_end'] = date('Y-m-d',strtotime(TODAY_DATE.' +3days'));
 		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/gardener/left_bar', $data);
 		$this->load->view('theme/gardener/nav',$data);
 		$this->load->view('gardener_blooming', $data);
 		$this->load->view('theme/gardener/footer_js', $data);
+		$this->load->view('js/gardener_blooming', $data);
 		$this->load->view('theme/gardener/footer', $data);
+	}
+	
+	public function blooming_save(){
+		
+		$flower_info= explode("|",$this->input->post('flower_id'));
+		
+		$data_insert['Garden_GARDEN_ID']= $this->input->post('garden_id');
+		$data_insert['Flower_FLOWER_ID']= $flower_info[0];
+		$data_insert['BLOOMING_STARTDATE']= $this->input->post('blooming_date');
+		$data_insert['BLOOMING_ENDDATE']= date("Y-m-d",strtotime($this->input->post('blooming_date')." +".($flower_info[1]-1)."day"));
+		$data_insert['BLOOMING_PERCENT']= $this->input->post('percent_blooming');
+		$data_insert['BLOOMING_STATUS']= 'รอยืนยัน';
+		
+		$this->load->model('gardener_model','',TRUE);
+		$chk_insert = $this->gardener_model->insert_blooming($data_insert);
+		
+		if($chk_insert ==true ){
+			redirect('member/bloomstatus/');
+		}
 	}
 	public function bloomstatus(){
 		$data = array();
-		$this->load->model('gardener_model','',TRUE);
-		$data['flowers'] = $this->gardener_model->get_flower();
-		$data['province'] = $this->gardener_model->province_near_by();
-
 		$data = $this->get_data();
+		
+		
+		$user = $this->session->userdata('logged_in');
+		$id = $user['id'];
+		
+		$this->load->model('gardener_model','',TRUE);
+		$data['garden'] = $this->gardener_model->garden_info($id);
+		
+		
+		$data['blooming_info']=$this->gardener_model->blooming_info($data['garden']['GARDEN_ID']);
+		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/gardener/left_bar', $data);
 		$this->load->view('theme/gardener/nav',$data);

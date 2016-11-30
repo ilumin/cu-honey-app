@@ -16,5 +16,6 @@
     <!-- DateJS -->
     <script src="<?php echo base_url() ;?>gentelella-master/vendors/DateJS/build/date.js"></script>
 
+
     <!-- Custom Theme Scripts -->
     <script src="<?php echo base_url() ;?>gentelella-master/build/js/custom.min.js"></script><!-- footer content -->
