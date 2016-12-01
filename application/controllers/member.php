@@ -10,6 +10,11 @@ class Member extends CI_Controller {
 	   $this->current_year = date('Y',strtotime(TODAY_DATE));
 	 }
 
+	 public function getUser()
+     {
+         return $this->session->userdata('logged_in');
+     }
+
 	public function login(){
 		$this->load->helper(array('form'));
 		$this->load->view('theme/nonlogin/header');
@@ -85,29 +90,36 @@ class Member extends CI_Controller {
 	}
 
 	public function register_submit(){
-    try {
-      $this->load->model('gardener_model','',TRUE);
-      $this->gardener_model->insert($_POST);
+        try {
+            $this->load->model('gardener_model','',TRUE);
+            $this->gardener_model->insert($_POST);
 
-      // TODO: set user session here
+            $result = $this->member_model->check_login($_POST['email'], $_POST['password']);
+            $data_session = array(
+                'id'    => $result['id'],
+                'name'  => $result['FIRSTNAME'],
+                'email' => $result['EMAIL'],
+                'type'  => $result['type']
+            );
+            $this->session->set_userdata('logged_in', $data_session);
 
-      header("Location: /member/register2");
-    } catch (Exception $e) {
-      echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
-    }
+            header("Location: /member/register2");
+        } catch (Exception $e) {
+            echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
+        }
 	}
 
 	public function register_submit2(){
-    try {
-      // TODO: check user session here
-      $gardener_id = 1;
+        try {
+            $user = $this->getUser();
+            $gardener_id = isset($user['id']) ? $user['id'] : null;
 
-      $this->load->model('gardener_model','',TRUE);
-      $this->gardener_model->insert_garden($_POST, $gardener_id);
-      header("Location: /member/register2");
-    } catch (Exception $e) {
-      echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
-    }
+            $this->load->model('gardener_model','',TRUE);
+            $this->gardener_model->insert_garden($_POST, $gardener_id);
+            header("Location: /member/register2");
+        } catch (Exception $e) {
+            echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
+        }
 	}
 
 	public function register2(){
