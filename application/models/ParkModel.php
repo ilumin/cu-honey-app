@@ -46,12 +46,16 @@ class ParkModel extends CI_Model
 
     public function getData($id)
     {
+		
         return (array) $this->db->where('GARDEN_ID', $id)->get('garden')->row();
     }
 
     public function getAll()
     {
-        return (array) $this->db->where('GARDEN_TYPE', 'PUBLIC')->get('garden')->result();
+		$sql ="SELECT G.*, GF.AMOUNT_HIVE ,P.PROVINCE_NAME FROM GARDEN AS G,GARDENFLOWER AS GF,PROVINCE AS P WHERE G.GARDEN_TYPE= 'PUBLIC' AND GF.GARDEN_GARDEN_ID=G.GARDEN_ID AND  P.PROVINCE_ID = G.PROVINCE_ID";
+		$query = $this->db->query($sql);
+		$data= $query->result_array();
+		return $data;
     }
 
 }

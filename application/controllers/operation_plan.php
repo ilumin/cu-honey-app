@@ -33,6 +33,13 @@ class operation_plan extends CI_Controller {
 	public function index()
 	{
 		$data = $this->get_data();
+		$data['period_show'] =$period_show= 6;
+		$next_date= date('Y-m-d',strtotime(TODAY_DATE.' +'.$period_show.'days'));
+		$schedule_info = $this->operation_model->schedule_info(TODAY_DATE,$next_date);
+		
+		
+		$data['schedule_info'] =$schedule_info;
+		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
@@ -42,11 +49,18 @@ class operation_plan extends CI_Controller {
 		
 	}
 	
-	public function bloom(){
+	public function bloom($id=0){
 		$data = $this->get_data();
 		
-		
+		$data['garden_id'] = $id= intval($id);
+		if($id>0){
+			$data['public_park'] = $this->operation_model->get_hive_public_park_byID($id);
+		}else{
+			$data['public_park'] = $this->operation_model->get_hive_public_park();
+		}
+		//var_dump($data['public_park']);
 		$data['blooming_info'] = $this->operation_model->blooming_info();
+
 		
 		//var_dump($data['blooming_info']);
 		$this->load->view('theme/header', $data);
@@ -56,14 +70,17 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
-	
+	/* 
 	public function transport_hive_insert(){
 		
-		$data= $this->operation_model->hive_avaliable();
+		$start = 51;
+		$end = 40;
+		$data= $this->operation_model->hive_avaliable($start,$end);
+		//$data= $this->operation_model->hive_reserve();
 		var_dump($data);
-	
+		//exit();
 		for($i=0;$i<count($data);$i++){
-			$data_insert['Transport_TRANSPORT_ID'] = 1; // TO DO Will be revise to get last insert transport
+			$data_insert['Transport_TRANSPORT_ID'] = 4; // TO DO Will be revise to get last insert transport  --34
 			$data_insert['BeeHive_BEE_HIVE_ID']=$data[$i]['BEE_HIVE_ID'];
 			$chk_insert =  $this->operation_model->insert_hive_transportation_item($data_insert);
 			echo $chk_insert."<br />";
@@ -84,4 +101,70 @@ class operation_plan extends CI_Controller {
 		}		
 	}
 	
+	public function insert_harvest_honey(){
+		
+		$data= $this->operation_model->hive_avaliable();
+		$date_insert=array(	'2016-10-24',
+							'2016-10-27',
+							'2016-10-30',
+							'2016-11-02',
+							'2016-11-05',
+							'2016-11-08',
+							'2016-11-11',
+							'2016-11-14',
+							'2016-11-17',
+							'2016-11-20');
+		for($j=0;$j<count($date_insert);$j++){
+			$data_insert1['Garden_GARDEN_ID']=3;
+			$data_insert1['Flower_FLOWER_ID']=5;
+			$data_insert1['Blooming_BLOOMING_ID']=2;
+			$data_insert1['HARVEST_DATE']=$date_insert[$j];
+			$data_insert1['HONEY_AMOUNT']=0;
+			$insert_id=	$this->operation_model->insert_harvest($data_insert1);
+			
+			
+			
+			for($i=0;$i<count($data);$i++){
+				$data_insert['HarvestHoney_HARVEST_ID'] = $insert_id;
+				$data_insert['BeeHive_BEE_HIVE_ID']=$data[$i]['BEE_HIVE_ID'];
+				$data_insert['HARVEST_DATE`']=$data_insert1['HARVEST_DATE'];
+				$data_insert['STATUS`']='จอง';
+				
+				$chk_insert =  $this->operation_model->insert_harvest_item($data_insert);
+				
+			}
+		}
+	}
+	
+	public function test(){
+		$this->load->model('gardener_model');
+		$garden = $this->gardener_model->garden_all();
+		
+		for($i=0;$i<count($garden);$i++){
+			$garden_id = $garden[$i]['GARDEN_ID'];
+			for($j=0;$j<count($garden); $j++){
+				//$garden_arr[$i][$j]=rand(15,145);
+				
+				$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']] = rand(15,145);
+
+				$data_insert['Garden_GARDEN1_ID'] = $garden[$i]['GARDEN_ID'];
+				$data_insert['Garden_GARDEN2_ID'] = $garden[$j]['GARDEN_ID'];
+				$data_insert['DISTANCE']=$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']];
+				
+				if(isset($check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']])){
+					
+					$data_insert['DISTANCE']=$check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']];	
+					$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']]=$check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']];	
+				}
+				
+				//var_Dump($data_insert); 
+				
+				echo $this->operation_model->insert_distance($data_insert);
+			}
+		}
+		var_Dump($check_insert); 
+		exit();
+		
+	}*/
+//`HARVEST_ID`, `Garden_GARDEN_ID`, `Flower_FLOWER_ID`, `Bloom_BLOOMING_ID`, `HARVEST_DATE`, `HONEY_AMOUNT`
 }

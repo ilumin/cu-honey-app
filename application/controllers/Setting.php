@@ -183,6 +183,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/nav', $this->data);
 
         $this->load->view('setting_park',$this->data);
+        $this->load->view('js/setting_js',$this->data);
 
         $this->load->view('theme/footer_js', $this->data);
         $this->load->view('theme/footer', $this->data);
@@ -334,6 +335,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_queen_form', $this->data);
+    		$this->load->view('theme/footer_js', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }

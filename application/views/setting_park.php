@@ -28,19 +28,21 @@
                             <th>ชื่อสวน</th>
                             <th>ที่อยู่สวน</th>
                             <th>จังหวัด</th>
+                            <th>จำนวนรังผึ้งที่สามารถวางได้</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($parks as $park): ?>
+                        <?php for($i=0;$i<count($parks);$i++){ ?>
                           <tr>
-                            <td><?php echo $park->GARDEN_ID; ?></td>
-                            <td><?php echo $park->NAME; ?></td>
-                            <td><?php echo $park->ADDRESS; ?></td>
-                            <td><?php echo $park->PROVINCE_ID; ?></td>
-                            <td><?php echo anchor('/setting/publicpark/' . $park->GARDEN_ID, 'Edit'); ?></td>
+                            <td><?php echo $parks[$i]['GARDEN_ID']; ?></td>
+                            <td><?php echo $parks[$i]['NAME']; ?></td>
+                            <td><?php echo $parks[$i]['ADDRESS']; ?></td>
+                            <td><?php echo $parks[$i]['PROVINCE_NAME']; ?></td>
+                            <td><?php echo $parks[$i]['AMOUNT_HIVE']; ?></td>
+                            <td><?php echo anchor('/setting/publicpark/' . $parks[$i]['GARDEN_ID'], 'Edit'); ?></td>
                           </tr>
-                        <?php endforeach; ?>
+                        <?php }; ?>
                     </tbody>
                 </table>
             </div>

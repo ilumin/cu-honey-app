@@ -101,7 +101,6 @@ class annual_model extends CI_Model {
 		$data= $query->result_array();
 		return $data;
 	}
-
 	
 }
 

@@ -32,12 +32,16 @@ class gardener_model extends CI_Model {
 	}
 
 	public function gardener_info($member_id){
-
-
 		$query = $this->db->query('SELECT * from GARDENER as G, PROVINCE as P WHERE GARDENER_ID='.$member_id);
 		$data= $query->row_array();
 		return $data;
 
+	}
+	public function garden_all(){
+		$query = $this->db->query('SELECT * from GARDEN WHERE STATUS="APPROVE" ');
+		$data= $query->result_array();
+		return $data;
+		
 	}
 	public function garden_info($member_id,$type="MEMBER"){
 

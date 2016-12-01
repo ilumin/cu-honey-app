@@ -4,7 +4,7 @@
               <div class="menu_section">
                 <h3>เมนูหลัก</h3>
                 <ul class="nav side-menu">
-                  <li><a href="<?php echo base_url()?>"><i class="fa fa-home"></i> หน้าแรก</a>
+                  <li><a href="<?php echo base_url()?>main"><i class="fa fa-home"></i> หน้าแรก</a>
                 
                   </li>
                   <li><a><i class="fa fa-bug"></i> ข้อมูลพื้นฐานระบบ <span class="fa fa-chevron-down"></span></a>

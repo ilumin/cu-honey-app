@@ -8,7 +8,49 @@
 	  </div>
 
 	  <div class="x_content">
-		
+		<span class="section">สวนสาธารณะ</span>
+		<table id="datatable" class="table table-striped table-bordered">
+		  <thead>
+			<tr>
+			  <th>สถานที่</th>
+			  <th>ระยะทาง</th>
+			  <th>จำนวนรังผึ้งที่ขนได้</th>
+			  <th>ประเภทสวน</th>
+			  <th>วันที่เริ่มต้น</th>
+			  <th>วันที่สิ้นสุด</th>
+			  <th>กรอกจำนวน</th>
+			</tr>
+		  </thead>
+
+
+		  <tbody>
+		<?php
+
+		for($i=0;$i<count($public_park);$i++){ ?>
+		  <tr>
+			
+			<td><?php echo $public_park[$i]['NAME'];?></td>
+			<td><?php echo isset($public_park[$i]['DISTANCE'])?$public_park[$i]['DISTANCE']:'' ; ?></td>
+			<td><?php echo $public_park[$i]['AMOUNT_HIVE'];?></td>
+			<td>สวนสาธารณะ</td>
+			<td>-</td>
+			<td>-</td>
+			<td>
+			<?php 
+			if($garden_id >0){  ?>
+			<select name="amount<?php echo $public_park[$i]['GARDEN_ID'];?>">
+				<option value=""></option>
+			</select>
+			<?php	
+			}?>
+			</td>
+			</tr>
+		<?php } ?>
+		  </tbody>
+		</table>
+	  </div>
+	  <div class="x_content">
+		<span class="section">สวนสมาชิก</span>
 		<table id="datatable" class="table table-striped table-bordered">
 		  <thead>
 			<tr>
@@ -25,13 +67,6 @@
 		  <tbody>
 			  <tr>
 			 
-				  <td>ddddddd</td>
-				  <td>40</td>
-				  <td>60</td>
-				  <td>สวนสมาชิก</td>
-				  <td>20 NOV 2016</td>
-				  <td>24 NOV 2016</td>
-			
 				</tr>
 		  </tbody>
 		</table>
