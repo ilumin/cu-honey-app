@@ -2,7 +2,7 @@
 
 $name = isset($park_edit['NAME']) ? $park_edit['NAME'] : null;
 $address = isset($park_edit['ADDRESS']) ? $park_edit['ADDRESS'] : null;
-$province = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
+$province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
 
 ?>
 
@@ -41,7 +41,13 @@ $province = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
             จังหวัด<span class="required">*</span>
         </label>
         <div class="col-md-6 col-sm-6 col-xs-12">
-            <input class="form-control col-md-7 col-xs-12" id="province" name="province" required="required" type="text" value="<?php echo $province; ?>">
+            <!-- <input class="form-control col-md-7 col-xs-12" id="province" name="province" required="required" type="text" value="<?php echo $province; ?>"> -->
+            <select id="province" name="province" class="form-control" required="required" >
+              <option value="" selected>--------- เลือกจังหวัด ---------</option>
+              <?php for($i=0; $i<count($province); $i++): ?>
+              <option value="<?php echo $province[$i]['PROVINCE_ID']; ?>" <?php echo $province[$i]['PROVINCE_ID'] == $province_id ? 'selected' : ''; ?>><?php echo $province[$i]['PROVINCE_NAME']; ?></option>
+              <?php endfor; ?>
+            </select>
         </div>
     </div>
 
