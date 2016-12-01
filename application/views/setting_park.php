@@ -14,7 +14,7 @@
             </div>
         </div>
 
-        <?php if(!isset($park_edit)): ?>
+        <?php if(isset($park_list)): ?>
         <div class="x_panel">
             <div class="x_title">
                 <h2>ข้อมูลสวนสาธารณะ</h2>

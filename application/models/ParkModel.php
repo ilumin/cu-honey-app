@@ -46,6 +46,7 @@ class ParkModel extends CI_Model
 
     public function getData($id)
     {
+        return (array) $this->db->where('GARDEN_ID', $id)->get('garden')->row();
     }
 
     public function getAll()

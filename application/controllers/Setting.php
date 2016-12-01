@@ -172,6 +172,7 @@ class Setting extends CI_Controller
             $this->data['park_edit'] = $this->parkModel->getData($id);
         }
         else {
+            $this->data['park_list'] = true;
             $this->data['parks'] = $this->parkModel->getAll();
         }
 
