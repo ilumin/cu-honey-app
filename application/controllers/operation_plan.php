@@ -7,6 +7,7 @@ class operation_plan extends CI_Controller {
 	 {
 	   parent::__construct();
 	   $this->load->model('member_model','',TRUE);
+	   $this->load->model('operation_model','',TRUE);
 	   
 	 }
 	/**
@@ -41,14 +42,46 @@ class operation_plan extends CI_Controller {
 		
 	}
 	
-	public function blooming(){
+	public function bloom(){
 		$data = $this->get_data();
+		
+		
+		$data['blooming_info'] = $this->operation_model->blooming_info();
+		
+		//var_dump($data['blooming_info']);
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
 		$this->load->view('blooming', $data);
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
+	}
+	
+	public function transport_hive_insert(){
+		
+		$data= $this->operation_model->hive_avaliable();
+		var_dump($data);
+	
+		for($i=0;$i<count($data);$i++){
+			$data_insert['Transport_TRANSPORT_ID'] = 1; // TO DO Will be revise to get last insert transport
+			$data_insert['BeeHive_BEE_HIVE_ID']=$data[$i]['BEE_HIVE_ID'];
+			$chk_insert =  $this->operation_model->insert_hive_transportation_item($data_insert);
+			echo $chk_insert."<br />";
+		}
+		
+	}
+	
+	public function harvest_honey(){
+		$bloom = $this->operation_model->blooming_info();
+		for($i=0;$i<count($bloom);$i++){
+				$diff= date_diff(date_create($bloom[$i]['BLOOMING_STARTDATE']), date_create($bloom[$i]['BLOOMING_ENDDATE']));
+				$day = $diff->format("%a")+1;
+				$firstdate =date("d-m-Y",strtotime($bloom[$i]['BLOOMING_STARTDATE']." +1days"));
+				for($j=1;$j<=($day /3); $j++){
+					echo $date_insert = date("d-m-Y",strtotime($firstdate." +".($j*3)."days")) ."<br />";
+				}
+				
+		}		
 	}
 	
 }

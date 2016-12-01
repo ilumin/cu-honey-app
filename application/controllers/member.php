@@ -197,7 +197,7 @@ class Member extends CI_Controller {
 		$data_insert['Garden_GARDEN_ID']= $this->input->post('garden_id');
 		$data_insert['Flower_FLOWER_ID']= $flower_info[0];
 		$data_insert['BLOOMING_STARTDATE']= $this->input->post('blooming_date');
-		$data_insert['BLOOMING_ENDDATE']= date("Y-m-d",strtotime($this->input->post('blooming_date')." +".($flower_info[1]-1)."day"));
+		$data_insert['BLOOMING_ENDDATE']= date("Y-m-d",strtotime($this->input->post('blooming_date')." +".($flower_info[1])."day"));
 		$data_insert['BLOOMING_PERCENT']= $this->input->post('percent_blooming');
 		$data_insert['BLOOMING_STATUS']= 'รอยืนยัน';
 		

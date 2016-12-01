@@ -67,27 +67,18 @@ class gardener_model extends CI_Model {
 	}
 
 	public function gardenflower_insert($data){
-
-
 		$check = $this->db->insert('gardenflower', $data);
-
 		return $check;
 
 	}
 	public function insert_blooming($data){
-
-
 		$check = $this->db->insert('blooming', $data);
-
 		return $check;
-
 	}
 	public function blooming_info($garden_id){
-
 		$query = $this->db->query('SELECT * from BLOOMING AS B,FLOWER AS F WHERE  F.FLOWER_ID = B.FLOWER_FLOWER_ID AND B.Garden_GARDEN_ID='.$garden_id);
 		$data= $query->result_array();
 		return $data;
-
 	}
 	public function garderflower_delete($id){
 

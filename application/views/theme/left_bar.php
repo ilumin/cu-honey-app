@@ -28,7 +28,7 @@
 				  <li><a><i class="fa fa-table "></i>Operation Plan <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
 					 <li><a href="<?php echo base_url()?>operation_plan">Operation Plan</a></li>
-					 <li><a href="<?php echo base_url()?>blooming">แจ้งดอกไม้บาน</a></li>
+					 <li><a href="<?php echo base_url()?>operation_plan/bloom">แจ้งดอกไม้บาน</a></li>
                     </ul>
                   </li>
 				  <li><a><i class="fa fa-list-alt "></i> รายงาน <span class="fa fa-chevron-down"></span></a>
