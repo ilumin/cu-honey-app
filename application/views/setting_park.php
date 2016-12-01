@@ -33,11 +33,13 @@
                     </thead>
                     <tbody>
                         <?php foreach ($parks as $park): ?>
+                          <tr>
                             <td><?php echo $park->GARDEN_ID; ?></td>
                             <td><?php echo $park->NAME; ?></td>
                             <td><?php echo $park->ADDRESS; ?></td>
                             <td><?php echo $park->PROVINCE_ID; ?></td>
-                            <td><?php echo anchor('edit', '/setting/publicpark/' . $park->GARDEN_ID); ?></td>
+                            <td><?php echo anchor('/setting/publicpark/' . $park->GARDEN_ID, 'Edit'); ?></td>
+                          </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
