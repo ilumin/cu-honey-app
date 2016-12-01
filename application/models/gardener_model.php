@@ -12,6 +12,12 @@ class gardener_model extends CI_Model {
 		$data= $query->result_array();
 		return $data;
 	}
+
+  public function getAllProvince()
+  {
+    return $this->db->query('SELECT * from province')->result_array();
+  }
+
 	public function province_near_by(){
 
 		$query = $this->db->query('SELECT p.* from province as p,nearbyprovince as n WHERE p.province_id=n.Province_PROVINCE_ID');
@@ -50,18 +56,18 @@ class gardener_model extends CI_Model {
 		return $data;
 
 	}
-	
+
 	public function garden_bloomingmonth($month,$garden_id){
 	$query = $this->db->query('SELECT *FROM FLOWER F ,GARDENFLOWER GF WHERE
 	(
 		(BLOOM_START_MONTH <= BLOOM_END_MONTH AND BLOOM_START_MONTH <='.$month.' AND BLOOM_END_MONTH >='.$month.')
-		OR 
+		OR
 		(BLOOM_START_MONTH >BLOOM_END_MONTH AND ('.$month.'<= BLOOM_END_MONTH   OR '.$month.'>= BLOOM_START_MONTH) )
 	)
 		AND GF.FLOWER_FLOWER_ID = F.FLOWER_ID
 		AND GF.GARDEN_GARDEN_ID='.$garden_id);
-		
-	
+
+
 		$data= $query->result_array();
 		return $data;
 	}
@@ -86,7 +92,7 @@ class gardener_model extends CI_Model {
 		$check_delete = $this->db->delete('gardenflower');
 		return $check_delete;
 	}
-	
+
 
   public function insert($data)
   {

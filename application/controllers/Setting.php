@@ -17,6 +17,7 @@ class Setting extends CI_Controller
         $this->load->model('beekeeperModel','',TRUE);
         $this->load->model('parkModel','',TRUE);
         $this->load->model('member_model','',TRUE);
+        $this->load->model('gardener_model','',TRUE);
 
         $this->data = $this->member_model->get_data();
     }
@@ -167,11 +168,13 @@ class Setting extends CI_Controller
         $user = $this->session->userdata('logged_in');
         $this->data['gardener_id'] = isset($user['id']) ? $user['id'] : null;
         $this->data['park_id'] = $id;
+        $this->data['province'] = $this->gardener_model->getAllProvince();
 
         if ($hasId) {
             $this->data['park_edit'] = $this->parkModel->getData($id);
         }
         else {
+            $this->data['park_list'] = true;
             $this->data['parks'] = $this->parkModel->getAll();
         }
 
