@@ -184,7 +184,7 @@ class action_plan extends CI_Controller {
             throw new Exception("Invalid param");
         }
 
-        $form_title = 'จำนวนรังที่กำลังเพาะ (' . ($current_month - $month + 1) . ' เดือน)';
+        $form_title = 'รังที่กำลังเพาะ (' . ($current_month - $month + 1) . ' เดือน)';
         $form_url = base_url() . 'action_plan/bee_queen_raise/' . $year . '/' . $month;
         $items = $this->action_model->bee_queen_raise("เพาะ", $month, $year);
         $view = 'action_list1';
@@ -194,9 +194,19 @@ class action_plan extends CI_Controller {
 
 	public function bee_queen_ready($year, $month)
     {
-        $form_title = 'จำนวนรังที่เพาะเรียบร้อย';
+        $form_title = 'รังที่เพาะเรียบร้อย';
         $form_url = base_url() . 'action_plan/bee_queen_ready/' . $year . '/' . $month;
         $items = $this->action_model->bee_queen_raise("เพาะ", $month, $year);
+        $view = 'action_list1';
+
+        $this->displayActionForm($form_title, $form_url, $items, $view);
+    }
+
+	public function bee_hive_using($year, $month)
+    {
+        $form_title = 'รังผึ้งที่เก็บน้ำผึ้งอยู่';
+        $form_url = base_url() . 'action_plan/bee_queen_ready/' . $year . '/' . $month;
+        $items = $this->action_model->bee_queen_raise("เก็บน้ำผึ้ง", $month, $year);
         $view = 'action_list1';
 
         $this->displayActionForm($form_title, $form_url, $items, $view);
