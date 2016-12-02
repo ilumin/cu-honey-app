@@ -105,13 +105,27 @@ array (size=7)
 				if($amount_hive>0){
 					
 					$data_insert['TRANSPORT_DATE'] = $choose_date;
-					$data_insert['RETURN_DATE'] = $choose_date;
-					$data_insert['BLOOMING_ID'] = $blooming_id;
-					$data_insert['FLOWER_ID'] = $blooming_info['FLOWER_FLOWER_ID'];
-					$hive_info = $this->operation_model->hive_id_ByGardenID($garden_id_arr[$i],$amount_hive);
-					var_dump($hive_info);
+					$data_insert['RETURN_DATE'] = $blooming_info['BLOOMING_ENDDATE'];
+					$data_insert['STATUS'] = 'จอง';
+					$data_insert['Blooming_BLOOMING_ID'] = $blooming_id;
+					$data_insert['FLOWER_FLOWER_ID'] = $blooming_info['FLOWER_FLOWER_ID'];
 					
-					//$this->insert->insert_hive_transportation();
+					
+					$hive_info = $this->operation_model->hive_id_ByGardenID($garden_id_arr[$i],$amount_hive);
+					$insert_id = $this->operation_model->insert_hive_transportation($data_insert);
+					if($insert_id >0){
+						for($j=0;$j<count($hive_info );$j++){
+							$data_insert2['Transport_TRANSPORT_ID'] = $insert_id ; // TO DO Will be revise to get last insert transport  --34
+							$data_insert2['BeeHive_BEE_HIVE_ID']=$hive_info[$j]['BeeHive_BEE_HIVE_ID'];
+							var_dump($data_insert2);
+							$chk_insert2 =  $this->operation_model->insert_hive_transportation_item($data_insert);
+							echo $chk_insert."<br />";
+							
+							
+						}
+					}
+					
+					
 					
 				}
 			}

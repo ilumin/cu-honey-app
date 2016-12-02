@@ -63,6 +63,7 @@ class action_plan extends CI_Controller {
 			$summary_hive[$i]=$this->annual_plan_library->summary_hive_month($data['annual_info'],$data['config']['BEEHIVE_ON_PROCESS']);
 		}
 		
+		
 		$data['bee_queen_on_process'][0] = $data['hive_summary']['TOTAL']-$data['hive_summary']['เพาะ'];
 		for($i=0; $i<4; $i++){
 			

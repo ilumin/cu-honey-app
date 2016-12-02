@@ -65,6 +65,7 @@ class action_model extends CI_Model {
 	//งานเพาะรังผึ้งภายในเดือนนี้
 	//จำนวนรังที่กำลังเพาะ ( 1 เดือน)
 	//จำนวนรังที่กำลังเพาะ ( 2 เดือน)
+
 	public function bee_hive_using_list($status="เก็บน้ำผึ้ง",$month,$year){
 		$sql="SELECT count(bee_hive_id) as AMOUNT FROM BEEHIVE WHERE STATUS='".$status."'AND MONTH(STARTDATE) = ".$month." AND ".$month." <= MONTH(ENDDATE) AND YEAR(STARTDATE) =".$year;
 		$query =$this->db->query($sql);
