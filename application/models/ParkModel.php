@@ -16,7 +16,7 @@ class ParkModel extends CI_Model
             $update['ADDRESS'] = isset($data['address']) ? $data['address'] : null;
             $update['PROVINCE_ID'] = isset($data['province']) ? $data['province'] : null;
             $update['GARDEN_TYPE'] = 'PUBLIC';
-            $update['STATUS'] = isset($data['status']) ? $data['status'] : null;
+            $update['STATUS'] = 'APPROVE';
 
             $this->db->where('GARDEN_ID', $garden_id)->update('garden', $update);
 
@@ -52,7 +52,7 @@ class ParkModel extends CI_Model
             $insert['ADDRESS'] = isset($data['address']) ? $data['address'] : null;
             $insert['PROVINCE_ID'] = isset($data['province']) ? $data['province'] : null;
             $insert['GARDEN_TYPE'] = 'PUBLIC';
-            $insert['STATUS'] = 'ว่าง';
+            $insert['STATUS'] = 'APPROVE';
 
             $this->db->insert('garden', $insert);
             $garden_id = $this->db->insert_id();
