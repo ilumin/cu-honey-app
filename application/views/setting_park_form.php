@@ -16,7 +16,7 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
         <?php endif; ?>
     </span>
 
-    <input type="hidden" name="garbdener_id" value="<?php echo $gardener_id; ?>">
+    <input type="hidden" name="gardener_id" value="<?php echo $gardener_id; ?>">
 
     <div class="item form-group">
         <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
@@ -49,6 +49,50 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
               <?php endfor; ?>
             </select>
         </div>
+    </div>
+
+    <div class="item form-group">
+        <span class="section">ข้อมูลพืชมีดอกที่ปลูกในสวน</span>
+        <h4 class="red">เลือกพืชที่ปลูกในสวน  (อย่างน้อย 1 รายการ)</h4>
+        <table class="table">
+            <thead>
+            <tr>
+
+                <th>เลือก</th>
+                <th>จำนวนไร่</th>
+                <th>จำนวนรัง</th>
+                <th>ปลูกพืชผสมหรือไม่</th>
+                <th>พิชที่ปลูก</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($flowers as $index => $flower): $flower_id = $flower['FLOWER_ID']; $flower_name = $flower['FLOWER_NAME']; ?>
+                <tr>
+                    <th scope="row">
+                        <label><input name="selected[]" type="checkbox" <?php echo $index==0 ? 'data-parsley-mincheck="1" required ' : ''; ?> value="<?php echo $flower_id;?>" class="flat">
+                            <?php echo $flower_name; ?>
+                        </label>
+                    </th>
+                    <td>
+                        <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][area]"  data-validate-minmax="5,2000" class="form-control">
+                    </td>
+                    <td>
+                        <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][hive]"  data-validate-minmax="5,2000" class="form-control">
+                    </td>
+                    <td>
+                        <input name="flowers[<?php echo $flower_id; ?>][risk]" type="checkbox" value="mix" class="flat checkbox_check">
+                        ปลูกผสมกับ
+                    </td>
+                    <td>
+                        <select name="flowers[<?php echo $flower_id; ?>][mix]">
+                            <option value="-">เลือกพืชที่ปลูกผสม</option>
+                            <?php foreach($flowers as $item) { echo '<option value="' . $item['FLOWER_ID'] . '">' . $item['FLOWER_NAME'] . '</option>'; }; ?>
+                        </select>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
     <div class="ln_solid"></div>

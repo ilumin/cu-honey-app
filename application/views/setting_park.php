@@ -25,10 +25,12 @@
                     <thead>
                         <tr>
                             <th>รหัสสวน</th>
+                            <th>รหัสคนสวน</th>
                             <th>ชื่อสวน</th>
+                            <th>ดอกไม้</th>
+                            <th>จำนวนรังผึ้งที่สามารถวางได้</th>
                             <th>ที่อยู่สวน</th>
                             <th>จังหวัด</th>
-                            <th>จำนวนรังผึ้งที่สามารถวางได้</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -36,10 +38,12 @@
                         <?php for($i=0;$i<count($parks);$i++){ ?>
                           <tr>
                             <td><?php echo $parks[$i]['GARDEN_ID']; ?></td>
+                            <td><?php echo $parks[$i]['GARDENER_ID']; ?></td>
                             <td><?php echo $parks[$i]['NAME']; ?></td>
+                            <td><?php echo $parks[$i]['FLOWER_NAME']; ?></td>
+                            <td><?php echo $parks[$i]['AMOUNT_HIVE']; ?></td>
                             <td><?php echo $parks[$i]['ADDRESS']; ?></td>
                             <td><?php echo $parks[$i]['PROVINCE_NAME']; ?></td>
-                            <td><?php echo $parks[$i]['AMOUNT_HIVE']; ?></td>
                             <td><?php echo anchor('/setting/publicpark/' . $parks[$i]['GARDEN_ID'], 'Edit'); ?></td>
                           </tr>
                         <?php }; ?>

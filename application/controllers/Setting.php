@@ -166,9 +166,14 @@ class Setting extends CI_Controller
         }
 
         $user = $this->session->userdata('logged_in');
+        if (empty($user)) {
+            header('Location: /member/login');
+        }
+
         $this->data['gardener_id'] = isset($user['id']) ? $user['id'] : null;
         $this->data['park_id'] = $id;
         $this->data['province'] = $this->gardener_model->getAllProvince();
+        $this->data['flowers'] = $this->gardener_model->get_flower();
 
         if ($hasId) {
             $this->data['park_edit'] = $this->parkModel->getData($id);
