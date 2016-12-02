@@ -34,51 +34,7 @@
 				<thead>
 					<tr class="headings" >
 					  <th>งาน</th>
-						<?php 
-						$show=1;
-						
-						for($i=0; $i<$show; $i++){ ?>
-						 <th><?php echo $month_txt[$i]?></th>
-						<?php } ?>
-					</tr>
-				</thead>
-				<tbody>
-					
-					<tr>
-					  <td class="a-center ">งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้ จำนวน <br />(หมดอายุภายในเดือนถัดไป)</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
-					  <td class="a-center "><a href="#"><?php echo $bee_hive_expired[$i]['AMOUNT']?></a></td>
-					  <?php } ?>
-					</tr>
-					<tr>
-					  <td class="a-center ">งานเปลี่ยนคอนใหม่ภายในเดือนนี้ จำนวน<br />(หมดอายุภายในเดือนถัดไป)</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
-					  <td class="a-center "><a href="#"><?php echo $bee_con_expired[$i]['H_AMOUNT']?> รัง  <br/><?php echo $bee_con_expired[$i]['AMOUNT']?>คอน</a></td>
-					  <?php } ?>
-					</tr>
-					<tr>
-					  <td class="a-center ">งานเพาะรังผึ้งภายในเดือนนี้<br />(หมดอายุภายในเดือนถัดไป)</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
-					  <td class="a-center "><a href="#"><?php echo $bee_queen_expired[$i]['AMOUNT']?></a></td>
-					  <?php } ?>
-					</tr>
-					
-					<tr>
-					  <td class="a-center ">งานเพาะรังใหม่เพิ่ม สำหรับเดือน <?php echo $month_txt[count($month_txt)-1]?> </td>
-					  <td class="a-center "><a class="red" href="#"><?php echo $need_hive[count($need_hive)-1]?></a></td>
-
-					</tr>
-				</tbody>
-		</table>
-		
-			<table  class="table table-striped jambo_table bulk_action">
-				<thead>
-					<tr class="headings" >
-					  <th>ผลที่คาดจะได้รับสิ้นเดือน</th>
-						<?php 
-						$show=1;
-						
-						for($i=0; $i<$show; $i++){ ?>
+						<?php for($i=0; $i<count($month_txt); $i++){ ?>
 						 <th><?php echo $month_txt[$i]?></th>
 						<?php } ?>
 					</tr>
@@ -86,31 +42,49 @@
 				<tbody>
 					<tr>
 					  <td class="a-center red">จำนวนรังผึ้งที่ต้องใช้งานในแต่ละเดือน</td>
-					   <?php for($i=0; $i<$show; $i++){ ?>
+					   <?php for($i=0; $i<count($bee_annual); $i++){ ?>
 						<td class="a-center red"><?php echo $bee_annual[$i] ;?></td>
 					  <?php } ?>
 					</tr>
 					<tr>
+					  <td class="a-center ">จำนวนรังที่ต้องเปลี่ยนภายในเดือนนี้ <br />(หมดอายุภายในเดือนถัดไป)</td>
+					  <?php for($i=0; $i<count($bee_hive_expired); $i++){ ?>
+					  <td class="a-center "><a href="#"><?php echo $bee_hive_expired[$i]['AMOUNT']?></a></td>
+					  <?php } ?>
+					</tr>
+					<tr>
+					  <td class="a-center ">จำนวนคอนที่ต้องเปลี่ยนภายในเดือนนี้<br />(หมดอายุภายในเดือนถัดไป)</td>
+					  <?php for($i=0; $i<count($bee_con_expired); $i++){ ?>
+					  <td class="a-center "><a href="#"><?php echo $bee_con_expired[$i]['H_AMOUNT']?> รัง  <br/><?php echo $bee_con_expired[$i]['AMOUNT']?>คอน</a></td>
+					  <?php } ?>
+					</tr>
+					<tr>
+					  <td class="a-center ">จำนวนรังที่ต้องนำมาเพาะภายในเดือนนี้<br />(หมดอายุภายในเดือนถัดไป)</td>
+					  <?php for($i=0; $i<count($bee_queen_expired); $i++){ ?>
+					  <td class="a-center "><a href="#"><?php echo $bee_queen_expired[$i]['AMOUNT']?></a></td>
+					  <?php } ?>
+					</tr>
+					<tr>
 					  <td class="a-center ">จำนวนรังที่กำลังเพาะ ( 1 เดือน)</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
+					  <?php for($i=0; $i<count($bee_queen_raise_1month); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $bee_queen_raise_1month[$i]['AMOUNT']?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
 					  <td class="a-center ">จำนวนรังที่กำลังเพาะ ( 2 เดือน)</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
+					  <?php for($i=0; $i<count($bee_queen_raise_2month); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $bee_queen_raise_2month[$i]['AMOUNT']?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
 					  <td class="a-center ">จำนวนรังที่เพาะเรียบร้อย</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
+					  <?php for($i=0; $i<count($bee_queen_raise_complete); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $bee_queen_raise_complete[$i]['AMOUNT']?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
 					  <td class="a-center ">จำนวนรังผึ้งที่เก็บน้ำผึ้งอยู่</td>
-					  <?php for($i=0; $i<$show; $i++){ ?>
+					  <?php for($i=0; $i<count($bee_hive_using); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $bee_hive_using[$i]['AMOUNT']?></a></td>
 					  <?php } ?>
 					</tr>
@@ -118,27 +92,27 @@
 					  <td class="a-center ">จำนวนรังผึ้งที่ On Process</td>
 					   <?php 
 					   
-					   for($i=0; $i<$show; $i++){ ?>
+					   for($i=0; $i<count($bee_queen_on_process); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $bee_queen_on_process[$i]?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
 					  <td class="a-center ">จำนวนรังผึ้งที่ต้องการเพิ่ม</td>
 					<?php 
-					   for($i=0; $i<$show; $i++){ 
-					   
-					   ?>
+					   for($i=0; $i<count($need_hive); $i++){ ?>
 					  <td class="a-center "><a href="#"><?php echo $need_hive[$i]?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
 					  <td class="a-center ">จำนวนรังผึ้งที่ต้องเพาะนางพญา</td>
-					  <td class="a-center "><a class="red" href="#"><?php echo $need_hive[count($need_hive)-1]?></a></td>
+					  <td class="a-center "><a class="red" href="#"><?php echo $need_hive[$i-1]?></a></td>
+					  <td class="a-center ">&nbsp;</td>
+					  <td class="a-center ">&nbsp;</td>
+					  <td class="a-center ">&nbsp;</td>
 
 					</tr>
 				</tbody>
 		</table>
-		
 	  </div>
 	</div>
   </div>

@@ -17,6 +17,8 @@
 			  <th>สถานที่</th>
 			  <th>จำนวนรังผึ้ง<br />ที่ขนได้</th>
 <?php 
+		$public_park_id='';
+		$member_park_id='';
 		if($garden_id >0){  
 ?>	
 			  <th>ระยะทาง</th>  
@@ -76,12 +78,14 @@
 			<?php }?>
 			</td>
 		<?php	
+		
 			}
 		?>
 			</tr>
-		<?php } ?>
+		<?php $public_park_id .="|".$public_park[$i]['GARDEN_ID']; } ?>
 		  </tbody>
 		</table>
+		
 	  </div>
 	  <div class="x_content">
 		<span class="section">สวนสมาชิก</span>
@@ -166,7 +170,7 @@
 				}
 			?>
 				</tr>
-			<?php } 
+			<?php $member_park_id .="|".$member_park_id[$i]['GARDEN_ID']; } 
 		
 		}else{
 		?>
@@ -180,6 +184,8 @@
 		</table>
 	  </div>
 	  <?php if($garden_id >0){  ?>
+	  <input type="hidden" name="public_park_id" value="<?php echo isset($public_park_id)?substr($public_park_id,1):'';?>" />
+	  <input type="hidden" name="member_park_id" value="<?php echo isset($member_park_id)?substr($member_park_id,1):'';?>" />
 	  <input  class="btn btn-primary submit" type="submit"  value="บันทึกจำนวนรังผึ้งที่ขนย้าย" />
 	  <?php }?>
 	  </form>
@@ -210,13 +216,15 @@
 		  <tbody>
 		  
 		   <?php for($i=0; $i<count($blooming_info);$i++){?>
+		   <tr>
 			<td><?php echo $blooming_info[$i]['FLOWER_NAME']?></td>
 			<td><?php echo $blooming_info[$i]['NAME']?></td>
 			<td><?php echo $blooming_info[$i]['AMOUNT_HIVE']?></td>
 			<td><?php echo $blooming_info[$i]['BLOOMING_PERCENT']?></td>
 			<td><?php echo $blooming_info[$i]['BLOOMING_STARTDATE']?></td>
 			<td><?php echo $blooming_info[$i]['BLOOMING_ENDDATE']?></td>
-			<td><a  class="btn btn-primary" href="<?php echo base_url();?>operation_plan/bloom/<?php echo  $blooming_info[$i]['GARDEN_ID']?>">ค้นหาสวนที่ว่าง</a></td>
+			<td><a  class="btn btn-primary" href="<?php echo base_url();?>operation_plan/bloom/<?php echo  $blooming_info[$i]['GARDEN_ID']?>">ค้นหาสวนเพื่อนขนย้ายรัง</a></td>
+			</tr>
 		   <?php } ?>
 		  </tbody>
 		</table>
