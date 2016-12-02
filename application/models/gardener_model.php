@@ -53,8 +53,6 @@ class gardener_model extends CI_Model {
 	}
 
 	public function gardenflower_info($garden_id){
-
-
 		$query = $this->db->query('SELECT * from GARDENFLOWER WHERE GARDEN_GARDEN_ID='.$garden_id);
 		$data= $query->result_array();
 		return $data;

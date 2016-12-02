@@ -28,6 +28,34 @@ class operation_model extends CI_Model {
 		
 		return $data;
 	}
+	
+	public function transport_info_byBID($bloom_id){
+			$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F WHERE 
+		T.Garden_GARDEN_ID = G.GARDEN_ID 
+		AND F.FLOWER_ID = T.FLOWER_FLOWER_ID
+		AND T.BLOOMING_BLOOMING_ID = ".$bloom_id."
+		";
+				
+		$query = $this->db->query($sql);
+		
+		//var_dump($data['HARVESTHONEY']);
+		
+		return $query->row_array();
+	}
+	public function transporthive_info_byBID($bloom_id){
+		$sql ="SELECT BEEHIVE_BEE_HIVE_ID FROM TRANSPORTHIVE AS TH, TRANSPORT AS T 
+					WHERE 
+					T.BLOOMING_BLOOMING_ID = ".$bloom_id."
+					AND TH.TRANSPORT_TRANSPORT_ID = T.TRANSPORT_ID
+					ORDER BY BEEHIVE_BEE_HIVE_ID ASC
+					";
+		$query = $this->db->query($sql);
+		echo $sql;
+		//var_dump($data['HARVESTHONEY']);
+		
+		return $query->result_array();
+	}
+	
 	public function blooming_info($id=0){
 		
 	$sql_add="";
@@ -241,6 +269,8 @@ public function get_hive_member_park($data){
 		return $check;
 		
 	}
+	
+	
 	
 	  public function updateBloom($id, $data = array())
     {
