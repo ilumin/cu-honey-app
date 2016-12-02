@@ -55,9 +55,9 @@ class action_model extends CI_Model {
 	}
 	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
 	public function bee_queen_expired_list($month,$year){
-		$sql = "SELECT BEEHIVE_BEE_HIVE_ID,QUEEN_ID FROM QUEENBEE where month(expired_date)=".$month." AND year(expired_date)= ".$year;	
+		$sql = "SELECT BEEHIVE_BEE_HIVE_ID AS parent_id, QUEEN_ID AS id FROM queenbee where month(expired_date)=".$month." AND year(expired_date)= ".$year;
 		$query = $this->db->query($sql);
-		$data = $query->row_array();
+		$data = $query->result_array();
 		return $data;
 	}
 	//งานเพาะรังผึ้งภายในเดือนนี้
@@ -66,9 +66,9 @@ class action_model extends CI_Model {
 	// จำนวนรังที่กำลังเพาะ ( 2 เดือน)
 
 	public function bee_hive_using_list($status="เก็บน้ำผึ้ง",$month,$year){
-		$sql="SELECT count(bee_hive_id) as AMOUNT FROM BEEHIVE WHERE STATUS='".$status."'AND MONTH(STARTDATE) = ".$month." AND ".$month." <= MONTH(ENDDATE) AND YEAR(STARTDATE) =".$year;
+		$sql="SELECT count(bee_hive_id) as AMOUNT FROM beehive WHERE STATUS='".$status."'AND MONTH(STARTDATE) = ".$month." AND ".$month." <= MONTH(ENDDATE) AND YEAR(STARTDATE) =".$year;
 		$query =$this->db->query($sql);
-		$data = $query->row_array();
+		$data = $query->result_array();
 		return $data;
 	}
 	

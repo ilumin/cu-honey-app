@@ -166,6 +166,16 @@ class action_plan extends CI_Controller {
         $this->displayActionForm($form_title, $form_url, $items, $view);
     }
 
+	public function bee_queen_expired($year, $month)
+    {
+        $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้';
+        $form_url = base_url() . 'action_plan/bee_queen_expired/' . $year . '/' . $month;
+        $items = $this->action_model->bee_queen_expired_list($month, $year);
+        $view = 'action_form2';
+
+        $this->displayActionForm($form_title, $form_url, $items, $view);
+    }
+
     private function displayActionForm($title, $url, $checkboxItem, $view)
     {
         $data = $this->get_data();
