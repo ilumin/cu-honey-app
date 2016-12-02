@@ -50,7 +50,7 @@ class operation_model extends CI_Model {
 					ORDER BY BEEHIVE_BEE_HIVE_ID ASC
 					";
 		$query = $this->db->query($sql);
-		echo $sql;
+		//echo $sql;
 		//var_dump($data['HARVESTHONEY']);
 		
 		return $query->result_array();
