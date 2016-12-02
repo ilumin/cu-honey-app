@@ -142,12 +142,14 @@ class annual_plan extends CI_Controller {
 		//var_dump( $this->annual_plan_library->summary_hive_month($data['annual_info'],120));
 		
 		$data['year'] = $year;
+        $data['current_month'] = date('n', strtotime(TODAY_DATE));
 		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
 		$this->load->view('annual_plan_view', $data);
 		$this->load->view('theme/footer_js', $data);
+		$this->load->view('js/annual_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
 	

@@ -121,7 +121,7 @@
 						$hive_no = $annual_info[$i]['AMOUNT_HIVE'];
 						$hive_month[$j]=$hive_month[$j]+$hive_no;
 					}
-					$html.= '<td>'.$hive_no.'</td>';
+					$html.= '<td class="month month-' . $j . '" data-month="' . $j . '">'.$hive_no.'</td>';
 				}
 			}
 			else {
@@ -132,7 +132,7 @@
 						$hive_no = $annual_info[$i]['AMOUNT_HIVE'];
 						$hive_month[$j]=$hive_month[$j]+$hive_no;
 					}
-					$html.= '<td>'.$hive_no.'</td>';
+					$html.= '<td class="month month-' . $j . '" data-month="' . $j . '">'.$hive_no.'</td>';
 				}
 			}
 			echo $html;
@@ -145,14 +145,14 @@
 		
 			<td colspan="6" align="right"><strong>จำนวนรังผึ้งที่คาดว่าจะใช้แต่ละเดือน</strong></td>
 			<?php for($i=1; $i<=12;$i++){?>
-			<td><strong><?php echo $hive_month[$i];?></strong></td>
+			<td class="month month-<?php echo $i; ?>" data-month="<?php echo $i; ?>"><strong><?php echo $hive_month[$i];?></strong></td>
 			<?php } ?>
 		</tr>
 		<tr class="bor-top">
 		
 			<td colspan="6" align="right"><strong>จำนวนรังผึ้งที่ต้องทำต่อเดือน</strong></td>
 			<?php for($i=1; $i<=12;$i++){?>
-			<td><strong <?php if($hive_month[$i] < $config['BEEHIVE_ON_PROCESS']){ echo ' class="red" ';} ?> ><?php echo $summary_info['hive_process_month'][$i];?></strong></td>
+			<td class="month month-<?php echo $i; ?>" data-month="<?php echo $i; ?>"><strong <?php if($hive_month[$i] < $config['BEEHIVE_ON_PROCESS']){ echo ' class="red" ';} ?> ><?php echo $summary_info['hive_process_month'][$i];?></strong></td>
 			<?php } ?>
 		</tr>
 		  </tbody>
