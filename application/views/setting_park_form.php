@@ -4,6 +4,7 @@ $name = isset($park_edit['NAME']) ? $park_edit['NAME'] : null;
 $address = isset($park_edit['ADDRESS']) ? $park_edit['ADDRESS'] : null;
 $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
 
+
 ?>
 
 <form action="<?php echo base_url() . 'setting/publicpark/' . $park_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
@@ -61,8 +62,6 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
                 <th>เลือก</th>
                 <th>จำนวนไร่</th>
                 <th>จำนวนรัง</th>
-                <th>ปลูกพืชผสมหรือไม่</th>
-                <th>พิชที่ปลูก</th>
             </tr>
             </thead>
             <tbody>
@@ -73,13 +72,9 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
 
                 $area = false;
                 $hive = false;
-                $risk = false;
-                $mix = false;
                 if ($selected) {
                     $area = $gardenflowers[$flower_id]['area'];
                     $hive = $gardenflowers[$flower_id]['hive'];
-                    $risk = $gardenflowers[$flower_id]['risk'];
-                    $mix = $gardenflowers[$flower_id]['mix'];
                 }
                 ?>
                 <tr>
@@ -93,16 +88,7 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
                     </td>
                     <td>
                         <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][hive]"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $hive; ?>">
-                    </td>
-                    <td>
-                        <input name="flowers[<?php echo $flower_id; ?>][risk]" type="checkbox" value="mix" class="flat checkbox_check" <?php echo $risk ? ' checked' : ''; ?>>
-                        ปลูกผสมกับ
-                    </td>
-                    <td>
-                        <select name="flowers[<?php echo $flower_id; ?>][mix]">
-                            <option value="-">เลือกพืชที่ปลูกผสม</option>
-                            <?php foreach($flowers as $item) { echo '<option value="' . $item['FLOWER_ID'] . '" ' . ($mix==$item['FLOWER_ID'] ? ' selected' : '') . '>' . $item['FLOWER_NAME'] . '</option>'; }; ?>
-                        </select>
+                        <input name="flowers[<?php echo $flower_id; ?>][risk]" type="hidden" value="mix">
                     </td>
                 </tr>
             <?php endforeach; ?>

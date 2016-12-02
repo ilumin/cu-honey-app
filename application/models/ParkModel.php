@@ -8,7 +8,7 @@ class ParkModel extends CI_Model
         $this->load->database();
     }
 
-    public function updateData($id, $data = array())
+    public function updateData($garden_id, $data = array())
     {
         try {
             $update['GARDENER_ID'] = isset($data['gardener_id']) ? $data['gardener_id'] : null;
@@ -18,9 +18,9 @@ class ParkModel extends CI_Model
             $update['GARDEN_TYPE'] = 'PUBLIC';
             $update['STATUS'] = isset($data['status']) ? $data['status'] : null;
 
-            $this->db->where('GARDEN_ID', $id)->update('garden', $update);
+            $this->db->where('GARDEN_ID', $garden_id)->update('garden', $update);
 
-            $this->db->where('Garden_GARDEN_ID', $id)->delete('gardenflower');
+            $this->db->where('Garden_GARDEN_ID', $garden_id)->delete('gardenflower');
             $flowers = $data['flowers'];
             foreach ($data['selected'] as $flower_id) {
                 $flower = $flowers[$flower_id];
@@ -29,7 +29,7 @@ class ParkModel extends CI_Model
                 $mix = isset($flower['mix']) ? $flower['mix'] : null;
                 $area = isset($flower['area']) ? $flower['area'] : null;
                 $this->db->insert('gardenflower', array(
-                    'Garden_GARDEN_ID' => $id,
+                    'Garden_GARDEN_ID' => $garden_id,
                     'Flower_FLOWER_ID' => $flower_id,
                     'AMOUNT_HIVE' => $hive,
                     'RISK_MIX_HONEY' => $risk,
@@ -38,7 +38,7 @@ class ParkModel extends CI_Model
                 ));
             }
 
-            return $id;
+            return $garden_id;
         } catch (Exception $e) {
             throw new Exception("Cannot update park: " . $e->getMessage(), 1);
         }
