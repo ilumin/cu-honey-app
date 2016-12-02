@@ -116,14 +116,18 @@ class Member extends CI_Controller {
 
             $this->load->model('gardener_model','',TRUE);
             $this->gardener_model->insert_garden($_POST, $gardener_id);
-            header("Location: /member/register2");
+
+            header("Location: /main");
         } catch (Exception $e) {
-            echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
+            throw new Exception($e->getMessage());
         }
 	}
 
 	public function register2(){
 		$data = array();
+
+        $user = $this->getUser();
+
 		$this->load->model('gardener_model','',TRUE);
 		$data['flowers'] = $this->gardener_model->get_flower();
 		$data['province'] = $this->gardener_model->province_near_by();
