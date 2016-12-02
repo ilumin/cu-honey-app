@@ -67,13 +67,13 @@ class annual_model extends CI_Model {
 						AI.AMOUNT_HIVE,
 						AI.RISK_MIX_HONEY,
 						AI.FLOWER_NEARBY_ID
-			 FROM ANNUALPLAN AS A, ANNUALPLANITEM AS AI  
-			,FLOWER as F, GARDEN as G ,PROVINCE as P
+			 FROM annualplan AS A, annualplanitem AS AI  
+			,flower as F, garden as G ,province as P
 			WHERE
 			AI.ANNUALPLAN_ANNUAL_PLAN_ID=A.ANNUAL_PLAN_ID AND
 			F.FLOWER_ID= AI.flower_flower_id AND
-			g.garden_id = garden_garden_id AND
-			p.province_id = g.province_id AND
+			G.GARDEN_ID = AI.Garden_GARDEN_ID AND
+			P.PROVINCE_ID = G.PROVINCE_ID AND
 			A.ANNUAL_YEAR = '".$year."'
 			
 		";
@@ -85,7 +85,7 @@ class annual_model extends CI_Model {
 	public function annual_info_db($year){
 		$sql ="
 			SELECT 
-			* FROM ANNUALPLAN
+			* FROM annualplan
 			WHERE ANNUAL_YEAR=".$year;
 
 		$query = $this->db->query($sql);
@@ -95,7 +95,7 @@ class annual_model extends CI_Model {
 	public function annual_info_list(){
 		$sql ="
 			SELECT 
-			* FROM ANNUALPLAN";
+			* FROM annualplan";
 
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
