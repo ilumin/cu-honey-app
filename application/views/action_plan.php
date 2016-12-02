@@ -104,7 +104,7 @@
 					<tr>
 					  <td class="a-center ">จำนวนรังที่เพาะเรียบร้อย</td>
 					  <?php for($i=0; $i<$show; $i++){ ?>
-					  <td class="a-center "><a href="<?php echo base_url();?>action_plan/bee_queen_raise/<?php echo $bee_queen_raise_complete_y[$i]."/".$bee_queen_raise_complete_m[$i] ?>"><?php echo $bee_queen_raise_complete[$i]['AMOUNT']?></a></td>
+					  <td class="a-center "><a href="<?php echo base_url();?>action_plan/bee_queen_ready/<?php echo $bee_queen_raise_complete_y[$i]."/".$bee_queen_raise_complete_m[$i] ?>"><?php echo $bee_queen_raise_complete[$i]['AMOUNT']?></a></td>
 					  <?php } ?>
 					</tr>
 					<tr>
