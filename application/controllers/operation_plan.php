@@ -200,6 +200,10 @@ class operation_plan extends CI_Controller {
 		//TO DO ขาด CASE มากกว่า CAP
 		
 	}
+	public function transfer_detail(){
+		
+		
+	}
 	
 	/* 
 	

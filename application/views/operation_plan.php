@@ -11,7 +11,7 @@
 				$show_date = $schedule_info['TRANSPORT'][$i]['TRANSPORT_DATE'];
 				$garden_name = $schedule_info['TRANSPORT'][$i]['GARDEN_NAME'];
 				$flower_name = $schedule_info['TRANSPORT'][$i]['FLOWER_NAME'];
-				$date_schedule[$show_date] .= '<div><a href="">ขนส่ง: '.$garden_name." (".$flower_name.') </a> </div>';
+				$date_schedule[$show_date] .= '<div><a href="'.base_url().'operation_plan/transfer_detail">ขนส่ง: '.$garden_name." (".$flower_name.') </a> </div>';
 			}			
 			
 			for($i=0;$i< count($schedule_info['HARVESTHONEY']) ; $i++){
