@@ -176,6 +176,22 @@ class action_plan extends CI_Controller {
         $this->displayActionForm($form_title, $form_url, $items, $view);
     }
 
+	public function bee_queen_raise($year, $month)
+    {
+        $current_month = date('n', strtotime(TODAY_DATE));
+
+        if ($current_month < $month) {
+            throw new Exception("Invalid param");
+        }
+
+        $form_title = 'จำนวนรังที่กำลังเพาะ (' . ($current_month - $month + 1) . ' เดือน)';
+        $form_url = base_url() . 'action_plan/bee_queen_expired/' . $year . '/' . $month;
+        $items = $this->action_model->bee_queen_raise("เพาะ", $month, $year);
+        $view = 'action_list1';
+
+        $this->displayActionForm($form_title, $form_url, $items, $view);
+    }
+
     private function displayActionForm($title, $url, $checkboxItem, $view)
     {
         $data = $this->get_data();
