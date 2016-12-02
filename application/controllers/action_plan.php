@@ -196,7 +196,7 @@ class action_plan extends CI_Controller {
     {
         $form_title = 'รังที่เพาะเรียบร้อย';
         $form_url = base_url() . 'action_plan/bee_queen_ready/' . $year . '/' . $month;
-        $items = $this->action_model->bee_queen_raise("เพาะ", $month, $year);
+        $items = $this->action_model->bee_queen_raise("ว่าง", $month, $year);
         $view = 'action_list1';
 
         $this->displayActionForm($form_title, $form_url, $items, $view);
