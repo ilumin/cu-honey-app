@@ -150,11 +150,23 @@ class action_plan extends CI_Controller {
         $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้';
         $form_url = base_url() . 'action_plan/bee_hive_expired/' . $year . '/' . $month;
         $items = $this->action_model->bee_hive_expired_list($month, $year);
+        $view = 'action_form';
 
-        $this->displayActionForm($form_title, $form_url, $items);
+        $this->displayActionForm($form_title, $form_url, $items, $view);
     }
 
-    public function displayActionForm($title, $url, $checkboxItem)
+	public function bee_con_expired($year, $month)
+    {
+        $form_title = 'งานเปลี่ยนคอนใหม่ภายในเดือนนี้';
+        $form_url = base_url() . 'action_plan/bee_con_expired/' . $year . '/' . $month;
+        $items = $this->action_model->bee_con_expired_list($month, $year);
+
+        $view = 'action_form2';
+
+        $this->displayActionForm($form_title, $form_url, $items, $view);
+    }
+
+    private function displayActionForm($title, $url, $checkboxItem, $view)
     {
         $data = $this->get_data();
         $data['form_url'] = $url;
@@ -165,7 +177,7 @@ class action_plan extends CI_Controller {
         $this->load->view('theme/left_bar', $data);
         $this->load->view('theme/nav',$data);
 
-        $this->load->view('action_form', $data);
+        $this->load->view($view, $data);
 
         $this->load->view('theme/footer_js', $data);
         $this->load->view('theme/footer', $data);

@@ -48,9 +48,9 @@ class action_model extends CI_Model {
 	}
 	//งานเปลี่ยนคอนใหม่ภายในเดือนนี้
 	public function bee_con_expired_list($month,$year){
-		$sql = "SELECT BEEFRAME_ID,BEEHIVE_BEE_HIVE_ID  FROM beeframe where month(expired_date)=".$month." AND year(expired_date)= ".$year;
+		$sql = "SELECT BEEFRAME_ID AS id,BEEHIVE_BEE_HIVE_ID AS parent_id FROM beeframe where month(expired_date)=".$month." AND year(expired_date)= ".$year;
 		$query = $this->db->query($sql);
-		$data = $query->row_array();
+		$data = $query->result_array();
 		return $data;
 	}
 	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
