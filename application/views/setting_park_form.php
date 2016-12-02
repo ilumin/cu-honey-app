@@ -5,6 +5,8 @@ $address = isset($park_edit['ADDRESS']) ? $park_edit['ADDRESS'] : null;
 $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : null;
 
 
+$area = isset($gardenflowers[BJP_FLOWER]) ? $gardenflowers[BJP_FLOWER]['area'] : null;
+$hive = isset($gardenflowers[BJP_FLOWER]) ? $gardenflowers[BJP_FLOWER]['hive'] : null;
 ?>
 
 <form action="<?php echo base_url() . 'setting/publicpark/' . $park_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
@@ -53,47 +55,23 @@ $province_id = isset($park_edit['PROVINCE_ID']) ? $park_edit['PROVINCE_ID'] : nu
     </div>
 
     <div class="item form-group">
-        <span class="section">ข้อมูลพืชมีดอกที่ปลูกในสวน</span>
-        <h4 class="red">เลือกพืชที่ปลูกในสวน  (อย่างน้อย 1 รายการ)</h4>
-        <table class="table">
-            <thead>
-            <tr>
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            จำนวนไร่<span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo BJP_FLOWER; ?>][area]"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $area; ?>">
+        </div>
+    </div>
 
-                <th>เลือก</th>
-                <th>จำนวนไร่</th>
-                <th>จำนวนรัง</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($flowers as $index => $flower):
-                $flower_id = $flower['FLOWER_ID'];
-                $flower_name = $flower['FLOWER_NAME'];
-                $selected = isset($gardenflowers[$flower_id]);
-
-                $area = false;
-                $hive = false;
-                if ($selected) {
-                    $area = $gardenflowers[$flower_id]['area'];
-                    $hive = $gardenflowers[$flower_id]['hive'];
-                }
-                ?>
-                <tr>
-                    <th scope="row">
-                        <label><input name="selected[]" type="checkbox" <?php echo $index==0 ? 'data-parsley-mincheck="1" required ' : ''; ?> value="<?php echo $flower_id;?>" class="flat" <?php echo $selected ? ' checked' : ''; ?>>
-                            <?php echo $flower_name; ?>
-                        </label>
-                    </th>
-                    <td>
-                        <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][area]"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $area; ?>">
-                    </td>
-                    <td>
-                        <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][hive]"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $hive; ?>">
-                        <input name="flowers[<?php echo $flower_id; ?>][risk]" type="hidden" value="mix">
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
+    <div class="item form-group">
+        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
+            จำนวนรัง<span class="required">*</span>
+        </label>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input style="width: 80px;" type="number" id="number" name="flowers[<?php echo BJP_FLOWER; ?>][hive]"  data-validate-minmax="5,2000" class="form-control" value="<?php echo $hive; ?>">
+            <input name="flowers[<?php echo BJP_FLOWER; ?>][risk]" type="hidden" value="mix">
+            <input type="hidden" name="selected[]" value="<?php echo BJP_FLOWER; ?>">
+        </div>
     </div>
 
     <div class="ln_solid"></div>
