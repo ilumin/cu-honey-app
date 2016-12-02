@@ -77,6 +77,12 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
+	
+	
+	function bloom_save(){
+		var_dump($_POST);
+		
+	}
 	/* 
 	public function transport_hive_insert(){
 		
