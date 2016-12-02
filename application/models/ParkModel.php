@@ -20,6 +20,24 @@ class ParkModel extends CI_Model
 
             $this->db->where('GARDEN_ID', $id)->update('garden', $update);
 
+            $this->db->where('Garden_GARDEN_ID', $id)->delete('gardenflower');
+            $flowers = $data['flowers'];
+            foreach ($data['selected'] as $flower_id) {
+                $flower = $flowers[$flower_id];
+                $hive = isset($flower['hive']) ? $flower['hive'] : 0;
+                $risk = isset($flower['risk']) ? $flower['risk']=='mix' : false;
+                $mix = isset($flower['mix']) ? $flower['mix'] : null;
+                $area = isset($flower['area']) ? $flower['area'] : null;
+                $this->db->insert('gardenflower', array(
+                    'Garden_GARDEN_ID' => $id,
+                    'Flower_FLOWER_ID' => $flower_id,
+                    'AMOUNT_HIVE' => $hive,
+                    'RISK_MIX_HONEY' => $risk,
+                    'FLOWER_NEARBY_ID' => $mix,
+                    'AREA' => $area,
+                ));
+            }
+
             return $id;
         } catch (Exception $e) {
             throw new Exception("Cannot update park: " . $e->getMessage(), 1);
@@ -69,8 +87,13 @@ class ParkModel extends CI_Model
 
     public function getParkFlowers($park_id)
     {
-        $sql = "SELECT f.FLOWER_ID, f.FLOWER_NAME FROM flower f LEFT JOIN gardenflower g ON f.FLOWER_ID = g.Flower_FLOWER_ID WHERE g.Garden_GARDEN_ID = '" . $park_id . "'";
-        return $this->db->query($sql)->result_array();
+        $result = array();
+        $sql = "SELECT g.AMOUNT_HIVE AS hive, g.AREA AS area, g.RISK_MIX_HONEY AS risk, g.Flower_FLOWER_ID AS flower_id, g.FLOWER_NEARBY_ID AS mix FROM gardenflower g WHERE g.Garden_GARDEN_ID = '" . $park_id . "'";
+        $flowers = $this->db->query($sql)->result_array();
+        foreach ($flowers as $flower) {
+            $result[$flower['flower_id']] = $flower;
+        }
+        return $result;
     }
 
     public function getAll()
