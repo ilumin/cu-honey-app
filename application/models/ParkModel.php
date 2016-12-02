@@ -75,7 +75,7 @@ class ParkModel extends CI_Model
 
     public function getAll()
     {
-		$sql = "SELECT G.*, GF.AMOUNT_HIVE, F.FLOWER_NAME, P.PROVINCE_NAME FROM garden AS G, gardenflower AS GF, province AS P, flower AS F WHERE G.GARDEN_TYPE= 'PUBLIC' AND GF.GARDEN_GARDEN_ID=G.GARDEN_ID AND P.PROVINCE_ID = G.PROVINCE_ID AND F.FLOWER_ID = GF.Flower_FLOWER_ID;";
+		$sql = "SELECT G.*, GF.AMOUNT_HIVE, F.FLOWER_NAME, P.PROVINCE_NAME FROM garden AS G, gardenflower AS GF, province AS P, flower AS F WHERE G.GARDEN_TYPE= 'PUBLIC' AND GF.GARDEN_GARDEN_ID=G.GARDEN_ID AND P.PROVINCE_ID = G.PROVINCE_ID AND F.FLOWER_ID = GF.Flower_FLOWER_ID ORDER BY G.GARDEN_ID DESC;";
         $query = $this->db->query($sql);
         $data= $query->result_array();
         return $data;
