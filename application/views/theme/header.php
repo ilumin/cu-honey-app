@@ -26,7 +26,8 @@
 
     <!-- Custom Theme Style -->
     <link href="<?php echo base_url() ;?>gentelella-master/build/css/custom.min.css" rel="stylesheet">
-	
+	    <!-- Select2 -->
+    <link href="<?php echo base_url() ;?>gentelella-master/vendors/select2/dist/css/select2.min.css" rel="stylesheet">
 	
 	<link href="<?php echo base_url() ;?>gentelella-master/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="<?php echo base_url() ;?>gentelella-master/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css" rel="stylesheet">

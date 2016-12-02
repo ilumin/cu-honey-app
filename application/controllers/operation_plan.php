@@ -52,15 +52,22 @@ class operation_plan extends CI_Controller {
 	public function bloom($id=0){
 		$data = $this->get_data();
 		
+		$data['blooming_info'] = $this->operation_model->blooming_info();
 		$data['garden_id'] = $id= intval($id);
 		if($id>0){
 			$data['public_park'] = $this->operation_model->get_hive_public_park_byID($id);
+			$data['member_park'] = $this->operation_model->get_hive_member_park_byID($id);
+			$data['blooming_select'] = $this->operation_model->blooming_info($id);
 		}else{
 			$data['public_park'] = $this->operation_model->get_hive_public_park();
+			
+			$data['member_park'] = $this->operation_model->get_hive_member_park($data['blooming_info']);
+			
 		}
 		//var_dump($data['public_park']);
-		$data['blooming_info'] = $this->operation_model->blooming_info();
-
+		
+		
+		
 		
 		//var_dump($data['blooming_info']);
 		$this->load->view('theme/header', $data);

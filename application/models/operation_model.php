@@ -28,9 +28,9 @@ class operation_model extends CI_Model {
 		
 		return $data;
 	}
-	public function blooming_info(){
+	public function blooming_info($id=0){
 		
-	
+	$sql_add="";
 		$sql ="
 			SELECT  
 			B.BLOOMING_ID,
@@ -53,10 +53,19 @@ class operation_model extends CI_Model {
 			AND GF.GARDEN_GARDEN_ID = B.GARDEN_GARDEN_ID
 			AND F.FLOWER_ID = D.Flower_FLOWER_ID
 			AND G.GARDEN_ID = B.GARDEN_GARDEN_ID
+			".$sql_add."
 			ORDER BY DEMAND_ORDER ASC
 		";
-		$query = $this->db->query($sql);
-		$data= $query->result_array();
+		if($id>0){
+			$sql_add= " AND G.GARDEN_ID=".$id;
+			$query = $this->db->query($sql);
+			$data= $query->row_array();
+		}else{
+			
+			$query = $this->db->query($sql);
+			$data= $query->result_array();
+		}
+		
 		return $data;
 	}
 	
@@ -73,16 +82,20 @@ class operation_model extends CI_Model {
 	}
 	
 	public function get_hive_public_park(){
+
+		
 	$sql ="
-		SELECT G.GARDEN_ID,G.NAME ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE
-		FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH
-		WHERE GARDEN_TYPE='PUBLIC'
-		AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
-		AND T.TRANSPORT_ID = TH.Transport_TRANSPORT_ID
-		AND G.STATUS='APPROVE'
-		AND T.STATUS = 'ขนส่งเรียบร้อย'
-		GROUP BY GARDEN_ID
+	SELECT G.GARDEN_ID,G.NAME ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE
+	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH
+	WHERE GARDEN_TYPE='PUBLIC'
+	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
+	AND T.TRANSPORT_ID = TH.Transport_TRANSPORT_ID
+	AND G.STATUS='APPROVE'
+	AND T.STATUS = 'ขนส่งเรียบร้อย'
+	GROUP BY GARDEN_ID
+	ORDER BY AMOUNT_HIVE DESC
 	";
+	
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
 		return $data;
@@ -90,7 +103,7 @@ class operation_model extends CI_Model {
 	
 	public function get_hive_public_park_byID($garden_id){
 	$sql ="
-	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE
+	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE
 	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH, DISTANCEGARDEN AS DG
 	WHERE GARDEN_TYPE='PUBLIC'
 	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
@@ -99,13 +112,62 @@ class operation_model extends CI_Model {
 	AND T.STATUS = 'ขนส่งเรียบร้อย'
 	AND Garden_GARDEN1_ID=".$garden_id."
 	AND Garden_GARDEN2_ID=G.GARDEN_ID
-	GROUP BY DISTANCE";
+	GROUP BY DISTANCE
+	ORDER BY AMOUNT_HIVE DESC, DISTANCE ASC
+	";
+	
+		$query = $this->db->query($sql);
+		$data= $query->result_array();
+		return $data;
+	}
+	public function get_hive_member_park($data){
+		
+			
+	$max_date ='0000-00-00';
+	for($i=0; $i<count($data);$i++){
+		if($max_date<$data[$i]['BLOOMING_ENDDATE']){
+			$max_date = $data[$i]['BLOOMING_ENDDATE'];
+			
+		}
+	}
+	$sql ="
+		SELECT G.GARDEN_ID,G.NAME ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE
+		FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH
+		WHERE GARDEN_TYPE='MEMBER'
+		AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
+		AND T.TRANSPORT_ID = TH.Transport_TRANSPORT_ID
+		AND G.STATUS='APPROVE'
+		AND T.STATUS = 'ขนส่งเรียบร้อย'
+		AND T.TRANSPORT_DATE > '".$max_date."'
+		GROUP BY GARDEN_ID
+		ORDER BY AMOUNT_HIVE DESC
+	";
+	
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
 		return $data;
 	}
 
 	
+	public function get_hive_member_park_byID($garden_id){
+	$sql ="
+	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE
+	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH, DISTANCEGARDEN AS DG
+	WHERE GARDEN_TYPE='MEMBER'
+	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
+	AND T.TRANSPORT_ID = TH.TRANSPORT_TRANSPORT_ID
+	AND G.STATUS='APPROVE'
+	AND T.STATUS = 'ขนส่งเรียบร้อย'
+	AND Garden_GARDEN1_ID=".$garden_id."
+	AND Garden_GARDEN2_ID=G.GARDEN_ID
+	AND G.GARDEN_ID!=".$garden_id."
+	GROUP BY DISTANCE
+	ORDER BY AMOUNT_HIVE DESC, DISTANCE ASC
+	";
+		$query = $this->db->query($sql);
+		$data= $query->result_array();
+		return $data;
+	}
 	public function hive_avaliable($start,$row){
 		
 		$sql ="
