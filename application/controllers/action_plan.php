@@ -6,6 +6,7 @@ class action_plan extends CI_Controller {
 	function __construct()
 	 {
 	   parent::__construct();
+	   $this->load->model('action_model','',TRUE);
 	   $this->load->model('member_model','',TRUE);
 	   $this->current_month =date('m',strtotime(TODAY_DATE));
 	   $this->current_year = date('Y',strtotime(TODAY_DATE));
@@ -144,6 +145,30 @@ class action_plan extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 	}
 	
-	
+	public function bee_hive_expired($year, $month)
+    {
+        $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้';
+        $form_url = base_url() . 'action_plan/bee_hive_expired/' . $year . '/' . $month;
+        $items = $this->action_model->bee_hive_expired_list($month, $year);
+
+        $this->displayActionForm($form_title, $form_url, $items);
+    }
+
+    public function displayActionForm($title, $url, $checkboxItem)
+    {
+        $data = $this->get_data();
+        $data['form_url'] = $url;
+        $data['form_title'] = $title;
+        $data['items'] = $checkboxItem;
+
+        $this->load->view('theme/header', $data);
+        $this->load->view('theme/left_bar', $data);
+        $this->load->view('theme/nav',$data);
+
+        $this->load->view('action_form', $data);
+
+        $this->load->view('theme/footer_js', $data);
+        $this->load->view('theme/footer', $data);
+    }
 	
 }

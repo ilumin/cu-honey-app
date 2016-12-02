@@ -8,7 +8,7 @@
 	  </div>
 
 		<div class="x_content">
-		<div class="row tile_count">
+			<div class="row tile_count">
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-stack-exchange"></i> จำนวนรังผึ้งรวมทั้งหมด</span>
               <div class="count"><?php echo $hive_summary['TOTAL'] ?></div>
@@ -16,7 +16,6 @@
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
               <span class="count_top"><i class="fa fa-clock-o"></i> รังที่สถานะว่าง</span>
               <div class="count blue"><?php echo ($hive_summary['ว่าง']) ?></div>
-              
             </div>
            
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
