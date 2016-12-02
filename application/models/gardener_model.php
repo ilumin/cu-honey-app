@@ -143,7 +143,7 @@ class gardener_model extends CI_Model {
       $garden['NAME'] = isset($data['garden_name']) ? $data['garden_name'] : "";
       $garden['ADDRESS'] = isset($data['address']) ? $data['address'] : "";
       $garden['PROVINCE_ID'] = isset($data['province']) ? $data['province'] : "";
-      $garden['GARDEN_TYPE'] = isset($data['garden_type']) ? $data['garden_type'] : "";
+      $garden['GARDEN_TYPE'] = "MEMBER";
       $this->db->insert('garden', $garden);
       $garden_id = $this->db->insert_id();
 
