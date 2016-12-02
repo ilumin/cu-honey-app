@@ -19,14 +19,12 @@ class action_model extends CI_Model {
 		$data = $query->row_array();
 		return $data;
 	}
-	
 	public function bee_con_expired($month,$year){
 		$sql = "SELECT count(BEEFRAME_ID) as AMOUNT,count(distinct(BEEHIVE_BEE_HIVE_ID)) as H_AMOUNT FROM beeframe where month(expired_date)=".$month." AND year(expired_date)= ".$year;
 		$query = $this->db->query($sql);
 		$data = $query->row_array();
 		return $data;
 	}
-	
 	public function bee_queen_expired($month,$year){
 		$sql = "SELECT count(QUEEN_ID)as AMOUNT FROM queenbee where month(expired_date)=".$month." AND year(expired_date)= ".$year;
 		$query = $this->db->query($sql);
@@ -42,4 +40,3 @@ class action_model extends CI_Model {
 	// start_Date <= EndDateOfMonth And EndDate >=StartDateOfMonth
 }
 
-?>
