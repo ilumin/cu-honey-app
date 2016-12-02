@@ -17,8 +17,7 @@
 			  <th>สถานที่</th>
 			  <th>จำนวนรังผึ้ง<br />ที่ขนได้</th>
 <?php 
-		$public_park_id='';
-		$member_park_id='';
+		$garden_id_all='';
 		if($garden_id >0){  
 ?>	
 			  <th>ระยะทาง</th>  
@@ -82,7 +81,7 @@
 			}
 		?>
 			</tr>
-		<?php $public_park_id .="|".$public_park[$i]['GARDEN_ID']; } ?>
+		<?php $garden_id_all .="|".$public_park[$i]['GARDEN_ID']; } ?>
 		  </tbody>
 		</table>
 		
@@ -170,7 +169,7 @@
 				}
 			?>
 				</tr>
-			<?php $member_park_id .="|".$member_park_id[$i]['GARDEN_ID']; } 
+			<?php $garden_id_all .="|".$member_park_id[$i]['GARDEN_ID']; } 
 		
 		}else{
 		?>
@@ -184,8 +183,9 @@
 		</table>
 	  </div>
 	  <?php if($garden_id >0){  ?>
-	  <input type="hidden" name="public_park_id" value="<?php echo isset($public_park_id)?substr($public_park_id,1):'';?>" />
-	  <input type="hidden" name="member_park_id" value="<?php echo isset($member_park_id)?substr($member_park_id,1):'';?>" />
+	  <input type="hidden" name="garden_id_all" value="<?php echo isset($garden_id_all)?substr($garden_id_all,1):'';?>" />
+	  <input type="hidden" name="bloom_id" value="<?php echo isset($blooming_select['BLOOMING_ID'])?$blooming_select['BLOOMING_ID']:'';?>" />
+	  
 	  <input  class="btn btn-primary submit" type="submit"  value="บันทึกจำนวนรังผึ้งที่ขนย้าย" />
 	  <?php }?>
 	  </form>

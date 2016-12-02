@@ -77,10 +77,45 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
-	
+/*
+array (size=7)
+  'amount13' => string '39' (length=2)
+  'choose_date13' => string '2016-10-20 ' (length=11)
+  'amount12' => string '0' (length=1)
+  'choose_date12' => string '2016-10-20 ' (length=11)
+  'amount11' => string '0' (length=1)
+  'choose_date11' => string '2016-10-20 ' (length=11)
+  'garden_id_all' => string '13|12|11' (length=8)
+*/	
 	
 	function bloom_save(){
 		var_dump($_POST);
+		$garden_id = $this->input->post('garden_id_all');
+		$blooming_id = $this->input->post('bloom_id');
+		
+		if($garden_id!="" && $blooming_id !=""){
+			$garden_id_arr= explode("|",$garden_id);
+			$blooming_info = $this->operation_model->blooming_info($blooming_id);
+			var_dump($blooming_info);
+			for($i=0; $i<count($garden_id_arr); $i++){
+				echo $i;
+				$amount_hive = $this->input->post('amount'.$garden_id_arr[$i]);
+				$choose_date = $this->input->post('choose_date'.$garden_id_arr[$i]);
+			
+				if($amount_hive>0){
+					
+					$data_insert['TRANSPORT_DATE'] = $choose_date;
+					$data_insert['RETURN_DATE'] = $choose_date;
+					$data_insert['BLOOMING_ID'] = $blooming_id;
+					$data_insert['FLOWER_ID'] = $blooming_info['FLOWER_FLOWER_ID'];
+					$hive_info = $this->operation_model->hive_id_ByGardenID($garden_id_arr[$i],$amount_hive);
+					var_dump($hive_info);
+					
+					//$this->insert->insert_hive_transportation();
+					
+				}
+			}
+		}
 		
 	}
 	/* 

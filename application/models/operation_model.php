@@ -181,6 +181,18 @@ class operation_model extends CI_Model {
 		
 	}
 	
+	
+	public function hive_id_ByGardenID($garden_id, $amount_hive){
+				
+		$sql ="SELECT * FROM TRANSPORTHIVE AS TH ,TRANSPORT AS T WHERE T.TRANSPORT_ID = TH.TRANSPORT_TRANSPORT_ID
+AND GARDEN_GARDEN_ID=".$garden_id." LIMIT 0,".$amount_hive;
+
+		$query = $this->db->query($sql);
+		$data= $query->result_array();
+		return $data;
+		
+	}
+	
 	public function insert_hive_transportation_item($data){
 		$this->db->insert('transporthive', $data);
 		$insert_id = $this->db->insert_id();

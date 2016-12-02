@@ -38,12 +38,15 @@ class action_plan extends CI_Controller {
 		$data = $this->get_data();
 		$this->load->model('annual_model');
 		$this->load->model('action_model');
-		
+		$this->load->library('action_plan_library');
 		
 		$data_show['HIVE_STATUS'] = $this->action_model->summary_hive();
-		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired(11,2016);
+		$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,1);
 		
-		$this->load->library('action_plan_library');
+		
+		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired($date_calc['month'],$date_calc['year']);
+		
+		
 		$data['hive_summary']=$this->action_plan_library->summary_hive($data_show);
 		
 		//echo $data['hive_summary']['TOTAL']; exit();
@@ -66,19 +69,29 @@ class action_plan extends CI_Controller {
 			// Past 2 Month	
 			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i-2);
 			$data['bee_queen_raise_complete'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			$data['bee_queen_raise_complete_m'][$i]=$date_calc['month'];
+			$data['bee_queen_raise_complete_y'][$i]=$date_calc['year'];
 			
 			
 			// Past Month	
 			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i-1);
 			$data['bee_queen_raise_2month'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			$data['bee_queen_raise_2month_m'][$i]=$date_calc['month'];
+			$data['bee_queen_raise_2month_y'][$i]=$date_calc['year'];
 			
 			
 			// Current Month	
 			$date_calc = $this->action_plan_library->get_nextmonth($this->current_month,$this->current_year,$i);
 			$data['bee_hive_using'][$i]=$this->action_model->bee_hive_using('เก็บน้ำผึ้ง',$date_calc['month'],$date_calc['year']);
+			$data['bee_hive_using_m'][$i]=$date_calc['month'];
+			$data['bee_hive_using_y'][$i]=$date_calc['year'];
+			
 			$data['bee_annual'][$i]=$summary_hive[$date_calc['year']]['hive_process_month'][$date_calc['month']];
 			$data['month_txt'][$i] = date('M-Y',strtotime($date_calc['year']."-".$date_calc['month']."-1"));
+			
 			$data['bee_queen_raise_1month'][$i]=$this->action_model->bee_hive_using('เพาะ',$date_calc['month'],$date_calc['year']);
+			$data['bee_queen_raise_1month_m'][$i]=$date_calc['month'];
+			$data['bee_queen_raise_1month_y'][$i]=$date_calc['year'];
 			
 			
 			// Next Month
@@ -87,7 +100,8 @@ class action_plan extends CI_Controller {
 			$data['bee_con_expired'][$i]=$this->action_model->bee_con_expired($date_calc['month'],$date_calc['year']);
 			$data['bee_queen_expired'][$i]=$this->action_model->bee_queen_expired($date_calc['month'],$date_calc['year']);	
 			
-			
+			$data['bee_hive_expired_m'][$i] = $data['bee_con_expired_m'][$i] = $data['bee_queen_expired_m'][$i] =$date_calc['month'];
+			$data['bee_hive_expired_y'][$i] = $data['bee_con_expired_y'][$i] = $data['bee_queen_expired_y'][$i] =$date_calc['year'];
 			
 			
 			if($i>0){
