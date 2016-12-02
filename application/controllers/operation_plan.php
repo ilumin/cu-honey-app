@@ -144,6 +144,8 @@ class operation_plan extends CI_Controller {
 	}
 	
 	function harvest($bloom_id=0){
+		
+		
 		$this->load->model('annual_model');
 		$this->load->model('blooming_model');
 		$config = $this->annual_model->config();
@@ -151,51 +153,51 @@ class operation_plan extends CI_Controller {
 		$round_h = $config['ROUND_HARVEST'];
 		$data_insert =$data_insert2= array();
 		$transport_info = $this->operation_model->transport_info_byBID($bloom_id);
+		$bloom_info = $this->blooming_model->blooming_infoByID($bloom_id);
 		$transport_hive_info = $this->operation_model->transporthive_info_byBID($bloom_id);
-		
-		
 		$total_hive = count($transport_hive_info);
-		for($i=0;$i<$total_hive;$i++){
-			$hive_id[$i] = $transport_hive_info[$i]['BEEHIVE_BEE_HIVE_ID'];
-		}
+		
+		//
+		/* 
+		
 		
 		if(ceil($total_hive / $cap) > $round_h){
 			$round_h = $round_h+1;
-		}
+		} */
 		
-		$diff= date_diff(date_create($transport_info[$i]['TRANSPORT_DATE']), date_create($transport_info[$i]['RETURN_DATE']));
+		$diff= date_diff(date_create($transport_info['TRANSPORT_DATE']), date_create($transport_info['RETURN_DATE']));
 		$day = $diff->format("%a")+1;
-		$firstdate =date("d-m-Y",strtotime($transport_info[$i]['TRANSPORT_DATE']));
+		$firstdate =date("d-m-Y",strtotime($transport_info['TRANSPORT_DATE']));
 		
 		for($j=1;$j<=floor($day /$round_h); $j++){
-			echo floor($day /$round_h);
-			$date_insert = date("d-m-Y",strtotime($firstdate." +".($j*3)."days")) ;
-			$data_insert['Garden_GARDEN_ID'] = $transport_info[$i]['Garden_GARDEN_ID'];
-			$data_insert['Flower_FLOWER_ID'] =$transport_info[$i]['Flower_FLOWER_ID'];
-			$data_insert['Blooming_BLOOMING_ID']=$transport_info[$i]['Blooming_BLOOMING_ID'];
+			
+			$date_insert = date("Y-m-d",strtotime($firstdate." +".($j*3)."days")) ;
+			$data_insert['Garden_GARDEN_ID'] = $bloom_info['Garden_GARDEN_ID'];
+			$data_insert['Flower_FLOWER_ID'] =$bloom_info['Flower_FLOWER_ID'];
+			$data_insert['Blooming_BLOOMING_ID']=$bloom_info['BLOOMING_ID'];
 			$data_insert['HARVEST_DATE']=$date_insert;
 			$data_insert['HONEY_AMOUNT']=0;
-			$data_insert['HARVEST_STAUS']='รอเก็บน้ำผึ้ง';
-			//$check_insert[$j] = $this->operation_model->insert_harvest($data_insert);
+			$data_insert['HARVEST_STATUS']='รอเก็บน้ำผึ้ง';
+			
+			$insert_id = $this->operation_model->insert_harvest($data_insert);
+			if($total_hive <= $cap && $insert_id >0){
+				for($k=0; $k<count($transport_hive_info); $k++){
+					$data_insert2['HarvestHoney_HARVEST_ID'] = $insert_id;
+					$data_insert2['BeeHive_BEE_HIVE_ID'] = $transport_hive_info[$k]['BEEHIVE_BEE_HIVE_ID'];
+					$data_insert2['HARVEST_DATE'] = '0000-00-00';
+					$data_insert2['STATUS'] = 'รอเก็บน้ำผึ้ง';
+					$check[$k] = $this->operation_model->insert_harvest_item($data_insert2);
+					
+				}
+			}
+
 		}
 		
-		if($total_hive> $cap){
+		if($k==count($transport_hive_info)){
+			redirect('operation_plan/','refresh');	
 			
 		}
-			/* if((in_array(false , $check_insert) == false) && in_array(false , $insert_id2)== false){
-				$data_bloom['blooming_status'] = 'ยืนยัน';
-				//echo 'confirm';
-				$check_bloom = $this->operation_model->updateBloom($blooming_id,$data_bloom );
-				if($check_bloom  !=false){
-					redirect('operation_plan/harvest/'.$blooming_id, 'refresh');	
-				}
-
-			}else{
-				echo "ERROR:cannot update data complete";
-				
-			} */
-		
-		
+		//TO DO ขาด CASE มากกว่า CAP
 		
 	}
 	
