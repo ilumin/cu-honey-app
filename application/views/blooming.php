@@ -18,9 +18,10 @@
 			  <th>จำนวนรังผึ้ง<br />ที่ขนได้</th>
 <?php 
 		$garden_id_all='';
+		$flower_id_all='';
 		if($garden_id >0){  
 ?>	
-			  <th>ระยะทาง</th>  
+			  <th>ระยะทางระหว่าง<br />สวนที่เลือก</th>  
 			  <th>กรอกจำนวน</th>
 			  <th>เลือกวันที่ต้องการขนส่ง</th>
 		<?php } ?>
@@ -81,7 +82,11 @@
 			}
 		?>
 			</tr>
-		<?php $garden_id_all .="|".$public_park[$i]['GARDEN_ID']; } ?>
+		<?php 
+		$garden_id_all .="|".$public_park[$i]['GARDEN_ID'];
+		$flower_id_all .="|".$public_park[$i]['FLOWER_ID'];
+
+		} ?>
 		  </tbody>
 		</table>
 		
@@ -126,8 +131,8 @@
 
 				<td><?php echo isset($member_park[$i]['DISTANCE'])?$member_park[$i]['DISTANCE']:'' ; ?></td>
 			<?php } ?>
-				<td><?php echo isset($member_park[$i]['TRANSPORT_DATE'])?$member_park[$i]['TRANSPORT_DATE']:'' ; ?></td>
-				<td><?php echo isset($member_park[$i]['RETURN_DATE'])?$member_park[$i]['RETURN_DATE']:'' ; ?></td>
+				<td><?php echo isset($member_park[$i]['STARTDATE'])?$member_park[$i]['STARTDATE']:'' ; ?></td>
+				<td><?php echo isset($member_park[$i]['ENDDATE'])?$member_park[$i]['ENDDATE']:'' ; ?></td>
 			<?php 
 			if($garden_id >0){  ?>	
 				<td>
@@ -169,7 +174,9 @@
 				}
 			?>
 				</tr>
-			<?php $garden_id_all .="|".$member_park_id[$i]['GARDEN_ID']; } 
+			<?php $garden_id_all .="|".$member_park_id[$i]['GARDEN_ID']; 
+				  $flower_id_all .="|".$member_park_id[$i]['FLOWER_ID'];
+			} 
 		
 		}else{
 		?>
@@ -184,6 +191,7 @@
 	  </div>
 	  <?php if($garden_id >0){  ?>
 	  <input type="hidden" name="garden_id_all" value="<?php echo isset($garden_id_all)?substr($garden_id_all,1):'';?>" />
+	  <input type="hidden" name="flower_id_all" value="<?php echo isset($flower_id_all)?substr($flower_id_all,1):'';?>" />
 	  <input type="hidden" name="bloom_id" value="<?php echo isset($blooming_select['BLOOMING_ID'])?$blooming_select['BLOOMING_ID']:'';?>" />
 	  
 	  <input  class="btn btn-primary submit" type="submit"  value="บันทึกจำนวนรังผึ้งที่ขนย้าย" />
@@ -215,7 +223,9 @@
 
 		  <tbody>
 		  
-		   <?php for($i=0; $i<count($blooming_info);$i++){?>
+		   <?php 
+		   if(count($blooming_info)>0){
+		   for($i=0; $i<count($blooming_info);$i++){?>
 		   <tr>
 			<td><?php echo $blooming_info[$i]['FLOWER_NAME']?></td>
 			<td><?php echo $blooming_info[$i]['NAME']?></td>
@@ -225,7 +235,14 @@
 			<td><?php echo $blooming_info[$i]['BLOOMING_ENDDATE']?></td>
 			<td><a  class="btn btn-primary" href="<?php echo base_url();?>operation_plan/bloom/<?php echo  $blooming_info[$i]['GARDEN_ID']?>">ค้นหาสวนเพื่อนขนย้ายรัง</a></td>
 			</tr>
-		   <?php } ?>
+		   <?php } 
+		   }else{
+			?>
+			<td colspan="7" style="text-align: center;">ไม่มีการแจ้งดอกไม้บาน</td>
+			<?php   
+			   
+		   }
+		   ?>
 		  </tbody>
 		</table>
 	  </div>

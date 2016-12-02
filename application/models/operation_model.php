@@ -87,15 +87,22 @@ class operation_model extends CI_Model {
 
 		
 	$sql ="
-	SELECT G.GARDEN_ID,G.NAME ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE
-	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH
-	WHERE GARDEN_TYPE='PUBLIC'
-	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
-	AND T.TRANSPORT_ID = TH.Transport_TRANSPORT_ID
-	AND G.STATUS='APPROVE'
-	AND T.STATUS = 'ขนส่งเรียบร้อย'
-	GROUP BY GARDEN_ID
-	ORDER BY AMOUNT_HIVE DESC
+		SELECT COUNT(H.BEE_HIVE_ID) AS AMOUNT_HIVE, G.GARDEN_ID ,H.FLOWER_FLOWER_ID AS FLOWER_ID ,NAME
+		FROM BEEHIVE AS H , GARDEN AS G 
+		WHERE 
+		H.STATUS='ว่าง'
+		AND G.STATUS='APPROVE'
+		AND G.GARDEN_ID= H.GARDEN_GARDEN_ID
+		AND G.GARDEN_TYPE = 'PUBLIC'
+		AND H.BEE_HIVE_ID  not in (
+		SELECT TH.BeeHive_BEE_HIVE_ID  FROM TRANSPORTHIVE AS TH, TRANSPORT AS T 
+		WHERE T.STATUS='รอขนย้าย'
+		AND T.Garden_GARDEN_ID=H.GARDEN_GARDEN_ID 
+		AND T.FLOWER_FLOWER_ID=H.FLOWER_FLOWER_ID 
+		AND TH.Transport_TRANSPORT_ID = T.Transport_ID
+		)
+		GROUP BY H.GARDEN_GARDEN_ID,H.FLOWER_FLOWER_ID
+		ORDER BY AMOUNT_HIVE DESC
 	";
 	
 		$query = $this->db->query($sql);
@@ -103,28 +110,37 @@ class operation_model extends CI_Model {
 		return $data;
 	}
 	
+	
+	//G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.FLOWER_FLOWER_ID AS FLOWER_ID
 	public function get_hive_public_park_byID($garden_id){
 	$sql ="
-	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE
-	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH, DISTANCEGARDEN AS DG
-	WHERE GARDEN_TYPE='PUBLIC'
-	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
-	AND T.TRANSPORT_ID = TH.TRANSPORT_TRANSPORT_ID
-	AND G.STATUS='APPROVE'
-	AND T.STATUS = 'ขนส่งเรียบร้อย'
-	AND Garden_GARDEN1_ID=".$garden_id."
-	AND Garden_GARDEN2_ID=G.GARDEN_ID
-	GROUP BY DISTANCE
-	ORDER BY AMOUNT_HIVE DESC, DISTANCE ASC
+			SELECT COUNT(H.BEE_HIVE_ID) AS AMOUNT_HIVE, G.GARDEN_ID ,H.FLOWER_FLOWER_ID AS FLOWER_ID ,NAME ,DISTANCE
+			FROM BEEHIVE AS H , GARDEN AS G ,DISTANCEGARDEN AS DG 
+			WHERE 
+			H.STATUS='ว่าง'
+			AND G.STATUS='APPROVE'
+			AND G.GARDEN_ID= H.GARDEN_GARDEN_ID
+			AND G.GARDEN_TYPE = 'PUBLIC'
+			AND Garden_GARDEN1_ID= ".$garden_id."
+			AND Garden_GARDEN2_ID=G.GARDEN_ID
+			AND H.BEE_HIVE_ID  not in (
+			SELECT TH.BeeHive_BEE_HIVE_ID  FROM TRANSPORTHIVE AS TH, TRANSPORT AS T 
+			WHERE T.STATUS='รอขนย้าย'
+			AND T.Garden_GARDEN_ID=H.GARDEN_GARDEN_ID 
+			AND T.FLOWER_FLOWER_ID=H.FLOWER_FLOWER_ID 
+			AND TH.Transport_TRANSPORT_ID = T.Transport_ID
+			)
+			GROUP BY H.GARDEN_GARDEN_ID,H.FLOWER_FLOWER_ID
+			ORDER BY AMOUNT_HIVE DESC ,DISTANCE ASC
 	";
 	
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
 		return $data;
 	}
-	public function get_hive_member_park($data){
+public function get_hive_member_park($data){
 		
-			
+		//รอแก้ไข	
 	$max_date ='0000-00-00';
 	for($i=0; $i<count($data);$i++){
 		if($max_date<$data[$i]['BLOOMING_ENDDATE']){
@@ -132,17 +148,20 @@ class operation_model extends CI_Model {
 			
 		}
 	}
+	
+	
 	$sql ="
-		SELECT G.GARDEN_ID,G.NAME ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE
-		FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH
-		WHERE GARDEN_TYPE='MEMBER'
-		AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
-		AND T.TRANSPORT_ID = TH.Transport_TRANSPORT_ID
+		SELECT COUNT(BEE_HIVE_ID) AS AMOUNT_HIVE,GARDEN_GARDEN_ID AS GARDEN_ID,FLOWER_FLOWER_ID AS FLOWER_ID ,NAME,STARTDATE,ENDDATE
+		FROM BEEHIVE AS H , GARDEN AS G 
+		WHERE 
+		H.STATUS='เก็บน้ำผึ้ง'
 		AND G.STATUS='APPROVE'
-		AND T.STATUS = 'ขนส่งเรียบร้อย'
-		AND T.TRANSPORT_DATE > '".$max_date."'
-		GROUP BY GARDEN_ID
+		AND G.GARDEN_ID= H.GARDEN_GARDEN_ID
+		AND G.GARDEN_TYPE = 'MEMBER'
+		AND H.ENDDATE >  '".$max_date."'
+		GROUP BY GARDEN_GARDEN_ID,FLOWER_FLOWER_ID
 		ORDER BY AMOUNT_HIVE DESC
+				
 	";
 	
 		$query = $this->db->query($sql);
@@ -153,7 +172,7 @@ class operation_model extends CI_Model {
 	
 	public function get_hive_member_park_byID($garden_id){
 	$sql ="
-	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE
+	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE,T.FLOWER_FLOWER_ID AS FLOWER_ID
 	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH, DISTANCEGARDEN AS DG
 	WHERE GARDEN_TYPE='MEMBER'
 	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
@@ -180,12 +199,10 @@ class operation_model extends CI_Model {
 		return $data;
 		
 	}
-	
-	
-	public function hive_id_ByGardenID($garden_id, $amount_hive){
+
+	public function hive_id_ByGardenID($garden_id,$flower_id, $amount_hive){
 				
-		$sql ="SELECT * FROM TRANSPORTHIVE AS TH ,TRANSPORT AS T WHERE T.TRANSPORT_ID = TH.TRANSPORT_TRANSPORT_ID
-AND GARDEN_GARDEN_ID=".$garden_id." LIMIT 0,".$amount_hive;
+		$sql ="SELECT * FROM BEEHIVE AS H  WHERE GARDEN_GARDEN_ID=".$garden_id." AND FLOWER_FLOWER_ID = ".$flower_id." ORDER BY EXPIRED_DATE DESC LIMIT 0,".$amount_hive;
 
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
@@ -194,32 +211,68 @@ AND GARDEN_GARDEN_ID=".$garden_id." LIMIT 0,".$amount_hive;
 	}
 	
 	public function insert_hive_transportation_item($data){
-		$this->db->insert('transporthive', $data);
-		$insert_id = $this->db->insert_id();
-		return  $insert_id;
+		$this->db->set($data);
+		return $this->db->insert('transporthive', $data);
+		
 	}
 	public function insert_hive_transportation($data){
+		$this->db->set($data);
 		$this->db->insert('transport', $data);
 		$insert_id = $this->db->insert_id();
 		return  $insert_id;
 	}
 
 	public function insert_harvest($data){
+		$this->db->set($data);
 		$this->db->insert('harvesthoney', $data);
 		$insert_id = $this->db->insert_id();
 		return  $insert_id;
 	}
 	public function insert_harvest_item($data){
+		$this->db->set($data);
 		$this->db->insert('harvesthoneyitem', $data);
 		$insert_id = $this->db->insert_id();
 		return  $insert_id;
 	}
 	
 	public function insert_distance($data){
+		$this->db->set($data);
 		$check = $this->db->insert('distancegarden',$data);
 		return $check;
 		
 	}
+	
+	  public function updateBloom($id, $data = array())
+    {
+		$update= array();
+
+		if(isset($data['blooming_status'])){
+			$update['BLOOMING_STATUS'] = $data['blooming_status'];
+		}
+		if(isset($data['blooming_startdate'])){
+			$update['BLOOMING_STARTDATE'] = $data['blooming_startdate'];
+		}
+		if(isset($data['blooming_enddate'])){
+			$update['BLOOMING_ENDDATE'] = $data['blooming_enddate'];
+		}
+		if(isset($data['blooming_percent'])){
+			$update['BLOOMING_PERCENT'] = $data['blooming_percent'];
+		}
+		if(isset($data['garden_garden_id'])){
+			$update['garden_garden_id'] = $data['garden_garden_id'];
+		}
+		if(isset($data['flower_flower_id'])){
+			$update['flower_flower_id'] = $data['flower_flower_id'];
+		}
+		
+		if(count($update)>0){
+         $this->db->where('BLOOMING_ID', $id);
+			return $this->db->update('blooming', $update);
+		}else{
+			
+			return false;
+		}
+    }
 }
 
 ?>

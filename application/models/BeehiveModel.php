@@ -18,12 +18,34 @@ class BeehiveModel extends CI_Model
 
     public function updateData($id, $data = array())
     {
-        $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
-        $insert['STARTDATE'] = isset($data['start_date']) ? $data['start_date'] : null;
-        $insert['ENDDATE'] = isset($data['end_date']) ? $data['end_date'] : null;
-        $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
+		$update= array();
 
-        return $this->db->where('BEE_HIVE_ID', $id)->update('beehive', $insert);
+		if(isset($data['expired_date'])){
+			$update['EXPIRED_DATE'] = $data['expired_date'];
+		}
+		if(isset($data['start_date'])){
+			$update['STARTDATE'] = $data['start_date'];
+		}
+		if(isset($data['end_date'])){
+			$update['ENDDATE'] = $data['end_date'];
+		}
+		if(isset($data['status'])){
+			$update['STATUS'] = $data['status'];
+		}
+		if(isset($data['GARDEN_GARDEN_ID'])){
+			$update['GARDEN_GARDEN_ID'] = $data['GARDEN_GARDEN_ID'];
+		}
+		if(isset($data['FLOWER_FLOWER_ID'])){
+			$update['FLOWER_FLOWER_ID'] = $data['FLOWER_FLOWER_ID'];
+		}
+		
+		if(count($update)>0){
+         $this->db->where('BEE_HIVE_ID', $id);
+			return $this->db->update('beehive', $update);
+		}else{
+			
+			return false;
+		}
     }
 
     public function insertData($data = array())
