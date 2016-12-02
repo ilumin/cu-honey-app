@@ -32,13 +32,13 @@ class gardener_model extends CI_Model {
 	}
 
 	public function gardener_info($member_id){
-		$query = $this->db->query('SELECT * from GARDENER as G, PROVINCE as P WHERE GARDENER_ID='.$member_id);
+		$query = $this->db->query('SELECT * from gardener as G, province as P WHERE GARDENER_ID='.$member_id);
 		$data= $query->row_array();
 		return $data;
 
 	}
 	public function garden_all(){
-		$query = $this->db->query('SELECT * from GARDEN WHERE STATUS="APPROVE" ');
+		$query = $this->db->query('SELECT * from garden WHERE STATUS="APPROVE" ');
 		$data= $query->result_array();
 		return $data;
 		
@@ -46,21 +46,21 @@ class gardener_model extends CI_Model {
 	public function garden_info($member_id,$type="MEMBER"){
 
 
-		$query = $this->db->query('SELECT * from GARDEN WHERE GARDEN_TYPE="'.$type.'" AND GARDENER_ID='.$member_id);
+		$query = $this->db->query('SELECT * from garden WHERE GARDEN_TYPE="'.$type.'" AND GARDENER_ID='.$member_id);
 		$data= $query->row_array();
 		return $data;
 
 	}
 
 	public function gardenflower_info($garden_id){
-		$query = $this->db->query('SELECT * from GARDENFLOWER WHERE GARDEN_GARDEN_ID='.$garden_id);
+		$query = $this->db->query('SELECT * from gardenflower WHERE GARDEN_GARDEN_ID='.$garden_id);
 		$data= $query->result_array();
 		return $data;
 
 	}
 
 	public function garden_bloomingmonth($month,$garden_id){
-	$query = $this->db->query('SELECT *FROM FLOWER F ,GARDENFLOWER GF WHERE
+	$query = $this->db->query('SELECT *FROM flower F ,gardenflower GF WHERE
 	(
 		(BLOOM_START_MONTH <= BLOOM_END_MONTH AND BLOOM_START_MONTH <='.$month.' AND BLOOM_END_MONTH >='.$month.')
 		OR
@@ -84,7 +84,7 @@ class gardener_model extends CI_Model {
 		return $check;
 	}
 	public function blooming_info($garden_id){
-		$query = $this->db->query('SELECT * from BLOOMING AS B,FLOWER AS F WHERE  F.FLOWER_ID = B.FLOWER_FLOWER_ID AND B.Garden_GARDEN_ID='.$garden_id);
+		$query = $this->db->query('SELECT * from blooming AS B,flower AS F WHERE  F.FLOWER_ID = B.FLOWER_FLOWER_ID AND B.Garden_GARDEN_ID='.$garden_id);
 		$data= $query->result_array();
 		return $data;
 	}
