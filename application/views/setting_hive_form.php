@@ -12,13 +12,6 @@ $end_date = isset($hive->ENDDATE) ? $hive->ENDDATE : null;
 $status = isset($hive->STATUS) ? $hive->STATUS : null;
 ?>
 
-<?php if(!empty($flash_type)): ?>
-  <div class="x_panel">
-    <h4><?php echo $flash_type; ?></h4>
-    <p><?php echo $flash_message; ?></p>
-  </div>
-<?php endif; ?>
-
 <form action="<?php echo base_url() . 'setting/hive/' . $hive_id; ?>" class="form-horizontal form-label-left" method="post" novalidate>
 
   <span class="section">
