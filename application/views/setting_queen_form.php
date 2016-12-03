@@ -4,6 +4,7 @@
 <?php endif; ?>
 
 <?php
+$available =array();
 $hives = isset($hives) ? $hives : array();
 $queen_id = isset($queen_id) ? $queen_id : null;
 $beehive_id = isset($queen->BeeHive_BEE_HIVE_ID) ? $queen->BeeHive_BEE_HIVE_ID : null;

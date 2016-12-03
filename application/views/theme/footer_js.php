@@ -1,3 +1,4 @@
+<!--Start FOOTER JS -->
 <!-- jQuery -->
     <script src="<?php echo base_url() ;?>gentelella-master/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
