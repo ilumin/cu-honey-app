@@ -86,6 +86,15 @@
 							 <?php echo $garden['ADDRESS']?>
 							</div>
 						  </div>
+						  
+						  <div class="item form-group">
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">สถานะสวน <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 col-xs-12 red">
+							 <?php echo ($garden['STATUS']=='APPROVE')?"อนุมัติ":"รอการอนุมัติ" ?>
+							</div>
+						  </div>
+						  
 						  <div class="clearfix"></div>
 							<span class="section">ข้อมูลพืชมีดอกที่ปลูกในสวน</span>
 							<h4 class="red">เลือกพืชที่ปลูกในสวน  (อย่างน้อย 1 รายการ)</h4>
@@ -148,7 +157,7 @@
 									  
 									  <?php 
 									  //echo $check_mix_plant;
-									  $select_plant= '<select name="mix_plant'.$flower[$i]['FLOWER_ID'].'" >	<option value="-">เลือกพืชที่ปลูกผสม</option>';
+									  $select_plant= '<select class="form-control col-md-7 col-xs-12 " name="mix_plant'.$flower[$i]['FLOWER_ID'].'" >	<option value="-">เลือกพืชที่ปลูกผสม</option>';
 										for($j=0; $j<count($flower); $j++){
 											$selected ="";
 											if($flower[$i]['FLOWER_ID'] != $flower[$j]['FLOWER_ID']  ){

@@ -106,6 +106,7 @@ class operation_model extends CI_Model {
 			".$sql_add."
 			ORDER BY DEMAND_ORDER ASC, AMOUNT_HIVE DESC
 		";
+		
 		if($id>0){
 			$sql_add= " AND G.GARDEN_ID=".$id;
 			$query = $this->db->query($sql);
@@ -181,7 +182,7 @@ class operation_model extends CI_Model {
 			GROUP BY H.GARDEN_GARDEN_ID,H.FLOWER_FLOWER_ID
 			ORDER BY AMOUNT_HIVE DESC ,DISTANCE ASC
 	";
-	
+	//echo $sql;
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
 		return $data;

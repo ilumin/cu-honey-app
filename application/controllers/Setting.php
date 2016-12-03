@@ -230,6 +230,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_hive_list',$this->data);
     		$this->load->view('theme/footer_js', $this->data);
+			$this->load->view('js/setting_frame_form', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
 
@@ -292,6 +293,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_frame_list', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
+			$this->load->view('js/setting_beekeeper', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
 

@@ -75,8 +75,9 @@ class annual_model extends CI_Model {
 			G.GARDEN_ID = AI.Garden_GARDEN_ID AND
 			P.PROVINCE_ID = G.PROVINCE_ID AND
 			A.ANNUAL_YEAR = '".$year."'
-			
+			ORDER BY G.GARDEN_ID ASC, F.FLOWER_ID ASC
 		";
+		
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
 		return $data;

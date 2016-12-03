@@ -32,7 +32,7 @@ class action_plan extends CI_Controller {
 		return $this->member_model->get_data();
 	}
 	
-	public function index()
+	public function index($id='0')
 	{
 		
 		//start_Date <= EndDateOfMonth And EndDate >=StartDateOfMonth
@@ -140,7 +140,11 @@ class action_plan extends CI_Controller {
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
-		$this->load->view('action_plan', $data);
+		if($id==0){
+			$this->load->view('action_plan', $data);
+		}else{
+			$this->load->view('action_plan2', $data);
+		}
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}

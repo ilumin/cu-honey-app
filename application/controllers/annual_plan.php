@@ -129,6 +129,7 @@ class annual_plan extends CI_Controller {
 		$this->load->model('gardener_model');
 		
 		$data['annual_info']=$this->annual_model->annual_info_list_db($year);
+		
 		$data['config']=$this->annual_model->annual_info_db($year);
 		
 		$this->load->library('annual_plan_library');

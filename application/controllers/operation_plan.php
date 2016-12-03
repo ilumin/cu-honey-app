@@ -221,7 +221,36 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 		
 	}
-	
+	public function test(){
+		$this->load->model('gardener_model');
+		$garden = $this->gardener_model->garden_all();
+		
+		for($i=0;$i<count($garden);$i++){
+			$garden_id = $garden[$i]['GARDEN_ID'];
+			for($j=0;$j<count($garden); $j++){
+				//$garden_arr[$i][$j]=rand(15,145);
+				
+				$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']] = rand(15,145);
+
+				$data_insert['Garden_GARDEN1_ID'] = $garden[$i]['GARDEN_ID'];
+				$data_insert['Garden_GARDEN2_ID'] = $garden[$j]['GARDEN_ID'];
+				$data_insert['DISTANCE']=$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']];
+				
+				if(isset($check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']])){
+					
+					$data_insert['DISTANCE']=$check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']];	
+					$check_insert[$garden[$i]['GARDEN_ID']][$garden[$j]['GARDEN_ID']]=$check_insert[$garden[$j]['GARDEN_ID']][$garden[$i]['GARDEN_ID']];	
+				}
+				
+				//var_Dump($data_insert); 
+				
+				echo $this->operation_model->insert_distance($data_insert);
+			}
+		}
+		var_Dump($check_insert); 
+		exit();
+		
+	}
 	/* 
 	
 	public function hive_update(){

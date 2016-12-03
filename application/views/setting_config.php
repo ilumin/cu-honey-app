@@ -20,7 +20,7 @@
                     <?php echo $label; ?>
                 </label>
                 <div class="col-md-6 col-sm-6 col-xs-12">
-                    <input class="form-control col-md-7 col-xs-12 input-date" id="<?php echo $key; ?>" name="<?php echo $key; ?>" type="text" value="<?php echo isset($config[$key]) ? $config[$key] : ''; ?>">
+                    <input class="form-control col-md-7 col-xs-12 " id="<?php echo $key; ?>" name="<?php echo $key; ?>" type="text" value="<?php echo isset($config[$key]) ? $config[$key] : ''; ?>">
                 </div>
             </div>
             <?php endforeach; ?>

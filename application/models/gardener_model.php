@@ -95,7 +95,34 @@ class gardener_model extends CI_Model {
 		return $check_delete;
 	}
 
+	public function update_garden_member($garden_id,$data){
+		 try {
+			 
+           if (isset($data['gardener_id'])){ 
+				$update['GARDENER_ID']= $data['gardener_id'];
+		   }
+           if (isset($data['name'])){ 
+				$update['NAME']= $data['name'];
+		   }
+           if (isset($data['address'])){ 
+				$update['ADDRESS']= $data['address'];
+		   }
+           if (isset($data['province_id'])){ 
+				$update['PROVINCE_ID']= $data['province_id'];
+		   }
+           if (isset($data['garden_type'])){ 
+				$update['GARDEN_TYPE']= $data['garden_type'];
+		   }
+           if (isset($data['status'])){ 
+				$update['STATUS']= $data['status'];
+		   }
+           
 
+            return $this->db->where('GARDEN_ID', $garden_id)->update('garden', $update);
+		} catch (Exception $e) {
+            throw new Exception("Cannot update park: " . $e->getMessage(), 1);
+        }
+	}
   public function insert($data)
   {
     $has_email = isset($data['email']);
@@ -144,7 +171,7 @@ class gardener_model extends CI_Model {
       $garden['ADDRESS'] = isset($data['address']) ? $data['address'] : "";
       $garden['PROVINCE_ID'] = isset($data['province']) ? $data['province'] : "";
       $garden['GARDEN_TYPE'] = "MEMBER";
-      $garden['STATUS'] = "UNAPPROVE";
+      $garden['STATUS'] = "WAITING";
       $this->db->insert('garden', $garden);
       $garden_id = $this->db->insert_id();
 

@@ -84,10 +84,36 @@ class Main extends CI_Controller {
 		//get flower in garden info
 		$gardenflower = $this->gardener_model->gardenflower_info($garden['GARDEN_ID']);
 		$data['gardenflower'] = $gardenflower;
+		//var_dump($data['gardenflower']);
 
+		//var_dump($data['gardener_list'] ); exit();
 
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('member_detail', $data);
+		$this->load->view('theme/footer_js', $data);
+		//$this->load->view('js/member_detail_js', $data);
+		$this->load->view('theme/footer', $data);
 
+	}
 
+	public function distance_garden($id){
+		$data = $this->member_model->get_data();
+		$this->load->helper(array('form'));
+		//get member info from gardener
+		$this->load->model('gardener_model','',TRUE);
+		$data['gardener_info'] = $this->gardener_model->gardener_info($id);
+		//get flower table
+		$flower = $this->gardener_model->get_flower();
+		$data['flower'] = $flower;
+		//get garden info
+		$garden = $this->gardener_model->garden_info($id);
+		$data['garden'] = $garden;
+
+		//get flower in garden info
+		$gardenflower = $this->gardener_model->gardenflower_info($garden['GARDEN_ID']);
+		$data['gardenflower'] = $gardenflower;
 		//var_dump($data['gardenflower']);
 
 		//var_dump($data['gardener_list'] ); exit();
@@ -133,7 +159,11 @@ class Main extends CI_Controller {
 		}
 
 		if(in_array(false,$chk_insert)=== false && $chk_del ==true ){
-			redirect('main/member_detail/'.$gardener_id, 'refresh');
+			$data_update['status'] = 'APPROVE' ;
+			$check = $this->gardener_model->update_garden_member($garden_id, $data_update);
+			if($check != false) {
+				redirect('main/member_detail/'.$gardener_id, 'refresh');
+			}
 		}
 	}
 
