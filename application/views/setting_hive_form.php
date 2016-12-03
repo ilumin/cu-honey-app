@@ -19,6 +19,7 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
     <?php echo empty($hive_id) ? 'เพิ่มกล่องรังผึ้ง' : 'แก้ไขข้อมูลกล่องรังผึ้ง'; ?>
   </span>
 
+  <?php if(!empty($beehive_id)): ?>
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
       รหัสรังผึ้ง<span class="required">*</span>
@@ -27,6 +28,7 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
       <input class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="text" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly disabled' : ''; ?>>
     </div>
   </div>
+  <?php endif; ?>
 
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">
