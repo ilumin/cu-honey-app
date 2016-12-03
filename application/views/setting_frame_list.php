@@ -1,6 +1,7 @@
+<?php if($action == 'list-hive') { ?>
 <div class="right_col">
 <div class="col-md-12 col-sm-12 col-xs-12">
-
+<?php } ?>
   <?php if(count($frames) < 10): ?>
   <?php if(!empty($flash_type)): ?>
     <div class="x_panel">
@@ -52,6 +53,7 @@
 		</table>
 	  </div>
 	</div>
-
+<?php  if($action == 'list-hive'){ ?>
 </div>
 </div>
+<?php } ?>

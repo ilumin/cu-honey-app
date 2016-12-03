@@ -103,7 +103,8 @@ class Member extends CI_Controller {
             );
             $this->session->set_userdata('logged_in', $data_session);
 
-            header("Location: /member/register2");
+            
+			redirect("member/register2",'refresh');
         } catch (Exception $e) {
             echo "ERROR: " . $e->getMessage() . "<br /><a href='window.history.back();'>back</a>";
         }
@@ -117,7 +118,10 @@ class Member extends CI_Controller {
             $this->load->model('gardener_model','',TRUE);
             $this->gardener_model->insert_garden($_POST, $gardener_id);
 
-            header("Location: /main");
+				
+           // header("Location: /main");
+			
+			redirect("member/logout",'refresh');
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

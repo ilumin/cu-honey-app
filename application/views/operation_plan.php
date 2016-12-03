@@ -11,14 +11,14 @@
 				$show_date = $schedule_info['TRANSPORT'][$i]['TRANSPORT_DATE'];
 				$garden_name = $schedule_info['TRANSPORT'][$i]['GARDEN_NAME'];
 				$flower_name = $schedule_info['TRANSPORT'][$i]['FLOWER_NAME'];
-				$date_schedule[$show_date] .= '<div><a href="'.base_url().'operation_plan/transfer_detail">ขนส่ง: '.$garden_name." (".$flower_name.') </a> </div>';
+				$date_schedule[$show_date] .= '<div><a href="'.base_url().'operation_plan/transfer_detail/'.$schedule_info['TRANSPORT'][$i]['TRANSPORT_ID'].'">ขนส่ง: '.$garden_name." (".$flower_name.') </a> </div>';
 			}			
 			
 			for($i=0;$i< count($schedule_info['HARVESTHONEY']) ; $i++){
 				$show_date = $schedule_info['HARVESTHONEY'][$i]['HARVEST_DATE'];
 				$garden_name = $schedule_info['HARVESTHONEY'][$i]['GARDEN_NAME'];
 				$flower_name = $schedule_info['HARVESTHONEY'][$i]['FLOWER_NAME'];
-				$date_schedule[$show_date] .= '<div><a href="">เก็บน้ำผึ้ง: '.$garden_name." (".$flower_name.') </a> </div>';
+				$date_schedule[$show_date] .= '<div><a href="'.base_url().'operation_plan/transfer_detail/'.$schedule_info['HARVESTHONEY'][$i]['HARVEST_ID'].'">เก็บน้ำผึ้ง: '.$garden_name." (".$flower_name.') </a> </div>';
 			}			
 			
 			?>

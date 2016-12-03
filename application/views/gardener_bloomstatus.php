@@ -9,6 +9,7 @@
 
 		<div class="x_content">
 			<h3>รายการสถานะแจ้งดอกไม้บาน</h3>
+			<?php if(count($blooming_info) >0){ ?>
 			<span class="section">สวน: <?php echo $garden['NAME']?></span>
 			<?php for($i=0;$i<count($blooming_info);$i++){  ?>
 			<div class="col-md-6 col-sm-6 col-xs-6">
@@ -21,7 +22,7 @@
 				</li>
 				</ul>
 			</div>
-	<?php }	 ?>
+			<?php }	}else{ echo "ยังไม่มีรายการแจ้งดอกไม้บาน";} ?>
 	  </div>
 	</div>
   </div>

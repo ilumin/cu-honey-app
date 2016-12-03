@@ -117,7 +117,7 @@ class Setting extends CI_Controller
         $hasPostRequest = !empty($this->input->post());
         if ($hasPostRequest) {
             $this->configModel->updateData($this->input->post());
-            header('Location: /setting/config');
+           redirect('setting/config','refresh');
         }
 
         $this->data['field'] = $this->configModel->getField();
@@ -136,17 +136,37 @@ class Setting extends CI_Controller
         $hasPostRequest = !empty($this->input->post());
         if ($hasPostRequest) {
             $this->beekeeperModel->updateData($this->input->post());
-            header('Location: /setting/config');
+           redirect('setting/config','refresh');
         }
 
         $this->data['field'] = $this->beekeeperModel->getField();
         $this->data['config'] = $this->beekeeperModel->getAll();
+        $this->data['province'] = $this->gardener_model->getAllProvince();
 
         $this->load->view('theme/header', $this->data);
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
         $this->load->view('setting_beekeeper',$this->data);
-        $this->load->view('theme/footer_js', $this->data);
+        $this->load->view('js/setting_beekeeper', $this->data);
+        $this->load->view('theme/footer', $this->data);
+    }
+    public function flower()
+    {
+        $hasPostRequest = !empty($this->input->post());
+        if ($hasPostRequest) {
+            $this->beekeeperModel->updateData($this->input->post());
+           redirect('setting/config','refresh');
+        }
+
+        $this->data['field'] = $this->beekeeperModel->getField();
+        $this->data['config'] = $this->beekeeperModel->getAll();
+        $this->data['province'] = $this->gardener_model->getAllProvince();
+
+        $this->load->view('theme/header', $this->data);
+        $this->load->view('theme/left_bar', $this->data);
+        $this->load->view('theme/nav', $this->data);
+        $this->load->view('setting_flower',$this->data);
+        $this->load->view('js/setting_beekeeper', $this->data);
         $this->load->view('theme/footer', $this->data);
     }
 
@@ -157,17 +177,17 @@ class Setting extends CI_Controller
 
         if ($hasId && $hasPostRequest) {
             $this->parkModel->updateData($id, $this->input->post());
-            header('Location: /setting/publicpark');
+           redirect('setting/publicpark');
         }
 
         if ($hasPostRequest) {
             $this->parkModel->insertData($this->input->post());
-            header('Location: /setting/publicpark');
+           redirect('setting/publicpark');
         }
 
         $user = $this->session->userdata('logged_in');
         if (empty($user)) {
-            header('Location: /member/login');
+           redirect('member/login');
         }
 
         $this->data['gardener_id'] = isset($user['id']) ? $user['id'] : null;
@@ -223,6 +243,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_hive_form', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('js/setting_hive_form', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
 
@@ -233,11 +254,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลกล่องรังผึ้งรหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive');
+           redirect('setting/hive');
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/hive/' . $id);
+           redirect('setting/hive/' . $id);
         }
 
     }
@@ -249,11 +270,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลกล่องรังผึ้งรหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive');
+           redirect('setting/hive');
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/hive/' . $id);
+           redirect('setting/hive/' . $id);
         }
     }
 
@@ -282,6 +303,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/left_bar', $this->data);
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_frame_form', $this->data);
+    		$this->load->view('js/setting_frame_form', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
@@ -293,11 +315,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลคอนรหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive/' . $insert['beehive_id']);
+           redirect('setting/hive/' . $insert['beehive_id']);
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/hive/' . $id);
+           redirect('setting/hive/' . $id);
         }
     }
 
@@ -308,11 +330,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลคอนผึ้งรหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive/' . $insert['beehive_id']);
+           redirect('setting/hive/' . $insert['beehive_id']);
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/hive/' . $id);
+           redirect('setting/hive/' . $id);
         }
     }
 
@@ -342,7 +364,7 @@ class Setting extends CI_Controller
         $this->load->view('theme/nav', $this->data);
     		$this->load->view('setting_queen_form', $this->data);
     		$this->load->view('theme/footer_js', $this->data);
-    		$this->load->view('theme/footer_js', $this->data);
+    		$this->load->view('js/formEditQueen', $this->data);
     		$this->load->view('theme/footer', $this->data);
     }
 
@@ -353,11 +375,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลกล่องนางพญารหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive/' . $insert['beehive_id']);
+           redirect('setting/hive/' . $insert['beehive_id']);
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/queen/');
+           redirect('setting/queen/');
         }
     }
 
@@ -368,11 +390,11 @@ class Setting extends CI_Controller
 
             $this->session->set_flashdata('flash.type', 'success');
             $this->session->set_flashdata('flash.message', 'บันทึกข้อมูลนางพญารหัส ' . $id . ' สำเร็จ');
-            header('Location: /setting/hive/' . $insert['beehive_id']);
+           redirect('setting/hive/' . $insert['beehive_id']);
         } catch (Exception $e) {
             $this->session->set_flashdata('flash.type', 'error');
             $this->session->set_flashdata('flash.message', $e->getMessage());
-            header('Location: /setting/queen');
+           redirect('setting/queen');
         }
     }
 

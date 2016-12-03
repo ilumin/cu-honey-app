@@ -200,8 +200,25 @@ class operation_plan extends CI_Controller {
 		//TO DO ขาด CASE มากกว่า CAP
 		
 	}
-	public function transfer_detail(){
+	public function transfer_detail($transport_id){
+		$data = $this->get_data();
+		if($transport_id>0){
+			$transport_info = $this->operation_model->transport_info_byTID($transport_id);
+		//	var_dump($transport_info);
+			if(count($transport_info)>0 ){
+				$bloom_id = $transport_info['Blooming_BLOOMING_ID'];
+				$transportHive = $this->operation_model->transporthive_info_byBID($bloom_id);
+				$data['transport_info'] = $transport_info;
+				$data['transport_hive'] =$transportHive;
+			}
+		}
 		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('transfer_detail', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('theme/footer', $data);
 		
 	}
 	

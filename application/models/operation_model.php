@@ -7,9 +7,11 @@ class operation_model extends CI_Model {
 	
 	function schedule_info($start_date, $end_date){
 
-		$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F WHERE 
-		T.Garden_GARDEN_ID = G.GARDEN_ID 
-		AND F.FLOWER_ID = T.FLOWER_FLOWER_ID
+		$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F ,BLOOMING AS B
+		WHERE 
+		B.Garden_GARDEN_ID = G.GARDEN_ID 
+		AND B.BLOOMING_ID = T.BLOOMING_BLOOMING_ID
+		AND F.FLOWER_ID = B.FLOWER_FLOWER_ID
 		AND TRANSPORT_DATE>='".$start_date."' 
 		AND TRANSPORT_DATE<= '".$end_date."'";
 		
@@ -29,10 +31,28 @@ class operation_model extends CI_Model {
 		return $data;
 	}
 	
+	public function transport_info_byTID($transport_id){
+			$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME  FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F ,BLOOMING AS B
+			WHERE 
+		B.Garden_GARDEN_ID = G.GARDEN_ID
+		AND B.BLOOMING_ID = T.BLOOMING_BLOOMING_ID
+		AND F.FLOWER_ID = B.FLOWER_FLOWER_ID
+		AND T.TRANSPORT_ID = ".$transport_id."
+		";
+				
+		$query = $this->db->query($sql);
+		
+		//var_dump($data['HARVESTHONEY']);
+		
+		return $query->row_array();
+	}
+	
 	public function transport_info_byBID($bloom_id){
-			$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F WHERE 
-		T.Garden_GARDEN_ID = G.GARDEN_ID 
-		AND F.FLOWER_ID = T.FLOWER_FLOWER_ID
+			$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F ,BLOOMING AS B 
+		WHERE 
+		B.Garden_GARDEN_ID = G.GARDEN_ID
+		AND B.BLOOMING_ID = T.BLOOMING_BLOOMING_ID
+		AND F.FLOWER_ID = B.FLOWER_FLOWER_ID
 		AND T.BLOOMING_BLOOMING_ID = ".$bloom_id."
 		";
 				

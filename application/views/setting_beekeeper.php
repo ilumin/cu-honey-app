@@ -1,7 +1,7 @@
 
 <div class="right_col">
     <div class="col-md-12 col-sm-12 col-xs-12">
-
+		<div class="x_panel">
         <?php if(!empty($flash_type)): ?>
             <div class="x_panel">
                 <h4><?php echo $flash_type; ?></h4>
@@ -20,7 +20,28 @@
                         <?php echo $label; ?>
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input class="form-control col-md-7 col-xs-12 input-date" id="<?php echo $key; ?>" name="<?php echo $key; ?>" type="text" value="<?php echo isset($config[$key]) ? $config[$key] : ''; ?>">
+					<?php if($key !='PROVINCE_ID' && $key !='PASSWORD') { ?>
+                        <input class="form-control col-md-7 col-xs-12 " id="<?php echo $key; ?>" name="<?php echo $key; ?>" type="text" value="<?php echo isset($config[$key]) ? $config[$key] : ''; ?>">
+					<?php }else if($key =='PASSWORD'){
+					?>
+					 <input class="form-control col-md-7 col-xs-12 x" id="<?php echo $key; ?>" name="<?php echo $key; ?>" type="text" value="">
+					<?php	
+						
+					}else  if($key =='PROVINCE_ID'){
+					?>
+					<select class="form-control col-md-7 col-xs-12 "  id="<?php echo $key; ?>" name="<?php echo $key; ?>" >
+					<?php 
+					
+					for($i=0; $i<count($province);$i++){
+						$selected='';
+						if($province[$i]['PROVINCE_ID'] == $config[$key]){ $selected = 'selected = "selected"';}
+					?>
+						<option <?php echo $selected ?> value="<?php echo $province[$i]['PROVINCE_ID'];?>"><?php echo $province[$i]['PROVINCE_NAME'];?></option>
+					<?php } ?>
+					</select>
+					<?php	
+						
+					} ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -32,47 +53,6 @@
             </div>
         </form>
 
+		</div>
     </div>
 </div>
-
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/jquery/dist/jquery.min.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/moment/min/moment.min.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
-<link rel="stylesheet" href="<?php echo base_url() ;?>gentelella-master/vendors/bootstrap-daterangepicker/daterangepicker.css">
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/fastclick/lib/fastclick.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/nprogress/nprogress.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/validator/validator.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-<script src="<?php echo base_url() ;?>gentelella-master/build/js/custom.min.js"></script>
-
-<script>
-    // initialize the validator function
-    validator.message.date = 'not a real date';
-
-    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-    $('form')
-        .on('blur', 'input[required], input.optional, select.required', validator.checkField)
-        .on('change', 'select.required', validator.checkField)
-        .on('keypress', 'input[required][pattern]', validator.keypress);
-
-    $('.multi.required').on('keyup blur', 'input', function() {
-        validator.checkField.apply($(this).siblings().last()[0]);
-    });
-
-    $('form').submit(function(e) {
-        e.preventDefault();
-        var submit = true;
-
-        // evaluate the form using generic validaing
-        if (!validator.checkAll($(this))) {
-            submit = false;
-        }
-
-        if (submit)
-            this.submit();
-
-        return false;
-    });
-
-</script>

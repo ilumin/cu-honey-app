@@ -19,9 +19,13 @@
 
                     <form action="<?php echo base_url(); ?>member/blooming_save" class="form-horizontal form-label-left" method="post" novalidate>
 						<div id="step1">
+							<?php
 
+							if(count($flower_chosen) >0){
+								
+							?>
 						  <span class="section">กรุณากรอกข้อมูลให้ครบ</span>
-
+							
 						  <div class="item form-group">
 							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="flower">ชื่อสวน
 							</label>
@@ -35,11 +39,7 @@
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12">
 							
-							<?php
 
-							if(count($flower_chosen) >0){
-								
-							?>
 								<select class="form-control" name="flower_id" > 
 							<?php
 								for($i=0;$i<count($flower_chosen);$i++){ 
@@ -49,12 +49,7 @@
 								}
 							?>
 								</select>
-							<?php	
-							} else {
-								echo "ไม่มีรายการดอกไม้บานให้เลือก"; 
-								
-							}
-							?>
+
 							</div>
 						  </div>
 						  <div class="item form-group">
@@ -88,7 +83,12 @@
 							</div>
 						  </div>
 					  </div>
-
+							<?php	
+							} else {
+								echo "ไม่มีรายการดอกไม้บานให้เลือก"; 
+								
+							}
+							?>
                     </form>
                 </div>
               </div>
