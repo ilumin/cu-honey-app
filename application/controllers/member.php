@@ -116,9 +116,25 @@ class Member extends CI_Controller {
             $gardener_id = isset($user['id']) ? $user['id'] : null;
 
             $this->load->model('gardener_model','',TRUE);
-            $this->gardener_model->insert_garden($_POST, $gardener_id);
-
+            $garden_id = $this->gardener_model->insert_garden($_POST, $gardener_id);
+			
+			$this->load->model('operation_model');
+			$garden = $this->gardener_model->garden_all();
+			
+			for($i=0;$i<count($garden);$i++){
 				
+				$data_insert['Garden_GARDEN1_ID'] = $garden_id;
+				$data_insert['Garden_GARDEN2_ID'] = $garden[$i]['GARDEN_ID'];
+				$data_insert['DISTANCE']=0;
+				$this->operation_model->insert_distance($data_insert);
+				
+				
+				$data_insert['Garden_GARDEN1_ID'] = $garden[$i]['GARDEN_ID'];
+				$data_insert['Garden_GARDEN2_ID'] = $garden_id;
+				$data_insert['DISTANCE']=0;
+				
+				$this->operation_model->insert_distance($data_insert);
+			}
            // header("Location: /main");
 			
 			redirect("member/logout",'refresh');

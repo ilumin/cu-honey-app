@@ -151,8 +151,8 @@ class action_plan extends CI_Controller {
 	
 	public function bee_hive_expired($year, $month)
     {
-        $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้';
-        $form_url = base_url() . 'action_plan/bee_hive_expired/' . $year . '/' . $month;
+        $form_title = 'งานเปลี่ยนกล่องรังผึ้งใหม่ภายในเดือนนี้ <br/> (หมดอายุเดือนถัดไป)';
+        $form_url = base_url() . 'action_plan/save/bee_hive_expired/';
         $items = $this->action_model->bee_hive_expired_list($month, $year);
         $view = 'action_form';
 
@@ -161,8 +161,8 @@ class action_plan extends CI_Controller {
 
 	public function bee_con_expired($year, $month)
     {
-        $form_title = 'งานเปลี่ยนคอนใหม่ภายในเดือนนี้';
-        $form_url = base_url() . 'action_plan/bee_con_expired/' . $year . '/' . $month;
+        $form_title = 'งานเปลี่ยนคอนใหม่ภายในเดือนนี้ <br/> (หมดอายุเดือนถัดไป)';
+        $form_url = base_url() . 'action_plan/save/bee_con_expired/';
         $items = $this->action_model->bee_con_expired_list($month, $year);
 
         $view = 'action_form2';
@@ -172,8 +172,8 @@ class action_plan extends CI_Controller {
 
 	public function bee_queen_expired($year, $month)
     {
-        $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้';
-        $form_url = base_url() . 'action_plan/bee_queen_expired/' . $year . '/' . $month;
+        $form_title = 'งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้ <br/> (หมดอายุเดือนถัดไป)';
+        $form_url = base_url() . 'action_plan/save/bee_queen_expired/';
         $items = $this->action_model->bee_queen_expired_list($month, $year);
         $view = 'action_form2';
 
@@ -189,7 +189,7 @@ class action_plan extends CI_Controller {
         }
 
         $form_title = 'รังที่กำลังเพาะ (' . ($current_month - $month + 1) . ' เดือน)';
-        $form_url = base_url() . 'action_plan/bee_queen_raise/' . $year . '/' . $month;
+        $form_url = base_url() . 'action_plan/save/bee_queen_raise/';
         $items = $this->action_model->bee_queen_raise("เพาะ", $month, $year);
         $view = 'action_list1';
 
@@ -199,7 +199,7 @@ class action_plan extends CI_Controller {
 	public function bee_queen_ready($year, $month)
     {
         $form_title = 'รังที่เพาะเรียบร้อย';
-        $form_url = base_url() . 'action_plan/bee_queen_ready/' . $year . '/' . $month;
+        $form_url = base_url() . 'action_plan/save/bee_queen_ready/';
         $items = $this->action_model->bee_queen_raise("ว่าง", $month, $year);
         $view = 'action_list1';
 
@@ -209,7 +209,7 @@ class action_plan extends CI_Controller {
 	public function bee_hive_using($year, $month)
     {
         $form_title = 'รังผึ้งที่เก็บน้ำผึ้งอยู่';
-        $form_url = base_url() . 'action_plan/bee_queen_ready/' . $year . '/' . $month;
+        $form_url = base_url() . 'action_plan/bee_queen_ready/';
         $items = $this->action_model->bee_queen_raise("เก็บน้ำผึ้ง", $month, $year);
         $view = 'action_list1';
 
@@ -230,7 +230,56 @@ class action_plan extends CI_Controller {
         $this->load->view($view, $data);
 
         $this->load->view('theme/footer_js', $data);
+        $this->load->view('js/form_action', $data);
         $this->load->view('theme/footer', $data);
     }
+	
+	public function save($module_name){
+		//var_dump($_POST);
+		$this->load->model('annual_model');
+		$config =$this->annual_model->config();
+		if($module_name == 'bee_hive_expired'){
+			//var_dump($config); 
+			$expired_date = date('Y-m-d',strtotime($_POST['action_date']." +".$config['BEEHIVE_AGE']."years"));
+			$hive_id = $_POST['selected'];
+			
+			
+			$items = $this->action_model->bee_hive_expired_save($hive_id ,$expired_date);
+			
+			if($items != false){
+				redirect('action_plan','refresh');
+				
+			}
+		}
+		if($module_name == 'bee_con_expired'){
+			$con_id = $_POST['selected'];
+			$expired_date = date('Y-m-d',strtotime($_POST['action_date']." +".$config['BEEFRAME_AGE']."years"));
+			$items = $this->action_model->bee_con_expired_save($con_id ,$expired_date);
+			
+			if($items != false){
+				redirect('action_plan','refresh');
+				
+			}
+		}
+		if($module_name == 'bee_queen_expired'){
+			$beehive_list = $_POST['selected'];
+			//queen
+			$expired_date = '0000-00-00';
+			$items1 = $this->action_model->bee_queen_expired_save($beehive_list ,$expired_date);
+			//Beehive
+			
+			$start_date =$_POST['action_date'];
+			$end_date =date('Y-m-d',strtotime($_POST['action_date']." +".$config['PERIOD_RAISE']));
+			$items2 = $this->action_model->bee_hive_raise_save($beehive_list ,$start_date,$end_date);
+			
+			
+			
+			
+			if($items1 != false && $items2 != false){
+				redirect('action_plan','refresh');
+				
+			}
+		}
+	}
 	
 }

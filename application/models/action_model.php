@@ -46,6 +46,19 @@ class action_model extends CI_Model {
 		$data = $query->result_array();
 		return $data;
 	}
+	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
+	public function bee_hive_expired_save($hive_list,$date_save){
+		if(count($hive_list)>0){
+			for($i=0;$i<count($hive_list);$i++){
+				$update['EXPIRED_DATE'] = $date_save;
+				$this->db->where('BEE_HIVE_ID', intval($hive_list[$i]));
+				
+				
+				$check[$i]= $this->db->update('beehive', $update);
+			}
+		}
+		return true;
+	}
 	//งานเปลี่ยนคอนใหม่ภายในเดือนนี้
 	public function bee_con_expired_list($month,$year){
 		$sql = "SELECT BEEFRAME_ID AS id,BEEHIVE_BEE_HIVE_ID AS parent_id FROM beeframe where month(expired_date)=".$month." AND year(expired_date)= ".$year;
@@ -53,12 +66,59 @@ class action_model extends CI_Model {
 		$data = $query->result_array();
 		return $data;
 	}
+	
+	//งานเปลี่ยนคอนใหม่ภายในเดือนนี้
+	public function bee_con_expired_save($con_list,$date_save){
+		if(count($con_list)>0){
+			for($i=0;$i<count($con_list);$i++){
+				$update['EXPIRED_DATE'] = $date_save;
+				$this->db->where('BEEFRAME_ID', intval($con_list[$i]));
+				
+				
+				$check[$i]= $this->db->update('beeframe', $update);
+			}
+		}
+		return true;
+	}
 	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
 	public function bee_queen_expired_list($month,$year){
 		$sql = "SELECT BEEHIVE_BEE_HIVE_ID AS parent_id, QUEEN_ID AS id FROM queenbee where month(expired_date)=".$month." AND year(expired_date)= ".$year;
 		$query = $this->db->query($sql);
 		$data = $query->result_array();
 		return $data;
+	}
+	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
+	public function bee_queen_expired_save($hive_list,$date_save){
+		if(count($hive_list)>0){
+			for($i=0;$i<count($hive_list);$i++){
+				//สถานะเพาะ รังผึ้ง วันหมดอายุของนางพญา + 1 ปี
+				$update['EXPIRED_DATE'] = $date_save;
+				$update['STATUS'] = 'เพาะ';
+				$this->db->where('Beehive_BEE_HIVE_ID', intval($hive_list[$i]));
+								
+				$check[$i]= $this->db->update('queenbee', $update);
+				
+				
+			}
+		}
+		return true;
+	}
+	//งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้
+	public function bee_hive_raise_save($hive_list,$start_date,$end_date){
+		if(count($hive_list)>0){
+			for($i=0;$i<count($hive_list);$i++){
+				//สถานะเพาะ รังผึ้ง วันหมดอายุของนางพญา + 1 ปี
+				$update['STARTDATE'] = $start_date;
+				$update['ENDDATE'] = $end_date;
+				$update['STATUS'] = 'เพาะ';
+				$this->db->where('BEE_HIVE_ID', intval($hive_list[$i]));
+								
+				$check[$i]= $this->db->update('beehive', $update);
+				
+				
+			}
+		}
+		return true;
 	}
 	//งานเพาะรังผึ้งภายในเดือนนี้
 

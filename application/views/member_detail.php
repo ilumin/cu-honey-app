@@ -75,6 +75,7 @@
 						  <div class="item form-group">
 							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">ชื่อสวน <span class="required">*</span>
 							</label>
+							
 							<div class="col-md-6 col-sm-6 col-xs-12">
 							 <?php echo $garden['NAME']?>
 							</div>
@@ -92,6 +93,13 @@
 							</label>
 							<div class="col-md-6 col-sm-6 col-xs-12 red">
 							 <?php echo ($garden['STATUS']=='APPROVE')?"อนุมัติ":"รอการอนุมัติ" ?>
+							</div>
+						  </div>
+						  <div class="item form-group">
+							<label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">ระยะห่างระหว่างสวน <span class="required">*</span>
+							</label>
+							<div class="col-md-6 col-sm-6 col-xs-12 red">
+								<a class="btn btn-danger" href="<?php echo base_url();?>main/distancegarden/<?php echo $gardener_info['GARDENER_ID'];?>">กำหนดระยะห่างระหว่างสวน</a>
 							</div>
 						  </div>
 						  

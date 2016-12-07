@@ -33,10 +33,11 @@ class operation_plan extends CI_Controller {
 	public function index()
 	{
 		$data = $this->get_data();
-		$data['period_show'] =$period_show= 6;
-		$next_date= date('Y-m-d',strtotime(TODAY_DATE.' +'.$period_show.'days'));
-		$schedule_info = $this->operation_model->schedule_info(TODAY_DATE,$next_date);
-		
+		$data['period_show'] =$period_show= 30;
+		$start_date = '2016-10-01'; //TODAY_DATE
+		$next_date= date('Y-m-d',strtotime($start_date.' +'.$period_show.'days'));
+		$schedule_info = $this->operation_model->schedule_info($start_date,$next_date);
+		$data['start_date'] = $start_date;
 		
 		$data['schedule_info'] =$schedule_info;
 		
@@ -51,6 +52,8 @@ class operation_plan extends CI_Controller {
 	
 	public function bloom($id=0){
 		$data = $this->get_data();
+		$data['public_park'] = array();
+		$data['member_park'] = array();
 		
 		$data['blooming_info'] = $this->operation_model->blooming_info();
 		$data['garden_id'] = $id= intval($id);
@@ -58,11 +61,6 @@ class operation_plan extends CI_Controller {
 			$data['public_park'] = $this->operation_model->get_hive_public_park_byID($id);
 			$data['member_park'] = $this->operation_model->get_hive_member_park_byID($id);
 			$data['blooming_select'] = $this->operation_model->blooming_info($id);
-		}else{
-			$data['public_park'] = $this->operation_model->get_hive_public_park();
-			
-			$data['member_park'] = $this->operation_model->get_hive_member_park($data['blooming_info']);
-			
 		}
 		//var_dump($data['public_park']);
 		
@@ -156,7 +154,7 @@ class operation_plan extends CI_Controller {
 		$bloom_info = $this->blooming_model->blooming_infoByID($bloom_id);
 		$transport_hive_info = $this->operation_model->transporthive_info_byBID($bloom_id);
 		$total_hive = count($transport_hive_info);
-		
+		$k =0;
 		//
 		/* 
 		
@@ -193,23 +191,24 @@ class operation_plan extends CI_Controller {
 
 		}
 		
-		if($k==count($transport_hive_info)){
-			redirect('operation_plan/','refresh');	
-			
-		}
+		
 		//TO DO ขาด CASE มากกว่า CAP
 		
 	}
 	public function transfer_detail($transport_id){
 		$data = $this->get_data();
+		$this->load->model('blooming_model');
 		if($transport_id>0){
 			$transport_info = $this->operation_model->transport_info_byTID($transport_id);
-		//	var_dump($transport_info);
+			//var_dump($transport_info);
 			if(count($transport_info)>0 ){
 				$bloom_id = $transport_info['Blooming_BLOOMING_ID'];
+				$garden_id_from = $transport_info['Garden_GARDEN_ID'];
+				$flower_id_from = $transport_info['Flower_FLOWER_ID'];
 				$transportHive = $this->operation_model->transporthive_info_byBID($bloom_id);
 				$data['transport_info'] = $transport_info;
 				$data['transport_hive'] =$transportHive;
+				$data['garden_info']=$this->blooming_model->get_garden_info($garden_id_from,$flower_id_from);
 			}
 		}
 		
@@ -218,7 +217,131 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/nav',$data);
 		$this->load->view('transfer_detail', $data);
 		$this->load->view('theme/footer_js', $data);
+		$this->load->view('js/transfer_detail', $data);
+		
 		$this->load->view('theme/footer', $data);
+		
+	}
+	public function harvest_detail($harvest_id){
+		$data = $this->get_data();
+		$this->load->model('blooming_model');
+		if($harvest_id>0){
+			$harvest_info = $this->operation_model->harvest_info_byHID($harvest_id);
+			//var_dump($harvest_info);
+			if(count($harvest_info)>0 ){
+				$bloom_id = $harvest_info['Blooming_BLOOMING_ID'];
+				$garden_id_from = $harvest_info['Garden_GARDEN_ID'];
+				$flower_id_from = $harvest_info['Flower_FLOWER_ID'];
+				$harvestHive = $this->operation_model->harvest_info_byBID($harvest_id);
+				$data['harvest_info'] = $harvest_info;
+				$data['harvest_hive'] =$harvestHive;
+				$data['garden_info']=$this->blooming_model->get_garden_info($garden_id_from,$flower_id_from);
+			}
+		}
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('harvest_detail', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('js/transfer_detail', $data);
+		$this->load->view('theme/footer', $data);
+		
+	}
+	public function harvest_detail_view($harvest_id){
+		$data = $this->get_data();
+		$this->load->model('blooming_model');
+		if($harvest_id>0){
+			$harvest_info = $this->operation_model->harvest_info_byHID($harvest_id);
+			//var_dump($harvest_info);
+			if(count($harvest_info)>0 ){
+				$bloom_id = $harvest_info['Blooming_BLOOMING_ID'];
+				$garden_id_from = $harvest_info['Garden_GARDEN_ID'];
+				$flower_id_from = $harvest_info['Flower_FLOWER_ID'];
+				$harvestHive = $this->operation_model->harvest_info_byBID($harvest_id);
+				$data['harvest_info'] = $harvest_info;
+				$data['harvest_hive'] =$harvestHive;
+				$data['garden_info']=$this->blooming_model->get_garden_info($garden_id_from,$flower_id_from);
+			}
+		}
+		
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('harvest_detail_view', $data);
+		$this->load->view('theme/footer_js', $data);
+		$this->load->view('js/transfer_detail', $data);
+		$this->load->view('theme/footer', $data);
+		
+	}
+	
+	public function save($method_name){
+		if($method_name =='transfer'){
+			
+			$this->load->model('BeehiveModel');
+			
+			$id = $this->input->post('transport_id');
+			$start_date = $this->input->post('start_date');
+			$end_date = $this->input->post('end_date');
+			
+			
+			
+			$data_update['status'] = 'ขนย้ายเรียบร้อย';
+			$data_update['transport_date'] = $start_date;
+			$data_update['return_date'] =$end_date;
+			
+			$check = $this->operation_model->updateTransport($id,$data_update);
+			
+			
+			$hive_arr = $this->input->post('hive_select');
+			
+			
+			if($check == true){
+				for($i=0; $i<count($hive_arr); $i++){
+					$data_update2['status'] = 'เก็บน้ำผึ้ง';
+					$data_update2['start_date'] = $end_date ;
+					$data_update2['end_date'] =$start_date ;
+					$check2[$i] = $this->BeehiveModel->updateData($hive_arr[$i],$data_update2);
+					
+				}
+			}
+			redirect("operation_plan","refresh");
+			
+			
+		}else if($method_name=='harvest'){
+			//var_dump($_POST);
+			
+			$id = $this->input->post('harvest_id');
+			$harvest_date = $this->input->post('harvest_date');
+			$honey_amount = $this->input->post('honey_amount');
+			
+			
+			
+			$data_update['status'] = 'เก็บน้ำผึ้งเรียบร้อย';
+			$data_update['transport_date'] = $harvest_date;
+			$data_update['honey_amount'] = $honey_amount;
+		
+			
+			 $check = $this->operation_model->updateHarvest($id,$data_update);
+			
+			
+			$hive_arr = $this->input->post('hive_select');
+			
+			
+			if($check == true){
+				for($i=0; $i<count($hive_arr); $i++){
+					$data_update2['status'] = 'เก็บน้ำผึ้งเรียบร้อย';
+					$data_update2['harvest_date'] = $harvest_date ;
+					$data_update2['harvest_id'] = $id ;
+					$data_update2['bee_hive_id'] = $hive_arr[$i] ;
+					 $check2[$i] = $this->operation_model->updateHarvestItem($data_update2);
+				
+				}
+			}
+			
+			
+			redirect("operation_plan","refresh");
+		}
 		
 	}
 	public function test(){

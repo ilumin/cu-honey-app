@@ -24,7 +24,7 @@
             </div>
            
             <div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"><i class="fa fa-stack-exchange"></i> รังที่หมดอายุเดือนหน้า</span>
+              <span class="count_top"><i class="fa fa-stack-exchange"></i> รังที่เปลี่ยนกล่องเดือนหน้า</span>
               <div class="count red"><?php echo $hive_summary['EXPIRED'] ?></div>
             </div>
           </div>
@@ -44,7 +44,7 @@
 				<tbody>
 					
 					<tr>
-					  <td class="a-center ">งานเปลี่ยนรังผึ้งใหม่ภายในเดือนนี้ จำนวน <br />(หมดอายุภายในเดือนถัดไป)</td>
+					  <td class="a-center ">งานเปลี่ยนกล่องรังผึ้งใหม่ภายในเดือนนี้ จำนวน <br />(หมดอายุภายในเดือนถัดไป)</td>
 					  <?php for($i=0; $i<$show; $i++){ ?>
 					  <td class="a-center "><a href="<?php echo base_url();?>action_plan/bee_hive_expired/<?php echo $bee_hive_expired_y[$i]."/".$bee_hive_expired_m[$i] ?>"><?php echo $bee_hive_expired[$i]['AMOUNT']?></a></td>
 					  <?php } ?>

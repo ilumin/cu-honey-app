@@ -22,8 +22,12 @@ $parent = false;
                             <table class="table">
                                 <thead>
                                 <tr>
+                                    <th style="text-align: right">เลือกวันที่ทำงาน</th>
+                                    <th><input class="input-date" name="action_date" type="text" value="<?php echo date('Y-m-d')?>" /></th>
+                                </tr>
+                                <tr>
                                     <th style="text-align: right"><input type="checkbox" class="select-all" /></th>
-                                    <th>รหัสรังผึ้ง</th>
+                                    <th>เลือก รหัสรังผึ้งทั้งหมด</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -34,7 +38,7 @@ $parent = false;
                                     </tr>
                                     <?php endif; ?>
                                     <tr>
-                                        <td style="text-align: right"><input type="checkbox" name="selected[]" value="<?php echo $item['id']; ?>"></td>
+                                        <td style="text-align: right"><input type="checkbox"  name="selected[]" value="<?php echo $item['id']; ?>"></td>
                                         <td><?php echo $item['id']; ?></td>
                                     </tr>
                                 <?php endforeach; ?>

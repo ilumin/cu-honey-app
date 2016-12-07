@@ -193,11 +193,19 @@ class gardener_model extends CI_Model {
       }
 
       $this->db->trans_commit();
+	  return $garden_id;
     } catch (Exception $e) {
       $this->db->trans_rollback();
       throw new Exception("Database transaction error: " . $e->getMessage(), 1);
 
     }
 
+  }
+  
+  public function distance($id){
+	$query = $this->db->query('SELECT * from distancegarden WHERE Garden_GARDEN1_ID='.$id);
+	$data= $query->result_array();
+	return $data;
+	  
   }
 }

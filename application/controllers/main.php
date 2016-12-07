@@ -97,8 +97,7 @@ class Main extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 
 	}
-
-	public function distance_garden($id){
+	public function distancegarden($id){
 		$data = $this->member_model->get_data();
 		$this->load->helper(array('form'));
 		//get member info from gardener
@@ -108,24 +107,63 @@ class Main extends CI_Controller {
 		$flower = $this->gardener_model->get_flower();
 		$data['flower'] = $flower;
 		//get garden info
-		$garden = $this->gardener_model->garden_info($id);
-		$data['garden'] = $garden;
+		$garden_info = $this->gardener_model->garden_info($id);
+		$data['garden_info'] = $garden_info;
+		//var_dump($garden_info);
 
-		//get flower in garden info
-		$gardenflower = $this->gardener_model->gardenflower_info($garden['GARDEN_ID']);
-		$data['gardenflower'] = $gardenflower;
+		$data['garden'] = $this->gardener_model->garden_all();
 		//var_dump($data['gardenflower']);
-
+		$data['distance'] = $this->gardener_model->distance($data['garden_info']['GARDEN_ID']);
 		//var_dump($data['gardener_list'] ); exit();
 
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
-		$this->load->view('member_detail', $data);
+		$this->load->view('distancegarden', $data);
 		$this->load->view('theme/footer_js', $data);
 		//$this->load->view('js/member_detail_js', $data);
 		$this->load->view('theme/footer', $data);
 
+	}
+
+	
+	public function distance_save(){
+		$garden_id = $this->input->post('garden_id');
+		$gardener_id = $this->input->post('gardener_id');
+		$garden_m = $this->input->post('garden_match');
+		
+		if($garden_id !=''){
+			
+			$this->load->model('operation_model');
+			
+			$garden = explode('|',$garden_m);
+		
+			for($i=0;$i<count($garden);$i++){
+				//echo $distance = $this->input->post('distance_'.$garden_match[$i])."<br />";
+				//$garden_arr[$i][$j]=rand(15,145);
+				
+				$check_insert[$garden[$i]][$garden_id] = $this->input->post('distance_'.$garden[$i]);
+	
+				$data_insert['Garden_GARDEN1_ID'] = $garden[$i];
+				$data_insert['Garden_GARDEN2_ID'] = $garden_id;
+				$data_insert['DISTANCE']=$check_insert[$garden[$i]][$garden_id];
+				//var_dump($data_insert);
+				$check['FIRST'][$i] = $this->operation_model->update_distance($data_insert);
+				if($check['FIRST'][$i] == true){
+					$data_insert['Garden_GARDEN1_ID'] = $garden_id;
+					$data_insert['Garden_GARDEN2_ID'] = $garden[$i]; 
+					$data_insert['DISTANCE']=$check_insert[$garden[$i]][$garden_id];
+					//var_dump($data_insert);
+					$check['SECOND'][$i] =$this->operation_model->update_distance($data_insert);
+				}
+			}
+			if(count($check['SECOND']) == count($garden)){
+				if(in_array(false,$check['SECOND'])=== false  && in_array(false,$check['FIRST'])=== false){
+					redirect('main/distancegarden/'.$gardener_id);
+				}
+			}
+		}
+		
 	}
 
 	public function member_update_flower(){

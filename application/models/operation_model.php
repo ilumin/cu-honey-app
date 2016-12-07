@@ -32,12 +32,29 @@ class operation_model extends CI_Model {
 	}
 	
 	public function transport_info_byTID($transport_id){
-			$sql ="SELECT T.*,G.NAME AS GARDEN_NAME,F.FLOWER_NAME  FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F ,BLOOMING AS B
+			$sql ="SELECT T.*,G.ADDRESS,G.NAME AS GARDEN_NAME,F.FLOWER_NAME  FROM TRANSPORT AS T,GARDEN AS G,FLOWER AS F ,BLOOMING AS B
 			WHERE 
 		B.Garden_GARDEN_ID = G.GARDEN_ID
 		AND B.BLOOMING_ID = T.BLOOMING_BLOOMING_ID
 		AND F.FLOWER_ID = B.FLOWER_FLOWER_ID
 		AND T.TRANSPORT_ID = ".$transport_id."
+		";
+				
+		$query = $this->db->query($sql);
+		
+		//var_dump($data['HARVESTHONEY']);
+		
+		return $query->row_array();
+	}
+	
+	public function harvest_info_byHID($harvest_id){
+			$sql ="SELECT H.*,G.ADDRESS,G.NAME AS GARDEN_NAME,F.FLOWER_NAME  
+FROM HARVESTHONEY AS H,GARDEN AS G,FLOWER AS F ,BLOOMING AS B
+			WHERE 
+		B.Garden_GARDEN_ID = G.GARDEN_ID
+		AND B.BLOOMING_ID = H.BLOOMING_BLOOMING_ID
+		AND F.FLOWER_ID = B.FLOWER_FLOWER_ID
+		AND H.HARVEST_ID =".$harvest_id."
 		";
 				
 		$query = $this->db->query($sql);
@@ -67,6 +84,19 @@ class operation_model extends CI_Model {
 					WHERE 
 					T.BLOOMING_BLOOMING_ID = ".$bloom_id."
 					AND TH.TRANSPORT_TRANSPORT_ID = T.TRANSPORT_ID
+					ORDER BY BEEHIVE_BEE_HIVE_ID ASC
+					";
+		$query = $this->db->query($sql);
+		//echo $sql;
+		//var_dump($data['HARVESTHONEY']);
+		
+		return $query->result_array();
+	}
+	public function harvest_info_byBID($bloom_id){
+		$sql ="SELECT BEEHIVE_BEE_HIVE_ID,HI.STATUS,HI.HARVEST_DATE FROM HARVESTHONEYITEM AS HI, HARVESTHONEY AS H
+					WHERE 
+					H.HARVEST_ID = ".$bloom_id."
+					AND HI.HarvestHoney_HARVEST_ID = H.HARVEST_ID
 					ORDER BY BEEHIVE_BEE_HIVE_ID ASC
 					";
 		$query = $this->db->query($sql);
@@ -221,18 +251,24 @@ public function get_hive_member_park($data){
 	
 	public function get_hive_member_park_byID($garden_id){
 	$sql ="
-	SELECT G.GARDEN_ID,G.NAME,DISTANCE ,COUNT(TH.BEEHIVE_BEE_HIVE_ID ) AS AMOUNT_HIVE, T.TRANSPORT_DATE,T.RETURN_DATE,T.FLOWER_FLOWER_ID AS FLOWER_ID
-	FROM GARDEN AS G ,TRANSPORT AS T ,TRANSPORTHIVE AS TH, DISTANCEGARDEN AS DG
-	WHERE GARDEN_TYPE='MEMBER'
-	AND G.GARDEN_ID= T.GARDEN_GARDEN_ID
-	AND T.TRANSPORT_ID = TH.TRANSPORT_TRANSPORT_ID
-	AND G.STATUS='APPROVE'
-	AND T.STATUS = 'ขนส่งเรียบร้อย'
-	AND Garden_GARDEN1_ID=".$garden_id."
-	AND Garden_GARDEN2_ID=G.GARDEN_ID
-	AND G.GARDEN_ID!=".$garden_id."
-	GROUP BY DISTANCE
-	ORDER BY AMOUNT_HIVE DESC, DISTANCE ASC
+	SELECT COUNT(H.BEE_HIVE_ID) AS AMOUNT_HIVE, G.GARDEN_ID ,H.FLOWER_FLOWER_ID AS FLOWER_ID ,NAME ,DISTANCE
+			FROM BEEHIVE AS H , GARDEN AS G ,DISTANCEGARDEN AS DG 
+			WHERE 
+			H.STATUS='ว่าง'
+			AND G.STATUS='APPROVE'
+			AND G.GARDEN_ID= H.GARDEN_GARDEN_ID
+			AND G.GARDEN_TYPE = 'MEMBER'
+			AND Garden_GARDEN1_ID= ".$garden_id."
+			AND Garden_GARDEN2_ID=G.GARDEN_ID
+			AND H.BEE_HIVE_ID  not in (
+			SELECT TH.BeeHive_BEE_HIVE_ID  FROM TRANSPORTHIVE AS TH, TRANSPORT AS T 
+			WHERE T.STATUS='รอขนย้าย'
+			AND T.Garden_GARDEN_ID=H.GARDEN_GARDEN_ID 
+			AND T.FLOWER_FLOWER_ID=H.FLOWER_FLOWER_ID 
+			AND TH.Transport_TRANSPORT_ID = T.Transport_ID
+			)
+			GROUP BY H.GARDEN_GARDEN_ID,H.FLOWER_FLOWER_ID
+			ORDER BY AMOUNT_HIVE DESC ,DISTANCE ASC
 	";
 		$query = $this->db->query($sql);
 		$data= $query->result_array();
@@ -291,6 +327,14 @@ public function get_hive_member_park($data){
 		
 	}
 	
+	public function update_distance($data){
+		$update['DISTANCE'] = $data['DISTANCE'];
+         $this->db->where('Garden_GARDEN1_ID', $data['Garden_GARDEN1_ID']);
+         $this->db->where('Garden_GARDEN2_ID', $data['Garden_GARDEN2_ID']);
+		return $this->db->update('distancegarden', $update);
+		
+	}
+	
 	
 	
 	  public function updateBloom($id, $data = array())
@@ -319,6 +363,104 @@ public function get_hive_member_park($data){
 		if(count($update)>0){
          $this->db->where('BLOOMING_ID', $id);
 			return $this->db->update('blooming', $update);
+		}else{
+			
+			return false;
+		}
+    }
+	
+	
+	  public function updateTransport($id, $data = array())
+    {
+		$update= array();
+/*
+TRANSPORT_DATE
+RETURN_DATE
+STATUS
+GARDEN_GARDEN_ID
+FLOWER_FLOWER_ID
+BLOOMING_BLOOMING_ID
+*/
+		if(isset($data['transport_date'])){
+			$update['TRANSPORT_DATE'] = $data['transport_date'];
+		}
+		if(isset($data['return_date'])){
+			$update['RETURN_DATE'] = $data['return_date'];
+		}
+		if(isset($data['status'])){
+			$update['STATUS'] = $data['status'];
+		}
+		if(isset($data['blooming_percent'])){
+			$update['BLOOMING_PERCENT'] = $data['blooming_percent'];
+		}
+		if(isset($data['garden_garden_id'])){
+			$update['GARDEN_GARDEN_ID'] = $data['garden_garden_id'];
+		}
+		if(isset($data['flower_flower_id'])){
+			$update['flower_flower_id'] = $data['flower_flower_id'];
+		}
+		
+		if(count($update)>0){
+			$this->db->where('transport_id', $id);
+			return $this->db->update('transport', $update);
+		}else{
+			
+			return false;
+		}
+    }
+	  public function updateHarvest($id, $data = array())
+    {
+		/*
+		`HARVEST_ID`, `Garden_GARDEN_ID`, `Flower_FLOWER_ID`, `Blooming_BLOOMING_ID`, `HARVEST_DATE`, `HONEY_AMOUNT`, `HARVEST_STATUS`
+		*/
+		$update= array();
+
+		if(isset($data['harvest_date'])){
+			$update['HARVEST_DATE'] = $data['harvest_date'];
+		}
+		
+		if(isset($data['status'])){
+			$update['HARVEST_STATUS'] = $data['status'];
+		}
+		if(isset($data['blooming_id'])){
+			$update['Blooming_BLOOMING_ID'] = $data['blooming_id'];
+		}
+		if(isset($data['garden_id'])){
+			$update['GARDEN_GARDEN_ID'] = $data['garden_id'];
+		}
+		if(isset($data['flower_id'])){
+			$update['flower_flower_id'] = $data['flower_id'];
+		}
+		
+		if(isset($data['honey_amount'])){
+			$update['HONEY_AMOUNT'] = $data['honey_amount'];
+		}
+		
+		if(count($update)>0){
+			$this->db->where('HARVEST_ID', $id);
+			return $this->db->update('harvesthoney', $update);
+		}else{
+			
+			return false;
+		}
+    }
+	 public function updateHarvestItem( $data = array())
+    {
+		/*HarvestHoney_HARVEST_ID, BeeHive_BEE_HIVE_ID, HARVEST_DATE, STATUS*/
+		$update= array();
+
+		if(isset($data['harvest_date'])){
+			$update['HARVEST_DATE'] = $data['harvest_date'];
+		}
+		if(isset($data['status'])){
+			$update['STATUS'] = $data['status'];
+		}
+		
+		
+		if(count($update)>0){
+			$this->db->where('HarvestHoney_HARVEST_ID', $data['harvest_id']);
+			$this->db->where('BeeHive_BEE_HIVE_ID', $data['bee_hive_id']);
+			return $this->db->update('harvesthoneyitem', $update);
 		}else{
 			
 			return false;

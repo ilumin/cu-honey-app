@@ -16,9 +16,13 @@
                 <div class="x_content">
                     <table class="table">
                         <thead>
+							<tr>
+								<th style="text-align: right">เลือกวันที่ทำงาน</th>
+								<th><input class="input-date" name="action_date" type="text" value="<?php echo date('Y-m-d')?>" /></th>
+							</tr>
                             <tr>
                                 <th style="text-align: right"><input type="checkbox" class="select-all" /></th>
-                                <th>รหัสรังผึ้ง</th>
+                                <th>เลือก รหัสรังผึ้งทั้งหมด</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,7 +46,7 @@
             </div>
             </div>
         </div>
-    <div>
+    </div>
     </form>
 
 </div>

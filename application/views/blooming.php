@@ -10,6 +10,7 @@
 
 	  <div class="x_content">
 	   <form action="<?php echo base_url(); ?>operation_plan/bloom_save" class="form-horizontal form-label-left" method="post" novalidate>
+<?php if(count($public_park) > 0 or count($member_park) > 0) { ?>
 		<span class="section">สวนสาธารณะ</span>
 		<table id="datatable" class="table table-striped table-bordered">
 		  <thead>
@@ -195,7 +196,9 @@
 	  <input type="hidden" name="bloom_id" value="<?php echo isset($blooming_select['BLOOMING_ID'])?$blooming_select['BLOOMING_ID']:'';?>" />
 	  
 	  <input  class="btn btn-primary submit" type="submit"  value="บันทึกจำนวนรังผึ้งที่ขนย้าย" />
-	  <?php }?>
+	  <?php }
+}
+	  ?>
 	  </form>
 	</div>
 	

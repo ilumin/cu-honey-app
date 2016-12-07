@@ -39,18 +39,26 @@ class member_model extends CI_Model {
 	
 	public function get_data()
 	{
-
-		$email ="yippadedoda@gmail.com";
-		$password = "1234";
+		
+		
 		//$this->load->model('beekeeper_model');
-		$bee_keeper_id=1;
+		
+		
 		$CI =& get_instance();
 		$CI->load->model('beekeeper_model');
-		$bee_keeper_info =  $CI->beekeeper_model->check_login($email,md5($password));
-
+		
+		$user = $this->session->userdata('logged_in');
+		
+		$bee_keeper_info =  $this->beekeeper_model->get_beekeeper_info($user['id']);
+		
+		
+		
 		if( is_null($bee_keeper_info) == false){
-			$data['account_info'] = array('account_id'=>$bee_keeper_info['BEE_KEEPER_ID'], 'account_name' => $bee_keeper_info['FIRSTNAME'] , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
-			//var_dump($bee_keeper_info);
+			
+			$data['account_info'] = array('account_id'=>$user['id'], 'account_name' => $user['name'] , 'type'=>'admin','account_picture'=> base_url().'img/account/2.png');
+		}else{
+			$data['account_info'] = array('account_id'=>$user['id'], 'account_name' => $user['name'] , 'type'=>'admin','account_picture'=> base_url().'img/account/1.png');
+			
 		}
 
 
