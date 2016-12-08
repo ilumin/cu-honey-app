@@ -9,7 +9,7 @@
 	  </div>
 
 	  <div class="x_content">
-	   <form action="<?php echo base_url(); ?>operation_plan/bloom_save" class="form-horizontal form-label-left" method="post" novalidate>
+	   <form action="<?php echo base_url(); ?>blooming/bloom_save" class="form-horizontal form-label-left" method="post" novalidate>
 <?php if(count($public_park) > 0 or count($member_park) > 0) { ?>
 		<span class="section">สวนสาธารณะ</span>
 		<table id="datatable" class="table table-striped table-bordered">
@@ -236,7 +236,7 @@
 			<td><?php echo $blooming_info[$i]['BLOOMING_PERCENT']?></td>
 			<td><?php echo $blooming_info[$i]['BLOOMING_STARTDATE']?></td>
 			<td><?php echo $blooming_info[$i]['BLOOMING_ENDDATE']?></td>
-			<td><a  class="btn btn-primary" href="<?php echo base_url();?>operation_plan/bloom/<?php echo  $blooming_info[$i]['GARDEN_ID']?>">ค้นหาสวนเพื่อนขนย้ายรัง</a></td>
+			<td><a  class="btn btn-primary" href="<?php echo base_url();?>blooming/index/<?php echo  $blooming_info[$i]['GARDEN_ID']?>">ค้นหาสวนเพื่อนขนย้ายรัง</a></td>
 			</tr>
 		   <?php } 
 		   }else{

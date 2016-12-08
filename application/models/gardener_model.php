@@ -43,6 +43,12 @@ class gardener_model extends CI_Model {
 		return $data;
 		
 	}
+	public function garden_all2(){
+		$query = $this->db->query('SELECT * from garden  ');
+		$data= $query->result_array();
+		return $data;
+		
+	}
 	public function garden_info($member_id,$type="MEMBER"){
 
 

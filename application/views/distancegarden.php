@@ -9,7 +9,7 @@
 				<div id="step1">
 			   
 				  <span class="section">ระยะห่างระหว่างสวน</span>
-				<?php  //var_dump($garden_info);
+				<?php  //var_dump($distance);
 				$garden_id_all ="";
 				for($i=0;$i<count($garden);$i++) { 
 					if($garden[$i]['GARDEN_ID'] != $garden_info['GARDEN_ID']){

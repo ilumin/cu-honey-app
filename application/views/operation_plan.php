@@ -10,13 +10,28 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; 
  }
-#datatable tr.bg-now th,
+#datatable tr th{
+	background-color: #d6d1d1;
+}
+#datatable tr td{
+	background-color: #f2eded;
+}
+#datatable tr.bg-now th{
+	background-color: #aae2da;
+}
 #datatable tr.bg-now td{
 	 background-color: #defcf8;
 
 	 
  }
+#datatable tr.bg-future th{
+	background-color: #eee;
+}
+#datatable tr.bg-future td{
+	 background-color: #fff;
 
+	 
+ }
 </style>
 <?php 
 			$content =$th="";
@@ -61,7 +76,13 @@
 	<div class="x_panel">
 	  <div class="x_title">
 		<h2>ตารางงานประจำวัน</h2>
-
+			<div class="title_right">
+				<div class="col-md-1 col-sm-1 col-xs-12 form-group pull-right top_search">
+				  <div class="input-group">
+					<a class="btn btn-primary" href="<?php echo base_url()?>operation_plan/edit">แก้ไข</a>
+				  </div>
+				</div>
+			</div>
 		<div class="clearfix"></div>
 	  </div>
 
@@ -76,7 +97,7 @@
 
 			foreach ($date_schedule as $key => $value) {
 				$now='';
-			?><tr <?php if($key == TODAY_DATE){echo 'class="bg-now"'; $now=" (now) ";}?>>
+			?><tr <?php if($key == TODAY_DATE){echo 'class="bg-now"'; $now=" (now) ";} else if ($key > TODAY_DATE){  echo 'class="bg-future"';}?>>
 			
 			  <th   ><?php echo date('D d/m/y',strtotime($key)).$now?></th> 
 			  <td><ul class="list-task"><?php echo  $value;?></ul></td>
