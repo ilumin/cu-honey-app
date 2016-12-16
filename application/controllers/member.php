@@ -46,7 +46,7 @@ class Member extends CI_Controller {
 
 		}else{
 			
-			redirect('main', 'refresh');
+			redirect('main/batch');
 		}
 
 	}
@@ -121,20 +121,28 @@ class Member extends CI_Controller {
 			$this->load->model('operation_model');
 			$garden = $this->gardener_model->garden_all();
 			
+			
 			for($i=0;$i<count($garden);$i++){
+				$data_insert[$garden_id][$garden[$i]['GARDEN_ID']] = 0;
+				$data_insert[$garden[$i]['GARDEN_ID']][$garden_id] = 0;
 				
-				$data_insert['Garden_GARDEN1_ID'] = $garden_id;
-				$data_insert['Garden_GARDEN2_ID'] = $garden[$i]['GARDEN_ID'];
-				$data_insert['DISTANCE']=0;
-				$this->operation_model->insert_distance($data_insert);
-				
-				
-				$data_insert['Garden_GARDEN1_ID'] = $garden[$i]['GARDEN_ID'];
-				$data_insert['Garden_GARDEN2_ID'] = $garden_id;
-				$data_insert['DISTANCE']=0;
-				
-				$this->operation_model->insert_distance($data_insert);
+				if(isset($data_insert[$garden_id][$garden_id])){
+					unset($data_insert[$garden_id][$garden_id]);
+				}
 			}
+			
+			foreach($data_insert as $i => $val1){
+				foreach($val1 as $j => $distance){
+					$distance_insert['Garden_GARDEN1_ID'] = $i;
+					$distance_insert['Garden_GARDEN2_ID'] = $j;
+					$distance_insert['DISTANCE']=$distance;
+					$this->gardener_model->insert_distance($distance_insert);
+					
+				}
+				
+			}
+			
+			
            // header("Location: /main");
 			
 			redirect("member/logout",'refresh');
@@ -214,8 +222,8 @@ class Member extends CI_Controller {
 			$data['flower_chosen'] = $this->gardener_model->garden_bloomingmonth($this->current_month,$data['garden']['GARDEN_ID']);
 		}
 
-		$data['date_start'] = date('Y-m-d',strtotime(TODAY_DATE.' -3days'));
-		$data['date_end'] = date('Y-m-d',strtotime(TODAY_DATE.' +3days'));
+		$data['date_start'] = date('Y-m-d',strtotime(TODAY_DATE.' -2days'));
+		$data['date_end'] = date('Y-m-d',strtotime(TODAY_DATE.' +5days'));
 		
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/gardener/left_bar', $data);
@@ -227,21 +235,90 @@ class Member extends CI_Controller {
 	}
 	
 	public function blooming_save(){
+		$data = array();
+		$show_form_confirm = false;
 		
-		$flower_info= explode("|",$this->input->post('flower_id'));
 		
-		$data_insert['Garden_GARDEN_ID']= $this->input->post('garden_id');
-		$data_insert['Flower_FLOWER_ID']= $flower_info[0];
-		$data_insert['BLOOMING_STARTDATE']= $this->input->post('blooming_date');
-		$data_insert['BLOOMING_ENDDATE']= date("Y-m-d",strtotime($this->input->post('blooming_date')." +".($flower_info[1])."day"));
-		$data_insert['BLOOMING_PERCENT']= $this->input->post('percent_blooming');
-		$data_insert['BLOOMING_STATUS']= 'รอยืนยัน';
-		
+		$data = $this->get_data();
 		$this->load->model('gardener_model','',TRUE);
-		$chk_insert = $this->gardener_model->insert_blooming($data_insert);
 		
-		if($chk_insert ==true ){
+			
+		if(isset($_POST['risk']) == true){
+			$id = $this->input->post('blooming_id');
+			if($_POST['risk'] == 'yes'){
+				$data_update['RISK_MIX_HONEY'] = 1;
+				$data_update['DEMAND_FLOWER_ID'] = BJP_FLOWER;
+				$check= $this->gardener_model->update_blooming($id, $data_update);
+				
+			}
+			
 			redirect('member/bloomstatus/');
+			
+		}else{
+			$flower_info= explode("|",$this->input->post('flower_id'));
+			$data_insert['Garden_GARDEN_ID']= $this->input->post('garden_id');
+			$data_insert['Flower_FLOWER_ID']= $flower_info[0];
+			$data_insert['BLOOMING_STARTDATE']= $this->input->post('blooming_date');
+			$data_insert['BLOOMING_ENDDATE']= date("Y-m-d",strtotime($this->input->post('blooming_date')." +".($flower_info[1])."day"));
+			$data_insert['BLOOMING_PERCENT']= $this->input->post('percent_blooming');
+			$data_insert['BLOOMING_STATUS']= 'รอยืนยัน';
+			$data_insert['RISK_MIX_HONEY']= 0;
+			$data_insert['DEMAND_FLOWER_ID']= $flower_info[0];
+			
+			
+			$insert_id = $this->gardener_model->insert_blooming($data_insert);
+			
+			//Recheck Mix Honey
+			
+			$flower_chosen = $this->gardener_model->garden_bloomingmonth($this->current_month,$data_insert['Garden_GARDEN_ID']);
+			
+			
+			
+			for($i=0; $i< count($flower_chosen); $i++){
+				
+				 $flower[$flower_chosen[$i]['FLOWER_ID']] = $flower_chosen[$i]['FLOWER_NAME'];
+				if($flower_chosen[$i]['FLOWER_ID'] ==$flower_info[0] ){
+					if($flower_chosen[$i]['RISK_MIX_HONEY'] == 1){
+						$show_form_confirm = true;
+						$flower_relate_id = $flower_chosen[$i]['FLOWER_NEARBY_ID'];
+					}
+				}
+				
+			}
+			
+			if(in_array($flower_relate_id, $flower) == false){
+				$show_form_confirm = false;
+			}
+			
+			
+
+			
+			
+			//End Recheck Mix Honey
+			
+			
+			
+			if($show_form_confirm == true){
+				
+				$data['flower_name'] = $flower[$flower_info[0]] ;
+				$data['flower_nearby'] = $flower[$flower_relate_id] ;
+				$data['blooming_startdate'] = $data_insert['BLOOMING_STARTDATE'] ;
+				$data['blooming_enddate'] = $data_insert['BLOOMING_ENDDATE'] ;
+				$data['blooming_id'] = $insert_id ;
+				
+				$this->load->view('theme/header', $data);
+				$this->load->view('theme/gardener/left_bar', $data);
+				$this->load->view('theme/gardener/nav',$data);
+				$this->load->view('gardener_blooming_confirm', $data);
+				$this->load->view('theme/gardener/footer_js', $data);
+				$this->load->view('js/gardener_blooming', $data);
+				$this->load->view('theme/gardener/footer', $data);
+				
+			}else{
+				if($insert_id !=false){
+					redirect('member/bloomstatus/');
+				}
+			}
 		}
 	}
 	public function bloomstatus(){

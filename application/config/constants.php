@@ -89,6 +89,6 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 
 defined('COMP_NAME')  OR define('COMP_NAME', 'KEEP HONEY');
 defined('COMP_TEL')  OR define('COMP_TEL', '089-123-4567');
-defined('TODAY_DATE') OR define('TODAY_DATE','2016-10-20'); //'2016-10-20'
+defined('TODAY_DATE') OR define('TODAY_DATE','2016-03-13'); //'2016-11-03'
 
 defined('BJP_FLOWER') OR define('BJP_FLOWER', 12);

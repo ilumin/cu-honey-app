@@ -32,6 +32,8 @@
 			  <th>รหัสนางพญา</th>
 			  <th>วันที่เริ่มต้นสถานะ</th>
 			  <th>วันที่สิ้นสุดสถานะ</th>
+			  <th>สวน</th>
+			  <th>ดอกไม้</th>
 			  <th>&nbsp;</th>
 			</tr>
 		  </thead>
@@ -47,6 +49,8 @@
         <td><?php echo isset($queens[$hive->BEE_HIVE_ID]) ? $queens[$hive->BEE_HIVE_ID] : "-"; ?></td>
         <td><?php echo $hive->STARTDATE; ?></td>
         <td><?php echo $hive->ENDDATE; ?></td>
+        <td><?php echo $garden[$hive->GARDEN_GARDEN_ID]; ?></td>
+        <td><?php echo $flower[$hive->FLOWER_FLOWER_ID]; ?></td>
         <td>
           <?php echo anchor('setting/hive/' . $hive->BEE_HIVE_ID, 'Edit');?>
         </td>

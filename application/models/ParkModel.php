@@ -74,7 +74,7 @@ class ParkModel extends CI_Model
                 ));
             }
 
-            return $this->db->insert_id();
+            return $garden_id;
         } catch (Exception $e) {
             throw new Exception("Cannot insert park: " . $e->getMessage(), 1);
         }
@@ -98,10 +98,20 @@ class ParkModel extends CI_Model
 
     public function getAll()
     {
-		$sql = "SELECT G.*, GF.AMOUNT_HIVE, F.FLOWER_NAME, P.PROVINCE_NAME FROM garden AS G, gardenflower AS GF, province AS P, flower AS F WHERE G.GARDEN_TYPE= 'PUBLIC' AND GF.GARDEN_GARDEN_ID=G.GARDEN_ID AND P.PROVINCE_ID = G.PROVINCE_ID AND F.FLOWER_ID = GF.Flower_FLOWER_ID ORDER BY G.GARDEN_ID DESC;";
+		$sql = "SELECT G.*, GF.AMOUNT_HIVE, F.FLOWER_NAME, P.PROVINCE_NAME
+FROM garden AS G, gardenflower AS GF, province AS P, flower AS F 
+WHERE G.GARDEN_TYPE= 'PUBLIC' AND GF.GARDEN_GARDEN_ID=G.GARDEN_ID 
+AND P.PROVINCE_ID = G.PROVINCE_ID AND F.FLOWER_ID = GF.Flower_FLOWER_ID
+ORDER BY G.GARDEN_ID DESC;";
         $query = $this->db->query($sql);
         $data= $query->result_array();
         return $data;
     }
-
+	public function get_hive($garden_id){
+		
+		$sql = "SELECT count(*) AS REMAIN_HIVE FROM BEEHIVE WHERE GARDEN_GARDEN_ID='".$garden_id."'";
+        $query = $this->db->query($sql);
+        $data= $query->row_array();
+        return $data;
+	}
 }

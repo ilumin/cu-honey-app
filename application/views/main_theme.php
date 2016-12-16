@@ -3,6 +3,7 @@
         <!-- page content -->
         <div class="right_col" role="main">
           <!-- top tiles -->
+		  <?php if(isset ($hive_summary)) {?>
 			<div class="row tile_count">
 				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
 				  <span class="count_top"><i class="fa fa-stack-exchange"></i> จำนวนรังผึ้งรวมทั้งหมด</span>
@@ -10,21 +11,21 @@
 				</div>
 				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
 				  <span class="count_top"><i class="fa fa-clock-o"></i> จำนวนรังผึ้งที่กำลังทำงาน</span>
-				  <div class="count blue"><?php echo ($hive_summary['TOTAL']-$hive_summary['เพาะ']) ?></div>
+				  <div class="count blue"><?php echo (isset($hive_summary['เพาะ'])&& isset($hive_summary['TOTAL']))?($hive_summary['TOTAL']-$hive_summary['เพาะ']) : 0 ?></div>
 				  
 				</div>
 			   
 				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
 				  <span class="count_top"><i class="fa fa-stack-exchange"></i> รังผึ้งที่กำลังเพาะ</span>
-				  <div class="count green"><?php echo $hive_summary['เพาะ'] ?></div>
+				  <div class="count green"><?php echo isset($hive_summary['เพาะ'])? $hive_summary['เพาะ']:0 ?></div>
 				</div>
 			   
 				<div class="col-md-3 col-sm-4 col-xs-6 tile_stats_count">
 				  <span class="count_top"><i class="fa fa-stack-exchange"></i> รังที่หมดอายุเดือนหน้า</span>
-				  <div class="count red"><?php echo $hive_summary['EXPIRED'] ?></div>
+				  <div class="count red"><?php echo isset($hive_summary['EXPIRED'])? $hive_summary['EXPIRED']:0  ?></div>
 				</div>
 			</div>
- 
+		  <?php } ?>
           <div class="row">
             
             <div class="col-md-8 col-sm-8 col-xs-12">

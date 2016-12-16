@@ -20,7 +20,11 @@ class BeeframeModel extends CI_Model
     {
         return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('beeframe')->result();
     }
-
+    public function updateStatusExpired()
+    {
+		$update['STATUS'] = 'หมดอายุ';
+		return $this->db->update('beeframe', $update, "'".TODAY_DATE."' > EXPIRED_DATE");
+    }
     public function countFrame()
     {
         $frames = array();
@@ -37,20 +41,24 @@ class BeeframeModel extends CI_Model
 
     public function updateData($id, $data = array())
     {
-        $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;
-        $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
-        $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
-
+		
+		if(isset($data['beehive_id'])){ $insert['BeeHive_BEE_HIVE_ID'] = $data['beehive_id']; }
+		if(isset($data['expired_date'])){ $insert['EXPIRED_DATE'] = $data['expired_date']; }
+		if(isset($data['status'])){ $insert['STATUS'] = $data['status']; }
+		
         return $this->db->where('BEEFRAME_ID', $id)->update('beeframe', $insert);
     }
 
     public function insertData($data = array())
     {
         try {
-            $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;
-            $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
-            $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
+            
 
+			if(isset($data['beehive_id'])){ $insert['BeeHive_BEE_HIVE_ID'] = $data['beehive_id']; }
+			if(isset($data['expired_date'])){ $insert['EXPIRED_DATE'] = $data['expired_date']; }
+			if(isset($data['status'])){ $insert['STATUS'] = $data['status']; }
+		
+			
             $this->db->insert('beeframe', $insert);
 
             return $this->db->insert_id();

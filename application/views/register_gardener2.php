@@ -79,10 +79,11 @@
 										</tr>
 										</thead>
 										<tbody>
+										
 										<?php foreach ($flowers as $index => $flower): $flower_id = $flower['FLOWER_ID']; $flower_name = $flower['FLOWER_NAME']; ?>
 											<tr>
 												<th scope="row">
-													<label><input name="selected[]" type="checkbox" <?php echo $index==0 ? 'data-parsley-mincheck="1" required ' : ''; ?> value="<?php echo $flower_id;?>" class="flat">
+													<label><input id="hive_select<?php echo $flower_id;?>" name="selected[]" type="checkbox" <?php echo $index==0 ? 'data-parsley-mincheck="1" required ' : ''; ?> value="<?php echo $flower_id;?>" class="flat hive_select">
 														<?php echo $flower_name; ?>
 													</label>
 												</th>
@@ -90,13 +91,13 @@
 													<input style="width: 80px;" type="number" id="number" name="flowers[<?php echo $flower_id; ?>][area]"  data-validate-minmax="5,2000" class="form-control">
 												</td>
 												<td>
-													<input name="flowers[<?php echo $flower_id; ?>][risk]" type="checkbox" value="mix" class="flat checkbox_check">
+													<input id="risk<?php echo $flower_id; ?>"name="flowers[<?php echo $flower_id; ?>][risk]" type="checkbox" value="mix" class="flat checkbox_check">
 													ปลูกผสมกับ
 												</td>
 												<td>
-													<select name="flowers[<?php echo $flower_id; ?>][mix]">
+													<select class="mix_dropdown" id="mix_<?php echo $flower_id;?>" name="flowers[<?php echo $flower_id; ?>][mix]">
 														<option value="-">เลือกพืชที่ปลูกผสม</option>
-														<?php foreach($flowers as $item) {  if($flower_id != $item['FLOWER_ID'] ) { echo '<option value="' . $item['FLOWER_ID'] . '">' . $item['FLOWER_NAME'] . '</option>'; }}; ?>
+														<?php //foreach($flowers as $item) {  if($flower_id != $item['FLOWER_ID'] ) { echo '<option value="' . $item['FLOWER_ID'] . '">' . $item['FLOWER_NAME'] . '</option>'; }}; ?>
 													</select>
 												</td>
 											</tr>
@@ -123,3 +124,43 @@
 	</div>
 </div>
 <!-- /page content -->
+<script>
+
+function get_all(){
+	var id ;
+	var id_arr = [] ;
+	var name_arr = [] ;
+	var html_select='<option value="-">เลือกพืชที่ปลูกผสม</option>';
+	
+	i=0;
+$('.hive_select').each(function(index, element ) {
+	
+	id= $(element).attr('id').substring(11);
+	name= $(element).parent('label').text();
+	name = $.trim(name);
+	if($(element).is(':checked')){
+		
+		id_arr.push(id);  
+		name_arr.push(name);  
+		
+		i++;
+	}
+});
+
+for(j=0;j< id_arr.length; j++){
+		
+		html_select = html_select+ '<option value="'+id_arr[j]+'" >'+name_arr[j]+'</option>';
+}
+$('.mix_dropdown').html(html_select);
+	
+}
+
+$('.hive_select').click(function(){
+	
+	 
+	get_all();
+		
+	 
+});
+ 
+</script>

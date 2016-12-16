@@ -49,10 +49,24 @@ class gardener_model extends CI_Model {
 		return $data;
 		
 	}
+	public function flower_all(){
+		$query = $this->db->query('SELECT * from flower  ');
+		$data= $query->result_array();
+		return $data;
+		
+	}
 	public function garden_info($member_id,$type="MEMBER"){
 
 
 		$query = $this->db->query('SELECT * from garden WHERE GARDEN_TYPE="'.$type.'" AND GARDENER_ID='.$member_id);
+		$data= $query->row_array();
+		return $data;
+
+	}
+	public function garden_infoByID($garden_id){
+
+
+		$query = $this->db->query('SELECT * from garden WHERE GARDEN_ID='.$garden_id);
 		$data= $query->row_array();
 		return $data;
 
@@ -66,16 +80,17 @@ class gardener_model extends CI_Model {
 	}
 
 	public function garden_bloomingmonth($month,$garden_id){
-	$query = $this->db->query('SELECT *FROM flower F ,gardenflower GF WHERE
+	$sql = 'SELECT * FROM flower F ,gardenflower GF WHERE
 	(
 		(BLOOM_START_MONTH <= BLOOM_END_MONTH AND BLOOM_START_MONTH <='.$month.' AND BLOOM_END_MONTH >='.$month.')
 		OR
 		(BLOOM_START_MONTH >BLOOM_END_MONTH AND ('.$month.'<= BLOOM_END_MONTH   OR '.$month.'>= BLOOM_START_MONTH) )
 	)
 		AND GF.FLOWER_FLOWER_ID = F.FLOWER_ID
-		AND GF.GARDEN_GARDEN_ID='.$garden_id);
-
-
+		AND GF.GARDEN_GARDEN_ID='.$garden_id;
+	$query = $this->db->query($sql);
+		
+//	echo $sql;
 		$data= $query->result_array();
 		return $data;
 	}
@@ -86,8 +101,15 @@ class gardener_model extends CI_Model {
 
 	}
 	public function insert_blooming($data){
-		$check = $this->db->insert('blooming', $data);
-		return $check;
+		$this->db->insert('blooming', $data);
+		$insert_id = $this->db->insert_id();
+		return  $insert_id;
+	}
+	public function update_blooming($id,$data){
+		
+		 $this->db->where('BLOOMING_ID', $id);
+        
+		return $this->db->update('blooming', $data);
 	}
 	public function blooming_info($garden_id){
 		$query = $this->db->query('SELECT * from blooming AS B,flower AS F WHERE  F.FLOWER_ID = B.FLOWER_FLOWER_ID AND B.Garden_GARDEN_ID='.$garden_id);
@@ -187,7 +209,18 @@ class gardener_model extends CI_Model {
         if (!in_array($flower_id, $selected_flowers)) {
           continue;
         }
-
+		
+		if(isset($flower['risk'])){
+			if($flower['risk']=='mix'){
+				if($flower_id == $flower['mix'] ){
+					unset($flower['risk']);
+					unset($flower['mix']);
+				}
+			}else{
+				unset($flower['mix']);
+			}
+		}
+		
         $this->db->insert('gardenflower', array(
           'Garden_GARDEN_ID' => $garden_id,
           'Flower_FLOWER_ID' => $flower_id,
@@ -208,10 +241,26 @@ class gardener_model extends CI_Model {
 
   }
   
-  public function distance($id){
+	public function distance($id){
 	$query = $this->db->query('SELECT * from distancegarden WHERE Garden_GARDEN1_ID='.$id);
 	$data= $query->result_array();
 	return $data;
 	  
-  }
+	}
+
+
+	public function insert_distance($data){
+		$this->db->set($data);
+		$check = $this->db->insert('distancegarden',$data);
+		return $check;
+		
+	}
+
+	public function update_distance($data){
+		$update['DISTANCE'] = $data['DISTANCE'];
+		 $this->db->where('Garden_GARDEN1_ID', $data['Garden_GARDEN1_ID']);
+		 $this->db->where('Garden_GARDEN2_ID', $data['Garden_GARDEN2_ID']);
+		return $this->db->update('distancegarden', $update);
+		
+	}
 }

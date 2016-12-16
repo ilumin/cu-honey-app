@@ -55,6 +55,13 @@
 				<input class="form-control input-date" type="text" name="start_date" value="<?php echo $transport_info['TRANSPORT_DATE'];?> ">
 				</div>
 			  </div>
+			  <div class="item form-group">
+				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">วันที่ขนกลับ
+				</label>
+				<div class="col-md-6 col-sm-6 col-xs-12">
+				<input class="form-control input-date" type="text" name="end_date" value="<?php echo $transport_info['RETURN_DATE'];?> ">
+				</div>
+			  </div>
 			  
 			  <div class="item form-group">
 				<label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">สถานะ
@@ -82,21 +89,16 @@
 				<?php for($i=0;$i<count($transport_hive);$i++){?>
 						<tr>
 						<td>
-							<label><?php if( $transport_info['STATUS'] =='รอขนส่ง') {  ?><input checked="checked"  name="hive_select[]" type="checkbox"  data-parsley-mincheck="1" required  value="<?php echo $transport_hive[$i]['BEEHIVE_BEE_HIVE_ID'] ?>" class="flat"> <?php  } ?> <?php echo $transport_hive[$i]['BEEHIVE_BEE_HIVE_ID'] ?></label>
+							<label><?php if( $transport_info['STATUS'] =='รอขนย้าย') {  ?><input checked="checked"  name="hive_select[]" type="checkbox"  data-parsley-mincheck="1" required  value="<?php echo $transport_hive[$i]['BEEHIVE_BEE_HIVE_ID'] ?>" class="flat"> <?php  } ?> <?php echo $transport_hive[$i]['BEEHIVE_BEE_HIVE_ID'] ?></label>
 						</td>
 						
 						</tr>
 				<?php } ?>
 					  </tbody>
 					</table>
-
-					<?php if( $transport_info['STATUS'] =='รอขนส่ง') {  ?>
+					<?php if( $transport_info['STATUS'] =='รอขนย้าย') {  ?>
 					<button id="send" type="submit" class="btn btn-success">ยืนยันการขนย้าย</button>
 					<input type="hidden" name="transport_id" value="<?php echo $transport_info['TRANSPORT_ID'];?>" />
-					<input type="hidden" name="garden_id" value="<?php echo $transport_info['GARDEN_GARDEN_ID'];?>" />
-					<input type="hidden" name="flower_id" value="<?php echo $transport_info['FLOWER_FLOWER_ID'];?>" />
-					<input type="hidden" name="blooming_id" value="<?php echo $transport_info['BLOOMING_ID'];?>" />
-					<input type="hidden" name="harvest_id" value="<?php echo $transport_info['HarvestHoney_HARVEST_ID'];?>" />
 					<a class="btn btn-danger" href="">ยกเลิกการขนย้าย</a>
 					<?php  } ?>
 				  <div class="clearfix"></div>

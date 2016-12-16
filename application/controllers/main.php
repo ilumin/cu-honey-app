@@ -7,7 +7,13 @@ class Main extends CI_Controller {
 	 {
 	   parent::__construct();
 	   $this->load->model('member_model','',TRUE);
-
+	   $this->load->model('BeehiveModel','',TRUE);
+	   $this->load->model('QueenModel','',TRUE);
+	   $this->load->model('BeeframeModel','',TRUE);
+	   $this->load->model('gardener_model','',TRUE);
+	   $this->load->model('Harvest_model','',TRUE);
+		$this->current_month =date('m',strtotime(TODAY_DATE));
+		$this->current_year = date('Y',strtotime(TODAY_DATE));
 	 }
 	/**
 	 * Index Page for this controller.
@@ -37,7 +43,7 @@ class Main extends CI_Controller {
 		$data = $this->member_model->get_data();
 		$this->load->model('action_model');
 		$data_show['HIVE_STATUS'] = $this->action_model->summary_hive();
-		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired(11,2016);
+		$data_show['HIVE_EXPIRED'] =$this->action_model->bee_hive_expired(date('m',strtotime(TODAY_DATE." +1 months")),date('Y',strtotime(TODAY_DATE." +1 months")));
 		
 		$this->load->library('action_plan_library');
 		$data['hive_summary']=$this->action_plan_library->summary_hive($data_show);
@@ -50,7 +56,14 @@ class Main extends CI_Controller {
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
 	}
-
+	public function batch(){
+		 $this->BeehiveModel->updateStatusExpired();
+		 $this->BeeframeModel->updateStatusExpired();
+		 $this->QueenModel->updateStatusExpired();
+		 $this->Harvest_model->updateStatusRaise();
+		 $this->BeehiveModel->updateStatusRaise();
+		 redirect('main');
+	}
 	
 	public function member_list(){
 		$data = $this->member_model->get_data();
@@ -97,7 +110,8 @@ class Main extends CI_Controller {
 		$this->load->view('theme/footer', $data);
 
 	}
-	public function distancegarden($id){
+	public function distancegarden($id,$type=''){
+		
 		$data = $this->member_model->get_data();
 		$this->load->helper(array('form'));
 		//get member info from gardener
@@ -106,14 +120,28 @@ class Main extends CI_Controller {
 		//get flower table
 		$flower = $this->gardener_model->get_flower();
 		$data['flower'] = $flower;
+		if($type == ''){
+			$type ="MEMBER";
+		}
+		if($type == 'public'){
+			$type ="PUBLIC";
+		}
+		$data['type'] =$type;
 		//get garden info
-		$garden_info = $this->gardener_model->garden_info($id);
+		if($type=='MEMBER'){
+			$garden_info = $this->gardener_model->garden_info($id,$type);
+		}else{
+			$garden_info = $this->gardener_model->garden_infoByID($id);
+		}
 		$data['garden_info'] = $garden_info;
-		//var_dump($garden_info);
+	//	var_dump($garden_info);
 
 		$data['garden'] = $this->gardener_model->garden_all();
 		//var_dump($data['gardenflower']);
-		$data['distance'] = $this->gardener_model->distance($data['garden_info']['GARDEN_ID']);
+		$data['distance'] = array();
+		if(isset ($data['garden_info']['GARDEN_ID'])) {
+			$data['distance'] = $this->gardener_model->distance($data['garden_info']['GARDEN_ID']);
+		}
 		//var_dump($data['gardener_list'] ); exit();
 
 		$this->load->view('theme/header', $data);
@@ -131,6 +159,7 @@ class Main extends CI_Controller {
 		$garden_id = $this->input->post('garden_id');
 		$gardener_id = $this->input->post('gardener_id');
 		$garden_m = $this->input->post('garden_match');
+		$garden_t = $this->input->post('garden_type');
 		
 		if($garden_id !=''){
 			
@@ -148,20 +177,27 @@ class Main extends CI_Controller {
 				$data_insert['Garden_GARDEN2_ID'] = $garden_id;
 				$data_insert['DISTANCE']=$check_insert[$garden[$i]][$garden_id];
 				//var_dump($data_insert);
-				$check['FIRST'][$i] = $this->operation_model->update_distance($data_insert);
+				$check['FIRST'][$i] = $this->gardener_model->update_distance($data_insert);
 				if($check['FIRST'][$i] == true){
 					$data_insert['Garden_GARDEN1_ID'] = $garden_id;
 					$data_insert['Garden_GARDEN2_ID'] = $garden[$i]; 
 					$data_insert['DISTANCE']=$check_insert[$garden[$i]][$garden_id];
 					//var_dump($data_insert);
-					$check['SECOND'][$i] =$this->operation_model->update_distance($data_insert);
+					$check['SECOND'][$i] =$this->gardener_model->update_distance($data_insert);
 				}
 			}
-			if(count($check['SECOND']) == count($garden)){
-				if(in_array(false,$check['SECOND'])=== false  && in_array(false,$check['FIRST'])=== false){
-					redirect('main/distancegarden/'.$gardener_id);
+
+			//var_dump($check);
+			
+			
+			if(in_array(false,$check['SECOND'])=== false  && in_array(false,$check['FIRST'])=== false){
+				$url = 'main/distancegarden/'.$gardener_id;
+				if($garden_t =='PUBLIC'){
+					$url = 'main/distancegarden/'.$gardener_id;
 				}
+				redirect('main/distancegarden/'.$garden_id."/public");
 			}
+			
 		}
 		
 	}
@@ -204,5 +240,43 @@ class Main extends CI_Controller {
 			}
 		}
 	}
-
+	public function print_po($id){
+		
+		$data = $this->member_model->get_data();
+		$data['harvest_id'] = $id;
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('print_po',$data);
+		$this->load->view('theme/footer_js', $data);
+		//$this->load->view('js/member_detail_js', $data);
+		$this->load->view('theme/footer', $data);
+		
+	}
+	
+	public function print_po_html($id){
+		$data =array();
+		$this->load->model('BeekeeperModel');
+		$this->load->helper('date_th_helper');
+		$data['harvest_id'] = $id;
+		$data['beekeeper'] = $this->BeekeeperModel->getAll();
+		$this->load->model('harvest_model');
+		$data['harvest_info'] = $this->harvest_model->get_harvest_info_BYID($id);
+		
+		$this->load->view('print_cash',$data);
+	}
+	
+	public function po_list(){
+		$data = $this->member_model->get_data();
+		$this->load->model('harvest_model');
+		$this->load->helper('date_th_helper');
+		$data['harvest_list'] = $this->harvest_model->harvest_complete();
+		$this->load->view('theme/header', $data);
+		$this->load->view('theme/left_bar', $data);
+		$this->load->view('theme/nav',$data);
+		$this->load->view('po_list', $data);
+		$this->load->view('theme/footer_js', $data);
+		
+		$this->load->view('theme/footer', $data);
+	}
 }

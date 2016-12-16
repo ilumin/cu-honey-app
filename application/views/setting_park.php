@@ -25,12 +25,14 @@
                     <thead>
                         <tr>
                             <th>รหัสสวน</th>
-                            <th>รหัสคนสวน</th>
+                            
                             <th>ชื่อสวน</th>
                             <th>ที่อยู่สวน</th>
                             <th>จังหวัด</th>
                             <th>ดอกไม้</th>
-                            <th>จำนวนรังผึ้งที่สามารถวางได้</th>
+                            <th>จำนวนรังผึ้ง <br />ทีวางได้</th>
+                            <th>จำนวนรังผึ้ง<br />ที่วางอยู่</th>
+                            <th>&nbsp;</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -38,13 +40,17 @@
                         <?php for($i=0;$i<count($parks);$i++){ ?>
                           <tr>
                             <td><?php echo $parks[$i]['GARDEN_ID']; ?></td>
-                            <td><?php echo $parks[$i]['GARDENER_ID']; ?></td>
+
                             <td><?php echo $parks[$i]['NAME']; ?></td>
                             <td><?php echo $parks[$i]['ADDRESS']; ?></td>
                             <td><?php echo $parks[$i]['PROVINCE_NAME']; ?></td>
                               <td><?php echo $parks[$i]['FLOWER_NAME']; ?></td>
                               <td><?php echo $parks[$i]['AMOUNT_HIVE']; ?></td>
-                            <td><?php echo anchor('/setting/publicpark/' . $parks[$i]['GARDEN_ID'], 'Edit'); ?></td>
+                              <td><?php echo ($remain_hive[$parks[$i]['GARDEN_ID']]['REMAIN_HIVE']);?></td>
+                            <td>
+							<a class="btn btn-default" href="<?php echo base_url();?>/setting/publicpark/<?php echo $parks[$i]['GARDEN_ID'];?>">แก้ไข</a>
+							</td>
+                            <td><a class="btn btn-default" href="<?php echo base_url();?>main/distancegarden/<?php echo $parks[$i]['GARDEN_ID'];?>/public">กำหนดระยะห่างระหว่างสวน</a></td>
                           </tr>
                         <?php }; ?>
                     </tbody>

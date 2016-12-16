@@ -24,7 +24,8 @@ $status = isset($hive->STATUS) ? $hive->STATUS : null;
       รหัสรังผึ้ง<span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      <input class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="text" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly disabled' : ''; ?>>
+		
+      <input  class="form-control col-md-7 col-xs-12" id="hive_id" name="hive_id" required="required" type="hidden" value="<?php echo $beehive_id; ?>" <?php echo !empty($beehive_id) ? 'readonly disabled' : ''; ?>>
     </div>
   </div>
 

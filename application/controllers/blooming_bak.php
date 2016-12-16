@@ -79,8 +79,6 @@ class blooming extends CI_Controller {
 	function bloom_save(){
 		//var_dump($_POST);
 		
-		$chk_insert3 =array();
-		$chk_insert2 =array();
 		
 		//from garden to blooming id
 		$garden_id = $this->input->post('garden_id_all');
@@ -95,18 +93,10 @@ class blooming extends CI_Controller {
 			
 			$blooming_info = $this->blooming_model->blooming_info($blooming_id);
 			
-			//อัพเดทสถานะของ HARVESTITEM เป็นรอขนย้าย
-			$harvest_info =$this->harvest_model->get_harvest_info_BY_GID($garden_id);
-			
-			
-			//echo $harvest_info['HARVEST_ID'];
-			
-			
 			for($i=0; $i<count($garden_id_arr); $i++){
 				
 				$amount_hive = $this->input->post('amount'.$garden_id_arr[$i]);
 				$choose_date = $this->input->post('choose_date'.$garden_id_arr[$i]);
-				$hive_info = $this->harvest_model->get_hiveForMove($garden_id_arr[$i],$amount_hive);
 			
 				if($amount_hive>0){
 					
@@ -122,10 +112,6 @@ class blooming extends CI_Controller {
 					
 					if($insert_id2 >0){
 						for($j=0;$j<count($hive_info );$j++){
-							
-							$data_move_harvest['STATUS'] ='รอขนย้าย';
-							$check_update2[$j] = $this->harvest_model-> updateItem_BY_BHID( $hive_info[$j]['BEE_HIVE_ID'],$harvest_info['HARVEST_ID'], $data_move_harvest);
-							
 							$data_insert3['HarvestHoney_HARVEST_ID'] = $insert_id2  ; // TO DO Will be revise to get last insert transport  --34
 							$data_insert3['BeeHive_BEE_HIVE_ID']=$hive_info[$j]['BEE_HIVE_ID'];
 							$data_insert3['STATUS']='รอเก็บน้ำผึ้ง';
@@ -152,7 +138,7 @@ class blooming extends CI_Controller {
 		
 					//วันที่ Expire Date DESC
 					//INSERT  TRANSPORT DETAIL
-					
+					$hive_info = $this->operation_model->hive_id_ByGardenID($garden_id_arr[$i],$flower_id_arr[$i],$amount_hive);
 					
 					if($insert_id >0){
 						for($j=0;$j<count($hive_info );$j++){
@@ -175,11 +161,8 @@ class blooming extends CI_Controller {
 				$data_bloom['blooming_status'] = 'ยืนยัน';
 				//echo 'confirm';
 				$check_bloom = $this->blooming_model->update($blooming_id,$data_bloom );
-				
-				
-				
 				if($check_bloom  !=false){
-					redirect('operation_plan/task', 'refresh');	
+					redirect('operation_plan', 'refresh');	
 				}
 
 			}else{
@@ -188,28 +171,6 @@ class blooming extends CI_Controller {
 			}
 		}
 		
-	}
-	
-	public function add_distance(){
-		$this->load->model('operation_model');
-		$garden = $this->gardener_model->garden_all();
-		for($j=0; $j<count($garden);$j++){
-			for($i=0;$i<count($garden);$i++){
-				
-				$data_insert['Garden_GARDEN1_ID'] = $garden[$j]['GARDEN_ID'];
-				$data_insert['Garden_GARDEN2_ID'] = $garden[$i]['GARDEN_ID'];
-				$data_insert['DISTANCE']=0;
-				$this->gardener_model->insert_distance($data_insert);
-				
-				if($garden[$j]['GARDEN_ID'] !=$garden[$i]['GARDEN_ID'] ){
-					$data_insert['Garden_GARDEN1_ID'] = $garden[$i]['GARDEN_ID'];
-					$data_insert['Garden_GARDEN2_ID'] =  $garden[$j]['GARDEN_ID'];
-					$data_insert['DISTANCE']=0;
-				}
-				
-				$this->gardener_model->insert_distance($data_insert);
-			}
-		}
 	}
 	
 	/* public function addtransport(){

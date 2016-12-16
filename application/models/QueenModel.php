@@ -20,7 +20,11 @@ class QueenModel extends CI_Model
     {
         return $this->db->where('BeeHive_BEE_HIVE_ID', $id)->get('queenbee')->row();
     }
-
+    public function updateStatusExpired()
+    {
+		$update['STATUS'] = 'หมดอายุ';
+		return $this->db->update('queenbee', $update, "'".TODAY_DATE."' > EXPIRED_DATE");
+    }
     public function mapHiveWithQueen()
     {
         $frames = array();
@@ -37,11 +41,11 @@ class QueenModel extends CI_Model
 
     public function updateData($id, $data = array())
     {
-        $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;
-        $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
-        $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
-
-        $duplicate = $this->db->where('BeeHive_BEE_HIVE_ID', $insert['BeeHive_BEE_HIVE_ID'])->where('QUEEN_ID !=', $id)->from('queenbee')->count_all_results();
+		if(isset($data['beehive_id'])){ $insert['BeeHive_BEE_HIVE_ID'] = $data['beehive_id']; }
+		if(isset($data['expired_date'])){ $insert['EXPIRED_DATE'] = $data['expired_date']; }
+		if(isset($data['status'])){ $insert['STATUS'] = $data['status']; }
+        
+		$duplicate = $this->db->where('BeeHive_BEE_HIVE_ID', $insert['BeeHive_BEE_HIVE_ID'])->where('QUEEN_ID !=', $id)->from('queenbee')->count_all_results();
         if ($duplicate) {
             throw new Exception("Hive already has queen", 1);
         }
@@ -52,9 +56,10 @@ class QueenModel extends CI_Model
     public function insertData($data = array())
     {
         try {
-            $insert['BeeHive_BEE_HIVE_ID'] = isset($data['beehive_id']) ? $data['beehive_id'] : null;
-            $insert['EXPIRED_DATE'] = isset($data['expired_date']) ? $data['expired_date'] : null;
-            $insert['STATUS'] = isset($data['status']) ? $data['status'] : null;
+            
+			if(isset($data['beehive_id'])){ $insert['BeeHive_BEE_HIVE_ID'] = $data['beehive_id']; }
+			if(isset($data['expired_date'])){ $insert['EXPIRED_DATE'] = $data['expired_date']; }
+			if(isset($data['status'])){ $insert['STATUS'] = $data['status']; }
 
             $duplicate = $this->db->where('BeeHive_BEE_HIVE_ID', $insert['BeeHive_BEE_HIVE_ID'])->from('queenbee')->count_all_results();
             if ($duplicate) {

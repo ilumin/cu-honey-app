@@ -17,7 +17,6 @@ class operation_plan extends CI_Controller {
 	   $this->load->model('QueenModel','',TRUE);
 	   $this->load->model('BeeframeModel','',TRUE);
 	   $this->load->model('ConfigModel','',TRUE);
-//$this->config  = $this->ConfigModel->getAll();
 	   
 	 }
 	/**
@@ -40,7 +39,7 @@ class operation_plan extends CI_Controller {
 		return $this->member_model->get_data();
 	}
 	
-	/* public function index(){
+	public function index(){
 		
 		$data = $this->get_data();
 		$data['harvest_info'] = $this->operationplan_model->harvest();
@@ -62,80 +61,6 @@ class operation_plan extends CI_Controller {
 		$this->load->view('theme/header', $data);
 		$this->load->view('theme/left_bar', $data);
 		$this->load->view('theme/nav',$data);
-		$this->load->view('operation_Overview', $data);
-		$this->load->view('theme/footer_js', $data);
-		$this->load->view('theme/footer', $data);
-	} */
-	
-	public function tomorrow(){
-		$tomorrow = date('Y-m-d',strtotime(TODAY_DATE." +1days"));
-		$data = $this->get_data();
-		$data['harvest_info'] = $this->operationplan_model->harvest(0,$tomorrow);
-		//var_dump($data['harvest_info']);
-		
-		
-		$data['transfer_info'] = $this->operationplan_model->transfer($tomorrow);
-		//var_dump($data['transfer_info']);
-		
-		$data['hive_fix'] = $this->operationplan_model->hive_fix();
-		//var_dump($data['hive_fix']);
-		
-		$f_info = $this->gardener_model->get_flower();
-		$f_arr = array();
-		foreach($f_info as $key => $value){
-			$f_arr[$value['FLOWER_ID']] = $value['FLOWER_NAME'];
-		}
-		$data['flowers'] = $f_arr;
-		//var_dump($data['flowers']);
-		$this->load->view('theme/header', $data);
-		$this->load->view('theme/left_bar', $data);
-		$this->load->view('theme/nav',$data);
-		$this->load->view('operation_Overview', $data);
-		$this->load->view('theme/footer_js', $data);
-		$this->load->view('theme/footer', $data);
-	}
-	public function task($method='all',$date=''){
-		
-		$data = $this->get_data();
-		$config  = $this->ConfigModel->getAll();
-		
-		if($date == 'tomorrow'){
-			$tomorrow = date('Y-m-d',strtotime(TODAY_DATE." +1days"));
-			$data['cap'] = $config['CAP_HARVEST_HONEY'];
-			if($method == 'harvest' || $method=='all' )
-				$data['harvest_info'] = $this->operationplan_model->harvest(0,$tomorrow);
-			//var_dump($data['harvest_info']);
-			if($method == 'transfer' || $method =='all')
-				$data['transfer_info'] = $this->operationplan_model->transfer($tomorrow);
-			//var_dump($data['transfer_info']);
-			if($method == 'fix' ||$method =='all')
-				$data['hive_fix'] = $this->operationplan_model->hive_fix();
-			//var_dump($data['hive_fix']);
-
-			
-		}else{
-		
-			$data['cap'] = $config['CAP_HARVEST_HONEY'];
-			if($method == 'harvest' || $method=='all' )
-				$data['harvest_info'] = $this->operationplan_model->harvest();
-			//var_dump($data['harvest_info']);
-			if($method == 'transfer' || $method =='all')
-				$data['transfer_info'] = $this->operationplan_model->transfer();
-			//var_dump($data['transfer_info']);
-			if($method == 'fix' ||$method =='all')
-				$data['hive_fix'] = $this->operationplan_model->hive_fix();
-			//var_dump($data['hive_fix']);
-		}
-		$f_info = $this->gardener_model->get_flower();
-		$f_arr = array();
-		foreach($f_info as $key => $value){
-			$f_arr[$value['FLOWER_ID']] = $value['FLOWER_NAME'];
-		}
-		$data['flowers'] = $f_arr;
-		//var_dump($data['flowers']);
-		$this->load->view('theme/header', $data);
-		$this->load->view('theme/left_bar', $data);
-		$this->load->view('theme/nav',$data);
 		$this->load->view('operation_plan', $data);
 		$this->load->view('theme/footer_js', $data);
 		$this->load->view('theme/footer', $data);
@@ -144,47 +69,6 @@ class operation_plan extends CI_Controller {
 	public function harvest($id){
 		$data = $this->get_data();
 		$garden_info = $this->gardener_model->garden_all($id);
-		$data['garden_move_back'] = array();
-		$data['garden_info'] = $garden_info;
-		$data['harvest_info'] = $this->operationplan_model->harvest($id);
-		$data['honey_avg'] = $this->operationplan_model->get_avg_honey($id);
-		
-		$config = $this->ConfigModel->getAll();
-		
-		$data['rental_rate'] = $config['RENTAL_RATE'];
-		//var_dump($data['harvest_info']);
-		$data['harvest_hive'] = $this->operationplan_model->harvesthive($id);
-		
-		if(count($data['harvest_info'])>0){
-			$data['garden_move_back'] = $this->operationplan_model->garden_move_back($data['harvest_info']['GARDEN_ID']);
-		}
-		
-		
-		
-		//var_dump($data['garden_move_back']);
-		
-		$f_info = $this->gardener_model->get_flower();
-		$f_arr = array();
-		foreach($f_info as $key => $value){
-			$f_arr[$value['FLOWER_ID']] = $value['FLOWER_NAME'];
-		}
-		$data['flowers'] = $f_arr;
-		
-		//var_dump($data['flowers']);
-		$this->load->view('theme/header', $data);
-		$this->load->view('theme/left_bar', $data);
-		$this->load->view('theme/nav',$data);
-		$this->load->view('harvest_detail', $data);
-		$this->load->view('theme/footer_js', $data);
-		$this->load->view('js/harvest_js', $data);
-		$this->load->view('theme/footer', $data);
-		
-	}
-	
-	
-	public function harvest_all(){
-		$data = $this->get_data();
-		$garden_info = $this->gardener_model->garden_all();
 		$data['garden_move_back'] = array();
 		$data['garden_info'] = $garden_info;
 		$data['harvest_info'] = $this->operationplan_model->harvest($id);
@@ -233,7 +117,6 @@ class operation_plan extends CI_Controller {
 			
 			$data_update['status'] = 'ขนส่งเรียบร้อย';
 			$data_update['transport_date'] = $start_date;
-			$data_update['return_date'] = $end_date;
 			
 			
 			$check = $this->transport_model->updateTransport($id,$data_update);
@@ -245,18 +128,13 @@ class operation_plan extends CI_Controller {
 			$check_harvest = $this->harvest_model->update($harvest_id,$data_update3);
 			
 			//echo "check-update Harvest".$check_harvest."<br>";
-			$harvest_info =$this->harvest_model->get_harvest_info_BY_GID($garden_id);
+		
 			
 			$hive_arr = $this->input->post('hive_select');
 			
 			
 			if($check == true){
 				for($i=0; $i<count($hive_arr); $i++){
-					
-					$data_move_harvest['STATUS'] ='ขนส่งเรียบร้อย';
-					$check_update2[$i] = $this->harvest_model-> updateItem_BY_BHID( $hive_arr[$i],$harvest_info['HARVEST_ID'], $data_move_harvest);
-					
-					
 					$data_update5['STATUS'] = 'ขนส่งเรียบร้อย';
 					$check6[$i] = $this->transport_model->updateTransportItem($id,$hive_arr[$i], $data_update5);
 					//echo "check-update TransportHive".$hive_arr[$i]."--status: ".$check6[$i]."<br>";
@@ -285,7 +163,7 @@ class operation_plan extends CI_Controller {
 					}
 				}
 			}
-			redirect("operation_plan/task","refresh");
+			//redirect("operation_plan","refresh");
 			
 			
 		}else if($method_name=='harvest'){
@@ -307,10 +185,6 @@ class operation_plan extends CI_Controller {
 						$data_update2['HARVESTHONEYITEM_ID'] = $harvesthoneyitem_id ;
 						$data_update2['HONEY_AMOUNT'] = $this->input->post('honey_amount'.$harvesthoneyitem_id) ;
 						
-						if($data_update2['HONEY_AMOUNT']== 0 && $this->input->post('fix_'.$harvesthoneyitem_id) != 'yes'){
-							continue;
-						}
-						
 						$check1[$i] = $this->harvest_model->insert_detail($data_update2);
 						
 						
@@ -322,16 +196,13 @@ class operation_plan extends CI_Controller {
 							$honey_amount[$j] = $data[$j]['HONEY_AMOUNT'];
 							$date_harvest[$j] = $data[$j]['HARVEST_DATE'];
 						}
-						
-						$percent_diff = 0;
 						$amount_harvest = count($data);
 						$last_id = count($data)-1;
 						$max_val = max($honey_amount);
 						$max_date = max($date_harvest);
 						$last_val = $honey_amount[$last_id];
-						if($max_val >0){
-							$percent_diff = number_format((($last_val/$max_val)*100),2);  //TODO: NEED TO BE REVISE
-						}
+						$percent_diff = number_format((($last_val/$max_val)*100),2);  //TODO: NEED TO BE REVISE
+						
 						
 						$data_update = array();
 						$data_update['STATUS'] ='เก็บน้ำผึ้ง' ;
@@ -393,18 +264,15 @@ class operation_plan extends CI_Controller {
 				
 				}
 			$move_back = $this->input->post('move_back');
-			if($move_back == 'yes'){
+			if($move_back == true){
 				$data_post['HARVEST_ID'] = $id;
 				$data_post['GARDEN_ID'] = $this->input->post('move_back_park');
-				$data_post['HIVE_SELECT'] = $this->input->post('hive_select');
-				$data_post['SERVICE_CASH'] = $this->input->post('service_cash');
-				
 				$this->move_back($data_post);
 				
 			}
 			
 			
-			redirect("operation_plan/task","refresh");
+			redirect("operation_plan","refresh");
 		}
 	
 	}
@@ -443,34 +311,20 @@ class operation_plan extends CI_Controller {
 		
 		
 		$blooming_id = $harvest_info['Blooming_BLOOMING_ID'];
-		/*
-		1. อัพเดทตาราง  HARVEST เก็บน้ำผึ้งเรียบร้อย ของเดิม
-		2.อัพเดทตาราง HARVEST ITEM เก็บน้ำผึ้งเรียบร้อย ของเดิม
-		3. เพิ่มตาราง HARVEST_ITEM เก็บน้ำผึ้ง ด้วยสวนใหม่ และเพิ่ม BLOOMING เป็นของสวนนั้นๆ
 		
-		4.เพิ่มตาราง TRANSPORT  เป็นขนย้ายไปที่สวนาธรารณะ
-		5. เพิ่มตาราง TRANSPORT ITEM เป็นขนย้ายไปที่สวนาธรารณะ
-		6.อัพเดทตาราง BEEHIVE เป็นสววนที่ย้ายไป 
-		*/
-		//1. อัพเดทตาราง  HARVEST เก็บน้ำผึ้งเรียบร้อย ของเดิม
 		$data_h['Blooming_BLOOMING_ID']= $blooming_id;
 		$data_h['HARVEST_STATUS'] ='เก็บน้ำผึ้งเรียบร้อย';
 		$data_h['HARVEST_ENDDATE'] = TODAY_DATE;
-		$data_h['SERVICE_CASH'] = $data_post['SERVICE_CASH'];
-		
 		$check = $this->harvest_model->update($data_post['HARVEST_ID'] , $data_h);
 		
-		//echo 'status'.$check ."harvest update HID:".$data_post['HARVEST_ID'];
-		
-		//*2อัพเดทตาราง HARVEST ITEM เก็บน้ำผึ้งเรียบร้อย ของเดิม
 		$data_hi['STATUS']='เก็บน้ำผึ้งเรียบร้อย';
 		$data_hi['STATUS_CHECK']='เก็บน้ำผึ้ง';
 		$check = $this->harvest_model->updateItem_BY_HID($data_post['HARVEST_ID'] , $data_hi);
 		
-		//echo 'status'.$check ."harvest update item  HID:".$data_post['HARVEST_ID'];
+		
 		
 		$harvest_info2 = $this->harvest_model->get_harvest_info_BY_GID($data_post['GARDEN_ID']);
-		//4.เพิ่มตาราง TRANSPORT  เป็นขนย้ายไปที่สวนาธรารณะ
+		
 		//INSERT TRANSPORT 
 		$data_insert['TRANSPORT_DATE'] = TODAY_DATE;
 		
@@ -480,57 +334,40 @@ class operation_plan extends CI_Controller {
 		$data_insert['Blooming_BLOOMING_ID'] = $blooming_id;
 		$data_insert['HarvestHoney_HARVEST_ID'] = $harvest_info2['HARVEST_ID'];
 		$insert_id = $this->transport_model->insert($data_insert);
-		
-		
-		//echo 'insert new Transport ID'.$insert_id ." on Blooming ID ".$blooming_id;
+
 		//วันที่ Expire Date DESC
 		//INSERT  TRANSPORT DETAIL
-		
-		//$hive_info = $this->operation_model->hive_id_ByGardenID($data_post['GARDEN_ID'],BJP_FLOWER);
-		$item_arr = $data_post['HIVE_SELECT'];
-	
+		$hive_info = $this->operation_model->hive_id_ByGardenID($data_post['GARDEN_ID'],BJP_FLOWER);
 		
 		if($insert_id >0){
-			
-			
-			for($j=0;$j<count($item_arr );$j++){
-
-				$id_arr = explode("|",$item_arr[$j]);
-				$harvesthoneyitem_id = $id_arr[0];
-				$hive_id = $id_arr[1];
-				// 5. เพิ่มตาราง TRANSPORT ITEM เป็นขนย้ายไปที่สวนาธรารณะ
+			for($j=0;$j<count($hive_info );$j++){
 				$data_insert2['Transport_TRANSPORT_ID'] = $insert_id ; 
-				$data_insert2['BeeHive_BEE_HIVE_ID']=$hive_id;
+				$data_insert2['BeeHive_BEE_HIVE_ID']=$hive_info[$j]['BEE_HIVE_ID'];
 				$data_insert2['STATUS']='ขนส่งเรียบร้อย';
-				// 6.อัพเดทตาราง BEEHIVE เป็นสววนที่ย้ายไป 
-				$chk_insert2[$j] =  $this->transport_model->insert_hive($data_insert2);
-			//	echo 'insert new Transport Item on '.$insert_id ." Beehive Id".$hive_id;
 				
+				$chk_insert2[$j] =  $this->transport_model->insert_hive($data_insert2);
 				
 				$data_b['FLOWER_FLOWER_ID'] = BJP_FLOWER ;
 				$data_b['GARDEN_GARDEN_ID'] = $data_post['GARDEN_ID'];
 				$data_b['status'] = 'ว่าง';
 				
 				
-				$this->BeehiveModel->updateData($data_insert2['BeeHive_BEE_HIVE_ID'],$data_b );
-			//	echo 'Update Beehive Id '.$insert_id ." Beehive Id".$data_insert2['BeeHive_BEE_HIVE_ID'];
+				 $this->BeehiveModel->updateData($data_insert2['BeeHive_BEE_HIVE_ID'],$data_b );
 				 
 				 
-				//3.เพิ่มตาราง HARVEST_ITEM เก็บน้ำผึ้ง ด้วยสวนใหม่ และเพิ่ม BLOOMING เป็นของสวนนั้นๆ
-				$data_insert3['HarvestHoney_HARVEST_ID'] = $harvest_info2['HARVEST_ID'] ; 
-				$data_insert3['BeeHive_BEE_HIVE_ID']=$hive_id;
+				$data_insert3['HarvestHoney_HARVEST_ID'] = $harvest_info2['HARVEST_ID'] ; // TO DO Will be revise to get last insert transport  --34
+				$data_insert3['BeeHive_BEE_HIVE_ID']=$data_insert2['BeeHive_BEE_HIVE_ID'];
 				$data_insert3['STATUS']='เก็บน้ำผึ้ง';
 				$data_insert3['LASTED_HARVEST_DATE']=TODAY_DATE;
 				$data_insert3['NO_HARVEST']='0';
 				$data_insert3['PERCENT_HARVEST']='0';
 
 				$chk_insert3[$j] =  $this->harvest_model->insert_item($data_insert3);
-			//	echo 'Insert Harvest Item: '.$chk_insert3[$j];
+				
 				
 			}
 		}
-		redirect('main/print_po/'.$data_post['HARVEST_ID']);
-		//exit();
+		
 	}
 	
 }

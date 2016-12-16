@@ -13,6 +13,14 @@ class beekeeper_model extends CI_Model {
 		return FALSE;
 	  }
 	}
+	
+	public function get_garden_beekeeper() {
+	 
+		$query = $this->db->get_where('garden', array('GARDEN_TYPE' => 'BEEKEEPER'));
+		return $query->row_array();
+	 
+	}
+	
 	public function check_login($email,$password) {
 	  if($email != FALSE && $password != FALSE) {
 		$query = $this->db->get_where('beekeeper', array('EMAIL' => $email,'PASSWORD'=>$password));
