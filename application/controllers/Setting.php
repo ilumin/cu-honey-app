@@ -277,13 +277,20 @@ class Setting extends CI_Controller
 	
 	public function move_hive_save()
 	{
-		$park_id = $this->input->post('parks_move');
+		$park_id = $this->input->post('parks_move'); //to
 		$hive_select = $this->input->post('hive_select');
-		$garden_id = $this->input->post('garden_id');
+		$garden_id = $this->input->post('garden_id'); //from 
 		$flower_id = $this->input->post('flower_id');
 		
 	//เหมือน MOVE BACK
-		
+		$harvest_info = $this->harvest_model->get_harvest_info_BY_GID($garden_id);
+	
+	
+		$data_post['HARVEST_ID'] = $harvest_info['HARVEST_ID'];
+		$data_post['GARDEN_ID'] = $park_id;
+		$data_post['HIVE_SELECT'] = $this->input->post('hive_select');
+		$data_post['SERVICE_CASH'] = 0;
+		$this->move_back($data_post);
 	}
     public function flower()
     {
@@ -619,5 +626,102 @@ class Setting extends CI_Controller
            redirect('setting/queen');
         }
     }
+	
+	private function move_back($data_post){
+		
+		//$harvest_info = $this->harvest_model->get_harvest_info_BY_GID($data_post['GARDEN_ID']);
+		//harvest_id = บ้านผู้เลี้ยงผึ้ง
+		//GARDEN_ID = สวนสาธารณะ
+		//blooming_id = สวนสาธารณะ
+		
+		//$blooming_id = $harvest_info['Blooming_BLOOMING_ID'];
+		
+
+		/*
+		1. อัพเดทตาราง  HARVEST เก็บน้ำผึ้งเรียบร้อย ของเดิม
+		2.อัพเดทตาราง HARVEST ITEM เก็บน้ำผึ้งเรียบร้อย ของเดิม
+		3. เพิ่มตาราง HARVEST_ITEM เก็บน้ำผึ้ง ด้วยสวนใหม่ และเพิ่ม BLOOMING เป็นของสวนนั้นๆ
+		
+		4.เพิ่มตาราง TRANSPORT  เป็นขนย้ายไปที่สวนาธรารณะ
+		5. เพิ่มตาราง TRANSPORT ITEM เป็นขนย้ายไปที่สวนาธรารณะ
+		6.อัพเดทตาราง BEEHIVE เป็นสววนที่ย้ายไป 
+		*/
+		
+		
+		
+		//echo 'status'.$check ."harvest update HID:".$data_post['HARVEST_ID'];
+		
+		//*2อัพเดทตาราง HARVEST ITEM เก็บน้ำผึ้งเรียบร้อย ของเดิม OK
+		$data_hi['STATUS']='เก็บน้ำผึ้งเรียบร้อย';
+		$data_hi['STATUS_CHECK']='เก็บน้ำผึ้ง';
+		$check = $this->harvest_model->updateItem_BY_HID($data_post['HARVEST_ID'] , $data_hi);
+		
+		//echo 'status'.$check ."harvest update item  HID:".$data_post['HARVEST_ID']."<br/>";
+		
+		
+		$harvest_info2 = $this->harvest_model->get_harvest_info_BY_GID($data_post['GARDEN_ID']);
+		
+		
+		//4.เพิ่มตาราง TRANSPORT  เป็นขนย้ายไปที่สวนาธรารณะ
+		//INSERT TRANSPORT 
+		$data_insert['TRANSPORT_DATE'] = TODAY_DATE;
+		
+		$data_insert['STATUS'] = 'ขนส่งเรียบร้อย';
+		$data_insert['FLOWER_FLOWER_ID'] = BJP_FLOWER ;
+		$data_insert['GARDEN_GARDEN_ID'] = $data_post['GARDEN_ID'];
+		$data_insert['Blooming_BLOOMING_ID'] = $harvest_info2['Blooming_BLOOMING_ID'];
+		$data_insert['HarvestHoney_HARVEST_ID'] = $harvest_info2['HARVEST_ID'];
+		$insert_id = $this->transport_model->insert($data_insert);
+		
+		
+		//echo 'insert new Transport ID'.$insert_id ." on Blooming ID ".$blooming_id."<br/>";
+		//วันที่ Expire Date DESC
+		//INSERT  TRANSPORT DETAIL
+		
+		//$hive_info = $this->operation_model->hive_id_ByGardenID($data_post['GARDEN_ID'],BJP_FLOWER);
+		$item_arr = $data_post['HIVE_SELECT'];
+	
+		
+		if($insert_id >0){
+			
+			
+			for($j=0;$j<count($item_arr );$j++){
+
+				
+				$hive_id = $item_arr[$j];
+				// 5. เพิ่มตาราง TRANSPORT ITEM เป็นขนย้ายไปที่สวนาธรารณะ
+				$data_insert2['Transport_TRANSPORT_ID'] = $insert_id ; 
+				$data_insert2['BeeHive_BEE_HIVE_ID']=$hive_id;
+				$data_insert2['STATUS']='ขนส่งเรียบร้อย';
+				// 6.อัพเดทตาราง BEEHIVE เป็นสววนที่ย้ายไป 
+				$chk_insert2[$j] =  $this->transport_model->insert_hive($data_insert2);
+				//echo 'insert new Transport Item on '.$insert_id ." Beehive Id".$hive_id."<br/>";
+				
+				
+				$data_b['FLOWER_FLOWER_ID'] = BJP_FLOWER ;
+				$data_b['GARDEN_GARDEN_ID'] = $data_post['GARDEN_ID'];
+				$data_b['status'] = 'ว่าง';
+				
+				
+				$this->beehiveModel->updateData($data_insert2['BeeHive_BEE_HIVE_ID'],$data_b );
+				//echo 'Update Beehive Id '.$insert_id ." Beehive Id".$data_insert2['BeeHive_BEE_HIVE_ID']."<br/>";
+				 
+				 
+				//3.เพิ่มตาราง HARVEST_ITEM เก็บน้ำผึ้ง ด้วยสวนใหม่ และเพิ่ม BLOOMING เป็นของสวนนั้นๆ
+				$data_insert3['HarvestHoney_HARVEST_ID'] = $harvest_info2['HARVEST_ID'] ; 
+				$data_insert3['BeeHive_BEE_HIVE_ID']=$hive_id;
+				$data_insert3['STATUS']='เก็บน้ำผึ้ง';
+				$data_insert3['LASTED_HARVEST_DATE']=TODAY_DATE;
+				$data_insert3['NO_HARVEST']='0';
+				$data_insert3['PERCENT_HARVEST']='0';
+
+				$chk_insert3[$j] =  $this->harvest_model->insert_item($data_insert3);
+				//echo 'Insert Harvest Item: '.$chk_insert3[$j]."<br/>";
+				
+			}
+		}
+		redirect('setting/hive');
+		//exit();
+	}
 
 }
